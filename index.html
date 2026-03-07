@@ -3,173 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal - happy_birthday_teteh.py</title>
+    <title>Pameran Memori Teteh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #0c0c0c;
-            color: #d4d4d4; /* Warna teks abu-abu terang khas Mac Terminal/VS Code */
-            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            /* Warna background aesthetic cream ala kertas scrapbook */
+            background-color: #f4f1ea; 
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            font-family: 'Quicksand', sans-serif;
             margin: 0;
-            padding: 30px;
-            font-size: 15px;
-            line-height: 1.6;
-            overflow-x: hidden;
+            padding: 40px 20px;
+            color: #333;
         }
 
-        #console {
-            max-width: 800px;
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-family: 'Caveat', cursive;
+            font-size: 4em;
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        /* Container Galeri Polaroid */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
-        .line {
-            margin-bottom: 8px;
-            min-height: 24px;
+        /* Styling Kartu Polaroid */
+        .polaroid {
+            background: #fff;
+            padding: 15px 15px 50px 15px; /* Padding bawah lebih besar untuk caption */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            width: 220px;
+            cursor: pointer;
+            position: relative;
         }
 
-        .system-text {
-            color: #569cd6; /* Biru khas keyword coding */
+        /* Bikin posisi polaroid miring-miring natural */
+        .polaroid:nth-child(even) { transform: rotate(4deg); }
+        .polaroid:nth-child(odd) { transform: rotate(-3deg); }
+        .polaroid:nth-child(3n) { transform: rotate(2deg); }
+        .polaroid:nth-child(4n) { transform: rotate(-4deg); }
+
+        /* Efek saat foto di-hover / disentuh */
+        .polaroid:hover {
+            transform: scale(1.1) rotate(0deg);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            z-index: 10;
         }
 
-        .success-text {
-            color: #4CAF50; /* Hijau untuk status success */
+        .polaroid img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            filter: sepia(15%); /* Kasih sedikit filter vintage */
         }
 
-        .string-text {
-            color: #ce9178; /* Orange/merah bata khas string Python */
+        .caption {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8em;
+            text-align: center;
+            margin-top: 15px;
+            color: #2c3e50;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 8px;
-            height: 18px;
-            background-color: #d4d4d4;
-            animation: blink 1s step-end infinite;
-            vertical-align: middle;
-            margin-left: 2px;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* Tampilan Music Box yang muncul di akhir */
-        #media-container {
-            display: none;
+        /* Bagian Surat di Bawah */
+        .letter-container {
             max-width: 800px;
-            margin: 40px auto 0;
-            padding-top: 20px;
-            border-top: 1px dashed #555;
-            opacity: 0;
-            transition: opacity 2s ease-in;
+            margin: 80px auto 40px auto;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            line-height: 1.8;
+            font-size: 1.1em;
         }
 
-        .music-title {
-            color: #569cd6;
-            margin-bottom: 15px;
-            font-size: 14px;
+        .letter-container h2 {
+            text-align: center;
+            font-family: 'Caveat', cursive;
+            font-size: 3em;
+            margin-top: 0;
+            color: #e74c3c;
+        }
+
+        .music-player {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
     </style>
 </head>
 <body>
 
-    <div id="console"></div>
-    
-    <div id="media-container">
-        <div class="music-title">> Executing audio_nostalgia.sh ...</div>
-        <iframe style="border-radius:12px; margin-bottom: 15px;" src="https://open.spotify.com/embed/track/123456789" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/987654321" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <div class="header">
+        <h1>Sebuah Pameran Kecil</h1>
+        <p>Ribuan kilometer dari Purwokerto ke Okayama, tapi memori ini rasanya baru kemarin.</p>
     </div>
 
-    <script>
-        // Skenario teks yang akan diketik
-        const scriptLines = [
-            { text: "login: afdhi_abdilah", type: "system", delay: 800 },
-            { text: "Establishing secure connection...", type: "system", delay: 1200 },
-            { text: "Origin: Purwokerto, Central Java", type: "system", delay: 800 },
-            { text: "Target Location: Okayama, Japan", type: "system", delay: 1000 },
-            { text: "Calculating distance... [ 5,300 km ]", type: "system", delay: 1500 },
-            { text: "Bypassing physical distance... [ SUCCESS ]", type: "success", delay: 1000 },
-            { text: "Compiling memories...", type: "system", delay: 2000 },
-            { text: "> python3 happy_birthday_teteh.py", type: "system", delay: 1000 },
-            { text: "--------------------------------------------------", type: "normal", delay: 500 },
-            { text: "Halo Teteh,", type: "normal", delay: 1000 },
-            { text: "Mungkin aneh ya dapet ucapan ulang tahun bentuknya layar terminal gini.", type: "normal", delay: 1500 },
-            { text: "Tapi ini caraku, buat ngirim doa dan rindu paling cepat melintasi ribuan kilometer ke Okayama.", type: "normal", delay: 2000 },
-            { text: "Selamat ulang tahun! Terima kasih udah jadi kakak yang hebat dan berani berjuang jauh dari rumah.", type: "normal", delay: 2500 },
-            { text: "Mungkin di sana udaranya lagi dingin, atau kerjaan lagi numpuk. Tapi luangkan waktu sebentar hari ini buat apresiasi diri sendiri ya.", type: "normal", delay: 2500 },
-            { text: "Ingat selalu kalau di sini ada aku dan keluarga yang selalu mendoakan kelancaran Teteh.", type: "normal", delay: 2000 },
-            { text: "Jangan lupa istirahat. Makan yang enak.", type: "normal", delay: 1500 },
-            { text: "Kalau kangen rumah, play lagu di bawah ini ya.", type: "normal", delay: 1500 },
-            { text: "Cepat pulang.", type: "normal", delay: 1500 },
-            { text: "--------------------------------------------------", type: "normal", delay: 1000 },
-            { text: "Process finished with exit code 0.", type: "system", delay: 1000 },
-            { text: "[SYSTEM]: Love successfully delivered.", type: "success", delay: 500 }
-        ];
+    <div class="gallery">
+        
+        <div class="polaroid">
+            <img src="link_foto_1.jpg" alt="Foto">
+            <div class="caption">Muka nyebelin 😆</div>
+        </div>
 
-        const consoleDiv = document.getElementById('console');
-        let currentLineIndex = 0;
+        <div class="polaroid">
+            <img src="link_foto_2.jpg" alt="Foto">
+            <div class="caption">Zaman masih piyik</div>
+        </div>
 
-        // Bikin elemen kursor
-        const cursor = document.createElement('span');
-        cursor.className = 'cursor';
+        <div class="polaroid">
+            <img src="link_foto_3.jpg" alt="Foto">
+            <div class="caption">Gaya andalan Teteh</div>
+        </div>
 
-        function typeWriter(text, element, speed, callback) {
-            let i = 0;
-            element.innerHTML = '';
-            element.appendChild(cursor);
-            
-            function type() {
-                if (i < text.length) {
-                    // Masukin karakter sebelum kursor
-                    const char = document.createTextNode(text.charAt(i));
-                    element.insertBefore(char, cursor);
-                    i++;
-                    setTimeout(type, speed);
-                } else {
-                    if (callback) callback();
-                }
-            }
-            type();
-        }
+        <div class="polaroid">
+            <img src="link_foto_4.jpg" alt="Foto">
+            <div class="caption">Liburan bareng</div>
+        </div>
 
-        function processNextLine() {
-            if (currentLineIndex < scriptLines.length) {
-                const lineData = scriptLines[currentLineIndex];
-                
-                const lineDiv = document.createElement('div');
-                lineDiv.className = 'line';
-                
-                // Tambahkan warna sesuai tipe
-                if (lineData.type === 'system') lineDiv.classList.add('system-text');
-                if (lineData.type === 'success') lineDiv.classList.add('success-text');
-                
-                consoleDiv.appendChild(lineDiv);
+        <div class="polaroid">
+            <img src="link_foto_5.jpg" alt="Foto">
+            <div class="caption">Formasi lengkap!</div>
+        </div>
 
-                // Kecepatan ngetik (system lebih cepat dari normal)
-                const typeSpeed = lineData.type === 'normal' ? 40 : 15;
+        </div>
 
-                typeWriter(lineData.text, lineDiv, typeSpeed, () => {
-                    currentLineIndex++;
-                    // Scroll otomatis ke bawah
-                    window.scrollTo(0, document.body.scrollHeight);
-                    setTimeout(processNextLine, lineData.delay);
-                });
-            } else {
-                // Semua teks selesai diketik, munculin music player
-                cursor.style.display = 'none';
-                const mediaContainer = document.getElementById('media-container');
-                mediaContainer.style.display = 'block';
-                setTimeout(() => {
-                    mediaContainer.style.opacity = '1';
-                }, 100);
-            }
-        }
+    <div class="letter-container">
+        <h2>Selamat Ulang Tahun, Teteh!</h2>
+        <p>Sengaja aku bikin galeri kecil ini karena aku tahu Teteh suka banget foto. Dari sekian banyak hasil jepretan yang Teteh punya, mungkin foto-foto di atas ini kualitasnya nggak seberapa atau malah blur, tapi buatku memorinya yang paling mahal.</p>
+        
+        <p>Semoga di umur yang baru ini, Teteh makin sehat, bahagia terus, dan dilancarkan semua urusan kerjanya di Jepang. Jaga kesehatan, jangan sampai telat makan, dan tetap jadi sosok inspiratif buat aku.</p>
+        
+        <p>Walaupun sekarang kita kepisah jauh banget, ingat ya kalau rumah selalu nungguin Teteh pulang. Sambil baca ini, coba <i>play</i> lagu di bawah ya, khusus aku masukin biar Teteh berasa lagi kumpul bareng kita di rumah.</p>
 
-        // Mulai animasi 1 detik setelah web dibuka
-        setTimeout(processNextLine, 1000);
+        <div class="music-player">
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/xyz" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/abc" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+    </div>
 
-    </script>
 </body>
 </html>
