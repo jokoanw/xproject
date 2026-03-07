@@ -3,199 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classified: Untuk Teteh</title>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <title>Terminal - happy_birthday_teteh.py</title>
     <style>
         body {
-            background-color: #0a0a0a;
-            color: #00ff41; /* Warna hijau ala terminal hacker/detektif */
-            font-family: 'Courier Prime', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background-color: #0c0c0c;
+            color: #d4d4d4; /* Warna teks abu-abu terang khas Mac Terminal/VS Code */
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
             margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .container {
-            max-width: 600px;
-            width: 100%;
-            background: #111;
             padding: 30px;
-            border: 1px solid #333;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+            font-size: 15px;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        h1, h2 {
-            text-align: center;
-            border-bottom: 1px dashed #00ff41;
-            padding-bottom: 10px;
-            letter-spacing: 2px;
+        #console {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .level {
-            display: none; /* Disembunyikan dulu */
-            margin-top: 20px;
-            text-align: center;
+        .line {
+            margin-bottom: 8px;
+            min-height: 24px;
         }
 
-        .level.active {
-            display: block;
-            animation: fadeIn 1s ease-in-out;
+        .system-text {
+            color: #569cd6; /* Biru khas keyword coding */
         }
 
-        p.clue {
-            font-size: 1.1em;
-            line-height: 1.5;
-            color: #ccc;
+        .success-text {
+            color: #4CAF50; /* Hijau untuk status success */
         }
 
-        input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            margin: 15px 0;
-            background: #000;
-            border: 1px solid #00ff41;
-            color: #00ff41;
-            font-family: 'Courier Prime', monospace;
-            font-size: 1em;
-            text-align: center;
-            outline: none;
+        .string-text {
+            color: #ce9178; /* Orange/merah bata khas string Python */
         }
 
-        button {
-            padding: 10px 20px;
-            background: #00ff41;
-            color: #000;
-            border: none;
-            font-family: 'Courier Prime', monospace;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 18px;
+            background-color: #d4d4d4;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
         }
 
-        button:hover {
-            background: #fff;
-            color: #000;
-            box-shadow: 0 0 10px #fff;
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
-        .error-msg {
-            color: #ff3333;
-            font-size: 0.9em;
-            margin-top: 10px;
+        /* Tampilan Music Box yang muncul di akhir */
+        #media-container {
             display: none;
+            max-width: 800px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px dashed #555;
+            opacity: 0;
+            transition: opacity 2s ease-in;
         }
 
-        /* Tampilan Surat (Hasil Akhir) */
-        #final-letter {
-            display: none;
-            color: #e0e0e0;
-        }
-
-        #final-letter h2 {
-            color: #00ff41;
-            border: none;
-        }
-
-        .music-box {
-            margin-top: 30px;
-            padding: 15px;
-            border: 1px dashed #555;
-            background: #050505;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .music-title {
+            color: #569cd6;
+            margin-bottom: 15px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="header-title">
-            <h1>[ ENIGMA BOX ]</h1>
-            <p style="text-align: center; color: #888; font-size: 0.9em;">Target: Okayama, Japan | Status: LOCKED</p>
-        </div>
-
-        <div id="level-1" class="level active">
-            <h2>Gembok #1: Memori</h2>
-            <p class="clue">"Sebelum pergi jauh, ada satu makanan di rumah yang selalu jadi rebutan kita. Apa itu?"</p>
-            <input type="text" id="ans-1" placeholder="Masukkan jawaban..." autocomplete="off">
-            <br>
-            <button onclick="checkAnswer(1, 'martabak')">UNLOCK</button>
-            <p id="err-1" class="error-msg">Akses ditolak. Coba ingat-ingat lagi.</p>
-        </div>
-
-        <div id="level-2" class="level">
-            <h2>Gembok #2: Kode Rahasia</h2>
-            <p class="clue">"Tahun berapa kita liburan bareng sekeluarga dan kamu nyebur ke selokan?"</p>
-            <input type="text" id="ans-2" placeholder="Masukkan tahun..." autocomplete="off">
-            <br>
-            <button onclick="checkAnswer(2, '2015')">UNLOCK</button>
-            <p id="err-2" class="error-msg">Jawaban salah. Masa lupa memori paling memalukan?</p>
-        </div>
-
-        <div id="level-3" class="level">
-            <h2>Gembok #3: Kunci Terakhir</h2>
-            <p class="clue">"Siapa nama adik laki-laki paling keren dan paling jago ngoding sedunia?"</p>
-            <input type="text" id="ans-3" placeholder="Tulis namanya..." autocomplete="off">
-            <br>
-            <button onclick="checkAnswer(3, 'afdhi')">DECRYPT MESSAGE</button>
-            <p id="err-3" class="error-msg">Hmm... yakin bukan itu namanya?</p>
-        </div>
-
-        <div id="final-letter">
-            <h2>>>> AKSES DITERIMA <<<</h2>
-            <p><strong>Selamat Ulang Tahun, Teteh! 🎉</strong></p>
-            <p>Akhirnya berhasil juga mecahin sandinya. Nggak sia-sia jadi kakak dari seorang *detective* handal hahaha.</p>
-            <p>Lewat pesan rahasia ini, aku cuma mau bilang: semangat terus di Okayama! Walaupun jaraknya jauh banget, doa dari rumah selalu nyampe ke sana tanpa *delay*.</p>
-            <p>Semoga di umur yang baru ini, Teteh makin sehat, makin sukses, dan semua yang lagi diperjuangin di Jepang bisa berjalan lancar. Kalau capek, istirahat. Jangan lupa dengerin lagu-lagu ini biar berasa lagi di rumah.</p>
-            <p>Cepat pulang, kita sekeluarga kangen!</p>
-            <p><em>- Dari adikmu yang paling keren.</em></p>
-
-            <div class="music-box">
-                <h3 style="text-align: center; margin-top: 0;">🎵 Decrypted Audio Files</h3>
-                <iframe style="border-radius:12px; margin-bottom: 10px;" src="https://open.spotify.com/embed/track/2fE97dG3uN2B7x50p58r3X?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/30A4vF51VvB4q7gMvD6W1w?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-        </div>
-
+    <div id="console"></div>
+    
+    <div id="media-container">
+        <div class="music-title">> Executing audio_nostalgia.sh ...</div>
+        <iframe style="border-radius:12px; margin-bottom: 15px;" src="https://open.spotify.com/embed/track/123456789" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/987654321" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
 
     <script>
-        function checkAnswer(level, correctAnswer) {
-            // Ambil inputan user dan ubah ke huruf kecil semua biar ga sensitif besar/kecil huruf
-            let inputId = 'ans-' + level;
-            let errorId = 'err-' + level;
-            let userAnswer = document.getElementById(inputId).value.toLowerCase().trim();
+        // Skenario teks yang akan diketik
+        const scriptLines = [
+            { text: "login: afdhi_abdilah", type: "system", delay: 800 },
+            { text: "Establishing secure connection...", type: "system", delay: 1200 },
+            { text: "Origin: Purwokerto, Central Java", type: "system", delay: 800 },
+            { text: "Target Location: Okayama, Japan", type: "system", delay: 1000 },
+            { text: "Calculating distance... [ 5,300 km ]", type: "system", delay: 1500 },
+            { text: "Bypassing physical distance... [ SUCCESS ]", type: "success", delay: 1000 },
+            { text: "Compiling memories...", type: "system", delay: 2000 },
+            { text: "> python3 happy_birthday_teteh.py", type: "system", delay: 1000 },
+            { text: "--------------------------------------------------", type: "normal", delay: 500 },
+            { text: "Halo Teteh,", type: "normal", delay: 1000 },
+            { text: "Mungkin aneh ya dapet ucapan ulang tahun bentuknya layar terminal gini.", type: "normal", delay: 1500 },
+            { text: "Tapi ini caraku, buat ngirim doa dan rindu paling cepat melintasi ribuan kilometer ke Okayama.", type: "normal", delay: 2000 },
+            { text: "Selamat ulang tahun! Terima kasih udah jadi kakak yang hebat dan berani berjuang jauh dari rumah.", type: "normal", delay: 2500 },
+            { text: "Mungkin di sana udaranya lagi dingin, atau kerjaan lagi numpuk. Tapi luangkan waktu sebentar hari ini buat apresiasi diri sendiri ya.", type: "normal", delay: 2500 },
+            { text: "Ingat selalu kalau di sini ada aku dan keluarga yang selalu mendoakan kelancaran Teteh.", type: "normal", delay: 2000 },
+            { text: "Jangan lupa istirahat. Makan yang enak.", type: "normal", delay: 1500 },
+            { text: "Kalau kangen rumah, play lagu di bawah ini ya.", type: "normal", delay: 1500 },
+            { text: "Cepat pulang.", type: "normal", delay: 1500 },
+            { text: "--------------------------------------------------", type: "normal", delay: 1000 },
+            { text: "Process finished with exit code 0.", type: "system", delay: 1000 },
+            { text: "[SYSTEM]: Love successfully delivered.", type: "success", delay: 500 }
+        ];
 
-            if (userAnswer === correctAnswer) {
-                // Sembunyikan error jika sebelumnya salah
-                document.getElementById(errorId).style.display = 'none';
-                
-                // Sembunyikan level sekarang
-                document.getElementById('level-' + level).classList.remove('active');
-                
-                // Munculin level berikutnya atau surat
-                let nextLevel = level + 1;
-                if (document.getElementById('level-' + nextLevel)) {
-                    document.getElementById('level-' + nextLevel).classList.add('active');
+        const consoleDiv = document.getElementById('console');
+        let currentLineIndex = 0;
+
+        // Bikin elemen kursor
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+
+        function typeWriter(text, element, speed, callback) {
+            let i = 0;
+            element.innerHTML = '';
+            element.appendChild(cursor);
+            
+            function type() {
+                if (i < text.length) {
+                    // Masukin karakter sebelum kursor
+                    const char = document.createTextNode(text.charAt(i));
+                    element.insertBefore(char, cursor);
+                    i++;
+                    setTimeout(type, speed);
                 } else {
-                    // Kalau level udah habis, munculin surat dan hilangkan header awal
-                    document.getElementById('header-title').style.display = 'none';
-                    document.getElementById('final-letter').style.display = 'block';
-                    document.getElementById('final-letter').style.animation = 'fadeIn 2s ease-in-out';
+                    if (callback) callback();
                 }
+            }
+            type();
+        }
+
+        function processNextLine() {
+            if (currentLineIndex < scriptLines.length) {
+                const lineData = scriptLines[currentLineIndex];
+                
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'line';
+                
+                // Tambahkan warna sesuai tipe
+                if (lineData.type === 'system') lineDiv.classList.add('system-text');
+                if (lineData.type === 'success') lineDiv.classList.add('success-text');
+                
+                consoleDiv.appendChild(lineDiv);
+
+                // Kecepatan ngetik (system lebih cepat dari normal)
+                const typeSpeed = lineData.type === 'normal' ? 40 : 15;
+
+                typeWriter(lineData.text, lineDiv, typeSpeed, () => {
+                    currentLineIndex++;
+                    // Scroll otomatis ke bawah
+                    window.scrollTo(0, document.body.scrollHeight);
+                    setTimeout(processNextLine, lineData.delay);
+                });
             } else {
-                // Munculin pesan error
-                document.getElementById(errorId).style.display = 'block';
+                // Semua teks selesai diketik, munculin music player
+                cursor.style.display = 'none';
+                const mediaContainer = document.getElementById('media-container');
+                mediaContainer.style.display = 'block';
+                setTimeout(() => {
+                    mediaContainer.style.opacity = '1';
+                }, 100);
             }
         }
+
+        // Mulai animasi 1 detik setelah web dibuka
+        setTimeout(processNextLine, 1000);
+
     </script>
 </body>
 </html>
