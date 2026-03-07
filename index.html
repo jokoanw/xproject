@@ -3,214 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Sibling Chronicles - Edisi Spesial</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:wght@400;700&display=swap" rel="stylesheet">
-    
+    <title>Classified: Untuk Teteh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #f4efe6; /* Warna kertas koran vintage */
-            color: #1a1a1a;
-            font-family: 'Lora', serif;
-            margin: 0;
-            padding: 20px;
+            background-color: #0a0a0a;
+            color: #00ff41; /* Warna hijau ala terminal hacker/detektif */
+            font-family: 'Courier Prime', monospace;
             display: flex;
             justify-content: center;
-        }
-
-        .newspaper-container {
-            max-width: 900px;
-            background-color: #fdfbf7;
-            padding: 40px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
-
-        /* Bagian Header / Nama Koran */
-        .header {
-            text-align: center;
-            border-bottom: 3px solid #1a1a1a;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-
-        .header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            align-items: center;
+            min-height: 100vh;
             margin: 0;
-            line-height: 1;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        .sub-header {
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid #1a1a1a;
-            border-bottom: 1px solid #1a1a1a;
-            padding: 8px 0;
-            font-family: Arial, sans-serif;
-            font-size: 0.85em;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        /* Layout Grid untuk Artikel */
-        .content {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        /* Artikel Utama */
-        .main-article {
-            text-align: justify;
-        }
-
-        .headline {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8em;
-            line-height: 1.1;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-
-        .author {
-            font-style: italic;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            color: #444;
-        }
-
-        .article-text {
-            column-count: 2; /* Teks dibagi 2 kolom seperti koran */
-            column-gap: 20px;
-            line-height: 1.6;
-        }
-
-        .main-img {
+        .container {
+            max-width: 600px;
             width: 100%;
-            height: auto;
-            filter: grayscale(100%) contrast(120%); /* Efek foto koran jadul */
-            border-bottom: 2px solid #1a1a1a;
-            margin-bottom: 15px;
+            background: #111;
+            padding: 30px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
         }
 
-        /* Kolom Samping (Sidebar) */
-        .sidebar {
-            border-left: 2px solid #1a1a1a;
-            padding-left: 20px;
+        h1, h2 {
+            text-align: center;
+            border-bottom: 1px dashed #00ff41;
+            padding-bottom: 10px;
+            letter-spacing: 2px;
         }
 
-        .sidebar h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5em;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
-            margin-top: 0;
-        }
-
-        .sidebar p {
-            font-size: 0.9em;
-            line-height: 1.5;
-            text-align: justify;
-        }
-
-        /* Kolom Musik / Rekomendasi */
-        .music-corner {
-            margin-top: 30px;
-            background-color: #ebe4d8;
-            padding: 15px;
-            border: 1px dashed #1a1a1a;
-        }
-
-        .music-corner h4 {
-            margin-top: 0;
-            font-family: 'Playfair Display', serif;
+        .level {
+            display: none; /* Disembunyikan dulu */
+            margin-top: 20px;
             text-align: center;
         }
 
-        .song-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .level.active {
+            display: block;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        p.clue {
+            font-size: 1.1em;
+            line-height: 1.5;
+            color: #ccc;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 15px 0;
+            background: #000;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1em;
+            text-align: center;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #00ff41;
+            color: #000;
+            border: none;
+            font-family: 'Courier Prime', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 10px #fff;
+        }
+
+        .error-msg {
+            color: #ff3333;
             font-size: 0.9em;
+            margin-top: 10px;
+            display: none;
         }
 
-        .song-list li {
-            padding: 5px 0;
-            border-bottom: 1px solid #ccc;
+        /* Tampilan Surat (Hasil Akhir) */
+        #final-letter {
+            display: none;
+            color: #e0e0e0;
         }
 
-        /* Responsif untuk layar HP */
-        @media (max-width: 768px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                border-left: none;
-                border-top: 2px solid #1a1a1a;
-                padding-left: 0;
-                padding-top: 20px;
-            }
-            .article-text {
-                column-count: 1;
-            }
-            .header h1 {
-                font-size: 3em;
-            }
+        #final-letter h2 {
+            color: #00ff41;
+            border: none;
+        }
+
+        .music-box {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px dashed #555;
+            background: #050505;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="newspaper-container">
-        <div class="header">
-            <h1>The Sibling Post</h1>
-        </div>
-        <div class="sub-header">
-            <span>Volume 01, Edisi Ulang Tahun</span>
-            <span>Okayama, Jepang — Maret 2026</span>
-            <span>Rp Gratis (Dibayar Pakai Doa)</span>
+    <div class="container">
+        <div id="header-title">
+            <h1>[ ENIGMA BOX ]</h1>
+            <p style="text-align: center; color: #888; font-size: 0.9em;">Target: Okayama, Japan | Status: LOCKED</p>
         </div>
 
-        <div class="content">
-            <div class="main-article">
-                <h2 class="headline">HARI INI DALAM SEJARAH: SOSOK INSPIRATIF BERTAMBAH USIA DI NEGERI SAKURA</h2>
-                <img src="https://via.placeholder.com/800x400?text=Foto+Teteh+(Otomatis+Hitam+Putih)" alt="Foto Utama" class="main-img">
-                
-                <div class="author">Ditulis oleh: Afdhi Abdilah | Biro Indonesia</div>
-                
-                <div class="article-text">
-                    <p><strong>OKAYAMA</strong> — Hari ini menandai momen penting. Jarak dari Indonesia ke Jepang mungkin memisahkan secara fisik, tapi halaman depan koran ini khusus dicetak untuk merayakan bertambahnya usia sosok luar biasa yang biasa dipanggil Teteh.</p>
-                    
-                    <p>Tulisan ini bukan sekadar berita biasa, melainkan sebuah pengingat bahwa di rumah, ada orang-orang yang selalu mendoakan kelancaran setiap langkahmu di sana.</p>
-                    
-                    <p>Mungkin di sana udaranya lagi dingin, atau mungkin tugas dan kerjaan lagi numpuk. Tapi, luangkan waktu sebentar hari ini buat apresiasi diri sendiri karena udah berhasil bertahan dan berjuang sejauh ini.</p>
-                    
-                    <p>Selamat ulang tahun! Semoga kesehatan selalu menyertai, rezeki makin lancar, dan semua yang lagi diusahakan di Okayama sana bisa berbuah manis. Jangan lupa makan enak hari ini, dan cepat pulang kalau udah waktunya libur!</p>
-                </div>
+        <div id="level-1" class="level active">
+            <h2>Gembok #1: Memori</h2>
+            <p class="clue">"Sebelum pergi jauh, ada satu makanan di rumah yang selalu jadi rebutan kita. Apa itu?"</p>
+            <input type="text" id="ans-1" placeholder="Masukkan jawaban..." autocomplete="off">
+            <br>
+            <button onclick="checkAnswer(1, 'martabak')">UNLOCK</button>
+            <p id="err-1" class="error-msg">Akses ditolak. Coba ingat-ingat lagi.</p>
+        </div>
+
+        <div id="level-2" class="level">
+            <h2>Gembok #2: Kode Rahasia</h2>
+            <p class="clue">"Tahun berapa kita liburan bareng sekeluarga dan kamu nyebur ke selokan?"</p>
+            <input type="text" id="ans-2" placeholder="Masukkan tahun..." autocomplete="off">
+            <br>
+            <button onclick="checkAnswer(2, '2015')">UNLOCK</button>
+            <p id="err-2" class="error-msg">Jawaban salah. Masa lupa memori paling memalukan?</p>
+        </div>
+
+        <div id="level-3" class="level">
+            <h2>Gembok #3: Kunci Terakhir</h2>
+            <p class="clue">"Siapa nama adik laki-laki paling keren dan paling jago ngoding sedunia?"</p>
+            <input type="text" id="ans-3" placeholder="Tulis namanya..." autocomplete="off">
+            <br>
+            <button onclick="checkAnswer(3, 'afdhi')">DECRYPT MESSAGE</button>
+            <p id="err-3" class="error-msg">Hmm... yakin bukan itu namanya?</p>
+        </div>
+
+        <div id="final-letter">
+            <h2>>>> AKSES DITERIMA <<<</h2>
+            <p><strong>Selamat Ulang Tahun, Teteh! 🎉</strong></p>
+            <p>Akhirnya berhasil juga mecahin sandinya. Nggak sia-sia jadi kakak dari seorang *detective* handal hahaha.</p>
+            <p>Lewat pesan rahasia ini, aku cuma mau bilang: semangat terus di Okayama! Walaupun jaraknya jauh banget, doa dari rumah selalu nyampe ke sana tanpa *delay*.</p>
+            <p>Semoga di umur yang baru ini, Teteh makin sehat, makin sukses, dan semua yang lagi diperjuangin di Jepang bisa berjalan lancar. Kalau capek, istirahat. Jangan lupa dengerin lagu-lagu ini biar berasa lagi di rumah.</p>
+            <p>Cepat pulang, kita sekeluarga kangen!</p>
+            <p><em>- Dari adikmu yang paling keren.</em></p>
+
+            <div class="music-box">
+                <h3 style="text-align: center; margin-top: 0;">🎵 Decrypted Audio Files</h3>
+                <iframe style="border-radius:12px; margin-bottom: 10px;" src="https://open.spotify.com/embed/track/2fE97dG3uN2B7x50p58r3X?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/30A4vF51VvB4q7gMvD6W1w?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
-
-            <div class="sidebar">
-                <h3>Sekilas Info</h3>
-                <p>Dilaporkan bahwa seorang adik di Indonesia rela begadang ngoding HTML demi merilis edisi spesial koran ini. Sumber terpercaya menyebutkan bahwa hadiah utamanya menyusul setelah gajian.</p>
-                
-                <h3>Cuaca Hari Ini</h3>
-                <p><strong>Okayama:</strong> Cerah, dengan peluang 100% dipenuhi rasa bahagia.<br>
-                <strong>Indonesia:</strong> Hujan rindu skala sedang hingga lebat.</p>
-
-                <div class="music-corner">
-                    <h4>🎵 Playlist Nostalgia</h4>
-                    <p style="font-size: 0.85em; text-align: center; margin-top:-10px;">Lagu yang harus diputar sambil baca koran ini:</p>
-                    <ul class="song-list">
-                        <li><strong>1. Ray'a</strong> — Amr Diab</li>
-                        <li><strong>2. Sepanjang Hidup</strong> — Maher Zain</li>
-                    </ul>
-                    <p style="font-size: 0.8em; margin-bottom: 0; text-align: center;"><em>*Scan kode Spotify di hatimu untuk mendengarkan.</em></p>
-                </div>
-            </div>
         </div>
+
     </div>
 
+    <script>
+        function checkAnswer(level, correctAnswer) {
+            // Ambil inputan user dan ubah ke huruf kecil semua biar ga sensitif besar/kecil huruf
+            let inputId = 'ans-' + level;
+            let errorId = 'err-' + level;
+            let userAnswer = document.getElementById(inputId).value.toLowerCase().trim();
+
+            if (userAnswer === correctAnswer) {
+                // Sembunyikan error jika sebelumnya salah
+                document.getElementById(errorId).style.display = 'none';
+                
+                // Sembunyikan level sekarang
+                document.getElementById('level-' + level).classList.remove('active');
+                
+                // Munculin level berikutnya atau surat
+                let nextLevel = level + 1;
+                if (document.getElementById('level-' + nextLevel)) {
+                    document.getElementById('level-' + nextLevel).classList.add('active');
+                } else {
+                    // Kalau level udah habis, munculin surat dan hilangkan header awal
+                    document.getElementById('header-title').style.display = 'none';
+                    document.getElementById('final-letter').style.display = 'block';
+                    document.getElementById('final-letter').style.animation = 'fadeIn 2s ease-in-out';
+                }
+            } else {
+                // Munculin pesan error
+                document.getElementById(errorId).style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>
