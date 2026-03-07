@@ -3,161 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pameran Memori Teteh</title>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <title>Scrapbook Memori Teteh 🎀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            /* Warna background aesthetic cream ala kertas scrapbook */
-            background-color: #f4f1ea; 
-            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
-            font-family: 'Quicksand', sans-serif;
+            /* Background kertas grid pastel ala Korean Journal */
+            background-color: #fffafb;
+            background-image: 
+                linear-gradient(#ffe6ea 1.5px, transparent 1.5px),
+                linear-gradient(90deg, #ffe6ea 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            font-family: 'Nunito', sans-serif;
+            color: #555;
             margin: 0;
             padding: 40px 20px;
-            color: #333;
+            overflow-x: hidden;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 50px;
+            position: relative;
         }
 
         .header h1 {
-            font-family: 'Caveat', cursive;
-            font-size: 4em;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 3.5em;
+            color: #ff8fab;
             margin: 0;
-            color: #2c3e50;
+            text-shadow: 2px 2px 0px #fff, 4px 4px 0px #ffe6ea;
+            letter-spacing: 2px;
         }
 
         .header p {
-            font-size: 1.2em;
-            color: #7f8c8d;
-            margin-top: 5px;
+            font-size: 1.1em;
+            color: #a5a5a5;
+            background: #fff;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px dashed #ffb3c6;
+            margin-top: 10px;
         }
 
-        /* Container Galeri Polaroid */
+        /* Container Galeri */
         .gallery {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 30px;
-            max-width: 1100px;
+            gap: 40px;
+            max-width: 1000px;
             margin: 0 auto;
+            padding: 20px;
         }
 
-        /* Styling Kartu Polaroid */
+        /* Styling Polaroid */
         .polaroid {
             background: #fff;
-            padding: 15px 15px 50px 15px; /* Padding bawah lebih besar untuk caption */
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            width: 220px;
-            cursor: pointer;
+            padding: 12px 12px 40px 12px;
+            border-radius: 4px;
+            box-shadow: 2px 6px 15px rgba(255, 143, 171, 0.15);
+            width: 200px;
             position: relative;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
         }
 
-        /* Bikin posisi polaroid miring-miring natural */
-        .polaroid:nth-child(even) { transform: rotate(4deg); }
-        .polaroid:nth-child(odd) { transform: rotate(-3deg); }
-        .polaroid:nth-child(3n) { transform: rotate(2deg); }
-        .polaroid:nth-child(4n) { transform: rotate(-4deg); }
+        /* Rotasi natural */
+        .polaroid:nth-child(1) { transform: rotate(-5deg); margin-top: 20px;}
+        .polaroid:nth-child(2) { transform: rotate(3deg); }
+        .polaroid:nth-child(3) { transform: rotate(-2deg); margin-top: 30px;}
+        .polaroid:nth-child(4) { transform: rotate(4deg); }
+        .polaroid:nth-child(5) { transform: rotate(-4deg); margin-top: -10px;}
 
-        /* Efek saat foto di-hover / disentuh */
         .polaroid:hover {
-            transform: scale(1.1) rotate(0deg);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: scale(1.08) rotate(0deg) translateY(-10px);
+            box-shadow: 5px 15px 25px rgba(255, 143, 171, 0.3);
             z-index: 10;
         }
 
         .polaroid img {
             width: 100%;
-            height: 220px;
+            height: 200px;
             object-fit: cover;
-            filter: sepia(15%); /* Kasih sedikit filter vintage */
+            border-radius: 2px;
         }
 
         .caption {
-            font-family: 'Caveat', cursive;
-            font-size: 1.8em;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.5em;
             text-align: center;
-            margin-top: 15px;
-            color: #2c3e50;
+            margin-top: 10px;
+            color: #4a4a4a;
         }
 
-        /* Bagian Surat di Bawah */
-        .letter-container {
-            max-width: 800px;
+        /* Selotip Washi Tape */
+        .washi-tape {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            width: 90px;
+            height: 28px;
+            background-color: rgba(255, 182, 193, 0.6); /* Warna selotip pastel pink */
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 5;
+            backdrop-filter: blur(2px);
+        }
+        
+        /* Variasi warna selotip */
+        .polaroid:nth-child(even) .washi-tape { background-color: rgba(173, 216, 230, 0.6); transform: translateX(-50%) rotate(3deg); } /* Baby blue */
+        .polaroid:nth-child(3n) .washi-tape { background-color: rgba(255, 239, 184, 0.7); transform: translateX(-50%) rotate(-4deg); } /* Soft yellow */
+
+        /* Stiker-stiker lucu pakai Emoji & CSS */
+        .sticker {
+            position: absolute;
+            font-size: 2em;
+            z-index: 6;
+            filter: drop-shadow(2px 2px 1px rgba(0,0,0,0.1));
+            pointer-events: none; /* Biar ga ganggu hover foto */
+        }
+        
+        .st-1 { bottom: 10px; right: -15px; transform: rotate(15deg); }
+        .st-2 { top: -20px; left: -20px; transform: rotate(-10deg); }
+        .st-3 { bottom: 30px; left: -15px; font-size: 1.5em; }
+
+        /* Container Surat ala Binder Notebook */
+        .notebook {
+            max-width: 700px;
             margin: 80px auto 40px auto;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            line-height: 1.8;
-            font-size: 1.1em;
+            background: #fff;
+            border-radius: 0 15px 15px 0;
+            box-shadow: 8px 8px 20px rgba(255, 182, 193, 0.2);
+            border-left: 35px solid #ffb3c6; /* Pinggiran binder */
+            padding: 40px 40px 40px 30px;
+            position: relative;
+            /* Efek garis-garis buku tulis */
+            background-image: repeating-linear-gradient(transparent, transparent 31px, #f4f4f4 31px, #f4f4f4 32px);
+            line-height: 32px;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.3em;
+            color: #444;
         }
 
-        .letter-container h2 {
+        /* Lubang-lubang binder */
+        .binder-holes {
+            position: absolute;
+            top: 20px;
+            bottom: 20px;
+            left: -25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .hole {
+            width: 15px;
+            height: 15px;
+            background: #fffafb;
+            border-radius: 50%;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .notebook h2 {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            color: #ff8fab;
+            margin-top: -10px;
+            margin-bottom: 20px;
             text-align: center;
-            font-family: 'Caveat', cursive;
-            font-size: 3em;
-            margin-top: 0;
-            color: #e74c3c;
+            background: #fff;
+            display: inline-block;
+            padding: 0 15px;
         }
 
         .music-player {
-            margin-top: 40px;
+            margin-top: 30px;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px dashed #ffc2d1;
+        }
+        
+        .music-player p {
+            margin: 0;
+            font-size: 0.8em;
+            text-align: center;
+            color: #ff8fab;
+            line-height: normal;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Sebuah Pameran Kecil</h1>
-        <p>Ribuan kilometer dari Purwokerto ke Okayama, tapi memori ini rasanya baru kemarin.</p>
+        <h1>✨ Teteh's Digital Diary ✨</h1>
+        <p>From Purwokerto to Okayama with love 💌</p>
     </div>
 
     <div class="gallery">
         
         <div class="polaroid">
-            <img src="link_foto_1.jpg" alt="Foto">
+            <div class="washi-tape"></div>
+            <img src="https://via.placeholder.com/200?text=Foto+Teteh+1" alt="Foto">
             <div class="caption">Muka nyebelin 😆</div>
+            <div class="sticker st-1">🌷</div>
         </div>
 
         <div class="polaroid">
-            <img src="link_foto_2.jpg" alt="Foto">
+            <div class="washi-tape"></div>
+            <img src="https://via.placeholder.com/200?text=Foto+Teteh+2" alt="Foto">
             <div class="caption">Zaman masih piyik</div>
+            <div class="sticker st-2">🎀</div>
         </div>
 
         <div class="polaroid">
-            <img src="link_foto_3.jpg" alt="Foto">
+            <div class="washi-tape"></div>
+            <img src="https://via.placeholder.com/200?text=Foto+Teteh+3" alt="Foto">
             <div class="caption">Gaya andalan Teteh</div>
+            <div class="sticker st-1">☁️</div>
         </div>
 
         <div class="polaroid">
-            <img src="link_foto_4.jpg" alt="Foto">
-            <div class="caption">Liburan bareng</div>
+            <div class="washi-tape"></div>
+            <img src="https://via.placeholder.com/200?text=Foto+Teteh+4" alt="Foto">
+            <div class="caption">Liburan bareng 🏖️</div>
+            <div class="sticker st-3">🧸</div>
         </div>
 
         <div class="polaroid">
-            <img src="link_foto_5.jpg" alt="Foto">
-            <div class="caption">Formasi lengkap!</div>
+            <div class="washi-tape"></div>
+            <img src="https://via.placeholder.com/200?text=Foto+Teteh+5" alt="Foto">
+            <div class="caption">Miss you! ❤️</div>
+            <div class="sticker st-2">✨</div>
         </div>
 
+    </div>
+
+    <div class="notebook">
+        <div class="binder-holes">
+            <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+            <div class="hole"></div><div class="hole"></div><div class="hole"></div>
         </div>
 
-    <div class="letter-container">
-        <h2>Selamat Ulang Tahun, Teteh!</h2>
-        <p>Sengaja aku bikin galeri kecil ini karena aku tahu Teteh suka banget foto. Dari sekian banyak hasil jepretan yang Teteh punya, mungkin foto-foto di atas ini kualitasnya nggak seberapa atau malah blur, tapi buatku memorinya yang paling mahal.</p>
+        <div style="text-align: center;"><h2>Dear Teteh, Happy Birthday! 🎂</h2></div>
         
-        <p>Semoga di umur yang baru ini, Teteh makin sehat, bahagia terus, dan dilancarkan semua urusan kerjanya di Jepang. Jaga kesehatan, jangan sampai telat makan, dan tetap jadi sosok inspiratif buat aku.</p>
+        Sengaja aku bikin galeri kecil ini soalnya aku tahu Teteh suka banget foto ala-ala aesthetic begini hihi.<br><br>
         
-        <p>Walaupun sekarang kita kepisah jauh banget, ingat ya kalau rumah selalu nungguin Teteh pulang. Sambil baca ini, coba <i>play</i> lagu di bawah ya, khusus aku masukin biar Teteh berasa lagi kumpul bareng kita di rumah.</p>
+        Semoga di umur yang baru ini, Teteh makin sehat, bahagia terus, dan dilancarkan semua urusan kerjanya di Jepang sana. Jaga kesehatan ya, jangan sampai telat makan, dan tetap jadi sosok inspiratif buat adiknya yang jago ngoding ini 😎.<br><br>
+        
+        Walaupun sekarang kita kepisah jarak yang jauh banget, ingat ya kalau rumah selalu nungguin Teteh pulang. Sambil baca ini, coba play lagu di bawah ya, khusus aku masukin biar Teteh berasa lagi kumpul bareng kita.<br><br>
+        
+        Cepat pulang ya! 💖
 
         <div class="music-player">
-            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/xyz" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/abc" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <p>🎶 Playlist Nostalgia 🎶</p>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/30wxtoVz6l73R4LdJq9iQh?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4jD9vG5O0V9t0Jz2oJ4r4z?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </div>
     </div>
 
