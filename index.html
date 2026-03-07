@@ -58,39 +58,37 @@
             50% { opacity: 0.3; box-shadow: none; }
         }
 
-        /* WADAH KERTAS (ANIMASI KELUAR & GOYANG) */
+        /* WADAH KERTAS (ANIMASI KELUAR - SWAY DIHAPUS) */
         .paper-container {
             width: 85%;
             max-width: 360px; /* Agak lebih kecil dari printer biar masuk akal */
             height: 0;
             overflow: hidden;
-            transition: height 8s cubic-bezier(0.25, 0.1, 0.25, 1); /* Efek narik kertas lebih smooth */
+            transition: height 8.5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Efek narik kertas lebih smooth */
             position: relative;
             z-index: 5;
             transform-origin: top center;
-            /* Efek kertas sedikit melambai saat keluar */
-            animation: sway 3s ease-in-out infinite alternate;
+            /* GOYANG-GOYANG HILANG DI SINI */
         }
 
-        @keyframes sway {
-            0% { transform: perspective(800px) rotateX(2deg) rotateY(-1deg); }
-            100% { transform: perspective(800px) rotateX(0deg) rotateY(1deg); }
-        }
-
-        /* FISIK KERTAS STRUK */
+        /* FISIK KERTAS STRUK - DENGAN TEKSTUR KUSUT */
         .receipt {
-            background-color: #f4f1e1; /* Kertas thermal kusam yang lebih aesthetic */
+            background-color: #f2eee0; /* Warna thermal kusam dasar */
             width: 100%;
             padding: 25px 25px 50px 25px;
             color: #1a1a1a;
             font-size: 1.15rem;
             position: relative;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            /* Texture Noise & Garis lipatan halus */
+            /* --- TEKSTUR KERTAS KUSUT --- */
             background-image: 
+                /* Layer 1: Tekstur Kertas Remas (Crumpled Paper) */
+                url("https://www.transparenttextures.com/patterns/creased-paper.png"),
+                /* Layer 2: Noise halus (biar ga flat) */
                 url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"),
-                linear-gradient(rgba(0,0,0,0) 95%, rgba(0,0,0,0.02) 100%);
-            background-size: auto, 100% 30px;
+                /* Layer 3: Bayangan lipatan kusam halus di seluruh kertas */
+                repeating-linear-gradient(rgba(0,0,0,0) 0%, rgba(0,0,0,0) 95%, rgba(0,0,0,0.02) 100%);
+            background-size: cover, auto, 100% 30px;
             /* Efek tinta luntur/panas khas thermal */
             text-shadow: 0px 0px 0.5px rgba(0,0,0,0.4);
         }
@@ -101,7 +99,7 @@
             position: absolute;
             bottom: -12px; left: 0;
             width: 100%; height: 12px;
-            background: #f4f1e1;
+            background: #f2eee0;
             background-image: linear-gradient(135deg, transparent 50%, #1a1a1a 50%), 
                               linear-gradient(225deg, transparent 50%, #1a1a1a 50%);
             background-size: 16px 16px;
@@ -213,7 +211,7 @@
             100% { top: 55px; }
         }
 
-        /* --- TOMBOL CETAK CHUNKY --- */
+        /* --- TOMBOL CETAK CHUNKY RETRO --- */
         .btn-print {
             margin-top: 50px;
             background: #ff4757; /* Ubah ke merah retro biar pop-out */
@@ -368,9 +366,8 @@
                 }
             }, 50); 
 
-            // Animasi Kertas Keluar
+            // Animasi Kertas Keluar pelan-pelan (PUSINGNYA ILANG!)
             const h = content.scrollHeight;
-            paper.style.transition = "height 8.5s cubic-bezier(0.25, 0.1, 0.25, 1)"; 
             paper.style.height = h + "px";
 
             // Tombol Disable
