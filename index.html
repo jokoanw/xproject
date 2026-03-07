@@ -3,215 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rasi Bintang Memori</title>
+    <title>The Sibling Chronicles - Edisi Spesial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        body, html {
+        body {
+            background-color: #f4efe6; /* Warna kertas koran vintage */
+            color: #1a1a1a;
+            font-family: 'Lora', serif;
             margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom, #020111 10%, #20124d 50%, #000022 100%);
-            color: white;
-            overflow: hidden;
-        }
-
-        /* Tampilan Intro */
-        #intro {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: #020111;
-            z-index: 100;
-            transition: opacity 1.5s ease;
-        }
-
-        h1 {
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-align: center;
             padding: 20px;
+            display: flex;
+            justify-content: center;
         }
 
-        button {
-            padding: 12px 24px;
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-            border-radius: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
+        .newspaper-container {
+            max-width: 900px;
+            background-color: #fdfbf7;
+            padding: 40px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
         }
 
-        button:hover {
-            background: white;
-            color: #020111;
-        }
-
-        /* Langit & Bintang */
-        #sky {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: none; /* Disembunyikan sampai intro selesai */
-        }
-
-        .star-bg {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle infinite ease-in-out;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
-        }
-
-        /* Bintang Memori (Yang bisa diklik) */
-        .memory-star {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: #fffacd;
-            border-radius: 50%;
-            box-shadow: 0 0 15px 5px rgba(255, 250, 205, 0.6);
-            cursor: pointer;
-            animation: pulse 2s infinite;
-            z-index: 10;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 15px 5px rgba(255, 250, 205, 0.6); }
-            50% { transform: scale(1.3); box-shadow: 0 0 25px 10px rgba(255, 250, 205, 0.8); }
-            100% { transform: scale(1); box-shadow: 0 0 15px 5px rgba(255, 250, 205, 0.6); }
-        }
-
-        /* Pop-up Glassmorphism */
-        .modal {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px;
+        /* Bagian Header / Nama Koran */
+        .header {
             text-align: center;
-            z-index: 50;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .modal img {
-            width: 100%;
-            border-radius: 10px;
+            border-bottom: 3px solid #1a1a1a;
+            padding-bottom: 15px;
             margin-bottom: 15px;
         }
 
-        .close-btn {
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .sub-header {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
+            padding: 8px 0;
+            font-family: Arial, sans-serif;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Layout Grid untuk Artikel */
+        .content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
             margin-top: 20px;
-            padding: 8px 16px;
-            border: 1px solid white;
+        }
+
+        /* Artikel Utama */
+        .main-article {
+            text-align: justify;
+        }
+
+        .headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8em;
+            line-height: 1.1;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .author {
+            font-style: italic;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: #444;
+        }
+
+        .article-text {
+            column-count: 2; /* Teks dibagi 2 kolom seperti koran */
+            column-gap: 20px;
+            line-height: 1.6;
+        }
+
+        .main-img {
+            width: 100%;
+            height: auto;
+            filter: grayscale(100%) contrast(120%); /* Efek foto koran jadul */
+            border-bottom: 2px solid #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        /* Kolom Samping (Sidebar) */
+        .sidebar {
+            border-left: 2px solid #1a1a1a;
+            padding-left: 20px;
+        }
+
+        .sidebar h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5em;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+
+        .sidebar p {
+            font-size: 0.9em;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        /* Kolom Musik / Rekomendasi */
+        .music-corner {
+            margin-top: 30px;
+            background-color: #ebe4d8;
+            padding: 15px;
+            border: 1px dashed #1a1a1a;
+        }
+
+        .music-corner h4 {
+            margin-top: 0;
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+        }
+
+        .song-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        .song-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        /* Responsif untuk layar HP */
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                border-left: none;
+                border-top: 2px solid #1a1a1a;
+                padding-left: 0;
+                padding-top: 20px;
+            }
+            .article-text {
+                column-count: 1;
+            }
+            .header h1 {
+                font-size: 3em;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div id="intro">
-        <h1>Langit Okayama mungkin berbeda,<br>tapi rasi bintang kita tetap sama.</h1>
-        <button onclick="startJourney()">Mulai Menjelajah</button>
-    </div>
+    <div class="newspaper-container">
+        <div class="header">
+            <h1>The Sibling Post</h1>
+        </div>
+        <div class="sub-header">
+            <span>Volume 01, Edisi Ulang Tahun</span>
+            <span>Okayama, Jepang — Maret 2026</span>
+            <span>Rp Gratis (Dibayar Pakai Doa)</span>
+        </div>
 
-    <div id="sky">
-        <div class="memory-star" style="top: 20%; left: 30%;" onclick="openModal('modal1')"></div>
-        <div class="memory-star" style="top: 50%; left: 50%;" onclick="openModal('modal2')"></div>
-        <div class="memory-star" style="top: 30%; left: 70%;" onclick="openModal('modal3')"></div>
-        <div class="memory-star" style="top: 75%; left: 40%;" onclick="openModal('modal4')"></div>
-    </div>
-
-    <div id="modal1" class="modal">
-        <h3>Memori #1: Masa Kecil</h3>
-        <p>Inget nggak pas kita dulu ngelakuin hal konyol ini? Waktu itu...</p>
-        <img src="https://via.placeholder.com/300x200?text=Foto+Masa+Kecil" alt="Foto">
-        <button class="close-btn" onclick="closeModal('modal1')">Tutup</button>
-    </div>
-
-    <div id="modal2" class="modal">
-        <h3>Memori #2: Nostalgia Playlist</h3>
-        <p>Lagu yang bikin otomatis inget rumah.</p>
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1P17dC1amhFzptugyAO7Il?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        <button class="close-btn" onclick="closeModal('modal2')">Tutup</button>
-    </div>
-
-    <div id="modal3" class="modal">
-        <h3>Memori #3: Inside Joke</h3>
-        <p>Cuma kita berdua yang paham lucunya di mana kalau ngomongin hal ini hahaha.</p>
-        <button class="close-btn" onclick="closeModal('modal3')">Tutup</button>
-    </div>
-
-    <div id="modal4" class="modal">
-        <h3>Selamat Ulang Tahun, Teteh! 🎉</h3>
-        <p>Semoga sehat selalu dan lancar semua urusannya di sana. Walaupun jaraknya jauh, semoga surat kecil ini bisa ngobatin kangen. Cepat pulang ya!</p>
-        <button class="close-btn" onclick="closeModal('modal4')">Tutup</button>
-    </div>
-
-    <script>
-        // Fungsi buat bikin bintang-bintang kecil sebagai background
-        function createStars() {
-            const sky = document.getElementById('sky');
-            for (let i = 0; i < 150; i++) {
-                let star = document.createElement('div');
-                star.className = 'star-bg';
+        <div class="content">
+            <div class="main-article">
+                <h2 class="headline">HARI INI DALAM SEJARAH: SOSOK INSPIRATIF BERTAMBAH USIA DI NEGERI SAKURA</h2>
+                <img src="https://via.placeholder.com/800x400?text=Foto+Teteh+(Otomatis+Hitam+Putih)" alt="Foto Utama" class="main-img">
                 
-                // Ukuran random
-                let size = Math.random() * 3 + 'px';
-                star.style.width = size;
-                star.style.height = size;
+                <div class="author">Ditulis oleh: Afdhi Abdilah | Biro Indonesia</div>
                 
-                // Posisi random
-                star.style.top = Math.random() * 100 + '%';
-                star.style.left = Math.random() * 100 + '%';
+                <div class="article-text">
+                    <p><strong>OKAYAMA</strong> — Hari ini menandai momen penting. Jarak dari Indonesia ke Jepang mungkin memisahkan secara fisik, tapi halaman depan koran ini khusus dicetak untuk merayakan bertambahnya usia sosok luar biasa yang biasa dipanggil Teteh.</p>
+                    
+                    <p>Tulisan ini bukan sekadar berita biasa, melainkan sebuah pengingat bahwa di rumah, ada orang-orang yang selalu mendoakan kelancaran setiap langkahmu di sana.</p>
+                    
+                    <p>Mungkin di sana udaranya lagi dingin, atau mungkin tugas dan kerjaan lagi numpuk. Tapi, luangkan waktu sebentar hari ini buat apresiasi diri sendiri karena udah berhasil bertahan dan berjuang sejauh ini.</p>
+                    
+                    <p>Selamat ulang tahun! Semoga kesehatan selalu menyertai, rezeki makin lancar, dan semua yang lagi diusahakan di Okayama sana bisa berbuah manis. Jangan lupa makan enak hari ini, dan cepat pulang kalau udah waktunya libur!</p>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <h3>Sekilas Info</h3>
+                <p>Dilaporkan bahwa seorang adik di Indonesia rela begadang ngoding HTML demi merilis edisi spesial koran ini. Sumber terpercaya menyebutkan bahwa hadiah utamanya menyusul setelah gajian.</p>
                 
-                // Durasi kedap-kedip random
-                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                
-                sky.appendChild(star);
-            }
-        }
+                <h3>Cuaca Hari Ini</h3>
+                <p><strong>Okayama:</strong> Cerah, dengan peluang 100% dipenuhi rasa bahagia.<br>
+                <strong>Indonesia:</strong> Hujan rindu skala sedang hingga lebat.</p>
 
-        // Fungsi mulai (hilangin intro, munculin langit)
-        function startJourney() {
-            document.getElementById('intro').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('intro').style.display = 'none';
-                document.getElementById('sky').style.display = 'block';
-                createStars();
-            }, 1500);
-        }
+                <div class="music-corner">
+                    <h4>🎵 Playlist Nostalgia</h4>
+                    <p style="font-size: 0.85em; text-align: center; margin-top:-10px;">Lagu yang harus diputar sambil baca koran ini:</p>
+                    <ul class="song-list">
+                        <li><strong>1. Ray'a</strong> — Amr Diab</li>
+                        <li><strong>2. Sepanjang Hidup</strong> — Maher Zain</li>
+                    </ul>
+                    <p style="font-size: 0.8em; margin-bottom: 0; text-align: center;"><em>*Scan kode Spotify di hatimu untuk mendengarkan.</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // Fungsi buka dan tutup pop-up memori
-        function openModal(id) {
-            // Tutup semua modal lain dulu
-            let modals = document.querySelectorAll('.modal');
-            modals.forEach(m => m.style.display = 'none');
-            
-            // Buka modal yang diklik
-            document.getElementById(id).style.display = 'block';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-    </script>
 </body>
 </html>
