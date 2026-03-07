@@ -3,318 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Vintage Scrapbook Teteh</title>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Special+Elite&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <title>10/10 Vintage Scrapbook Teteh</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Permanent+Marker&family=Special+Elite&family=Caveat:wght@700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
     
     <style>
         * { box-sizing: border-box; }
 
         body {
-            background-color: #121212;
-            background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
-            margin: 0;
-            padding: 40px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #2c2c2c;
+            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            margin: 0; padding: 40px 20px;
+            display: flex; justify-content: center; align-items: center;
             min-height: 100vh;
-            font-family: sans-serif;
             overflow-x: hidden;
+            font-family: sans-serif;
         }
 
-        /* --- BUKU JURNAL UTAMA --- */
-        .scrapbook-book {
+        /* --- BUKU JURNAL --- */
+        .scrapbook {
             display: flex;
-            width: 100%;
-            max-width: 1100px;
-            aspect-ratio: 16 / 10; /* Proporsi buku lebar */
-            background-color: #901a1e; /* Maroon gelap */
-            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 80px rgba(0,0,0,0.5);
+            width: 100%; max-width: 1100px;
+            background: #a31d24; /* Maroon vintage */
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 100px rgba(0,0,0,0.6);
             border-radius: 8px;
             position: relative;
         }
 
-        /* Halaman Kiri & Kanan (Desktop pakai absolute positioning biar bebas numpuk) */
         .page {
-            width: 50%;
-            height: 100%;
+            width: 50%; min-height: 750px;
             position: relative;
-            overflow: hidden; /* Biar rapi di tepi buku */
+            overflow: hidden;
         }
-
+        
         .page.left {
-            border-right: 2px solid rgba(0, 0, 0, 0.6);
-            box-shadow: inset -20px 0 30px rgba(0,0,0,0.3);
+            border-right: 3px solid rgba(0,0,0,0.7);
+            box-shadow: inset -20px 0 30px rgba(0,0,0,0.4);
             border-radius: 8px 0 0 8px;
         }
         
         .page.right {
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: inset 20px 0 30px rgba(0,0,0,0.3);
+            border-left: 1px solid rgba(255,255,255,0.05);
+            box-shadow: inset 20px 0 30px rgba(0,0,0,0.4);
             border-radius: 0 8px 8px 0;
         }
 
-        /* --- PRINTILAN DEKORASI --- */
-        
-        /* 1. Kertas Sobek (Ransom & Torn Paper) */
-        .torn-paper {
+        /* --- LAYER 1: BACKGROUND FILLERS (Menghilangkan hampa) --- */
+        .news-scrap {
             position: absolute;
-            background: #e8e6d9;
-            padding: 15px 25px;
-            font-family: 'Special Elite', cursive;
-            color: #222;
-            box-shadow: 3px 4px 10px rgba(0,0,0,0.4);
-            /* Efek kertas sobek kasar */
-            clip-path: polygon(0% 0%, 100% 5%, 98% 100%, 2% 95%);
-            z-index: 10;
+            background: #e6e2d3;
+            color: #333; font-family: 'Courier Prime', serif; font-size: 10px; line-height: 1.2;
+            padding: 10px; opacity: 0.7; mix-blend-mode: multiply;
+            overflow: hidden; text-align: justify;
+            z-index: 1;
         }
-
-        /* 2. Prangko & Cap Pos */
-        .stamp-container {
+        .coffee-stain {
             position: absolute;
-            top: 5%; left: 5%;
-            transform: rotate(-15deg);
-            z-index: 15;
-        }
-        .stamp {
-            width: 60px; height: 75px;
-            background: #fff;
-            padding: 4px;
-            border: 2px dashed #ccc;
-            box-shadow: 1px 1px 5px rgba(0,0,0,0.3);
-        }
-        .stamp img { width: 100%; height: 100%; object-fit: cover; filter: sepia(50%); }
-        .postmark {
-            position: absolute;
-            top: -10px; left: 20px;
-            width: 70px; height: 70px;
-            border: 2px solid rgba(0,0,0,0.5);
+            width: 120px; height: 120px;
+            border: 4px solid rgba(92, 58, 33, 0.4);
             border-radius: 50%;
-            color: rgba(0,0,0,0.5);
-            font-family: 'Courier Prime', monospace;
-            font-size: 8px;
-            text-align: center;
-            display: flex; justify-content: center; align-items: center;
-            transform: rotate(25deg);
+            opacity: 0.6; mix-blend-mode: multiply;
+            z-index: 2;
         }
 
-        /* 3. Bunga Kering */
-        .dried-flower {
+        /* --- LAYER 2: ELEMEN DEKORASI & FOTO --- */
+        .cluster {
             position: absolute;
-            font-size: 60px;
-            filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.5)) grayscale(30%) sepia(40%);
-            z-index: 20;
+            display: flex; flex-direction: column; align-items: center;
         }
 
-        /* 4. Polaroid dengan beragam rotasi */
+        /* Washi Tapes */
+        .tape {
+            position: absolute;
+            width: 70px; height: 22px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            z-index: 10; backdrop-filter: blur(2px);
+        }
+        .tape.masking { background: rgba(245, 245, 220, 0.8); }
+        .tape.grid { background: repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(0,0,0,0.2) 5px, rgba(0,0,0,0.2) 6px), rgba(255,255,255,0.6); }
+
+        /* Polaroid */
         .photo {
-            position: absolute;
-            background: #fdfdfd;
-            padding: 8px 8px 30px 8px;
-            box-shadow: 4px 6px 15px rgba(0,0,0,0.5);
-            transition: transform 0.3s;
-            z-index: 25;
+            background: #fff; padding: 10px 10px 35px 10px;
+            box-shadow: 3px 5px 15px rgba(0,0,0,0.5);
+            position: relative; z-index: 5;
+            transition: transform 0.3s ease;
         }
-        .photo:hover { z-index: 100 !important; transform: scale(1.15) rotate(0deg) !important; }
-        .photo img { width: 100%; height: 100%; object-fit: cover; filter: sepia(30%) contrast(110%); }
-        .photo-caption { font-family: 'Caveat', cursive; font-size: 20px; text-align: center; margin-top: 5px; color: #111;}
+        .photo:hover { z-index: 50; transform: scale(1.1) !important; }
+        .photo img { width: 100%; height: 100%; object-fit: cover; filter: sepia(20%) contrast(110%); }
+        .caption { font-family: 'Nanum Pen Script', cursive; font-size: 24px; text-align: center; margin-top: 5px; color: #222; }
 
-        /* 5. Kertas Bon (Receiptify) & Amplop */
-        .receipt-container {
-            position: absolute;
-            top: 25%; right: 5%;
-            width: 200px;
-            transform: rotate(8deg);
-            z-index: 30;
+        /* Kertas Sobek & Surat */
+        .ransom {
+            background: #f4f1ea; padding: 8px 15px;
+            font-family: 'Special Elite', cursive; font-size: 16px;
+            box-shadow: 2px 3px 8px rgba(0,0,0,0.4);
+            border: 1px solid #ccc; z-index: 6;
         }
+
+        /* Receiptify */
         .receipt {
-            background: #fcfcfc;
-            padding: 15px 15px 40px 15px;
-            font-family: 'Courier Prime', monospace;
-            font-size: 11px; color: #333;
-            box-shadow: 2px 5px 10px rgba(0,0,0,0.3);
+            background: #fdfdfd; padding: 15px 15px 30px 15px;
+            font-family: 'Courier Prime', monospace; font-size: 11px;
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.4); z-index: 6;
             clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 95% 98%, 90% 100%, 85% 98%, 80% 100%, 75% 98%, 70% 100%, 65% 98%, 60% 100%, 55% 98%, 50% 100%, 45% 98%, 40% 100%, 35% 98%, 30% 100%, 25% 98%, 20% 100%, 15% 98%, 10% 100%, 5% 98%, 0% 100%);
         }
 
-        /* 6. Film Strip */
-        .film-strip {
-            position: absolute;
-            background: #111;
-            padding: 5px;
-            display: flex; gap: 4px;
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.6);
-            border-top: 4px dashed #ddd; border-bottom: 4px dashed #ddd;
-            z-index: 20;
-        }
-        .film-strip img { width: 55px; height: 55px; object-fit: cover; filter: grayscale(100%); }
-
-        /* 7. Washi Tape (Selotip) */
-        .tape {
-            position: absolute;
-            width: 60px; height: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            z-index: 40;
-            backdrop-filter: blur(2px);
-        }
-        .tape-clear { background: rgba(255,255,255,0.4); }
-        .tape-pattern { background: repeating-linear-gradient(45deg, rgba(200,50,50,0.5), rgba(200,50,50,0.5) 10px, rgba(255,255,255,0.5) 10px, rgba(255,255,255,0.5) 20px); }
-
-        /* 8. Tiket Konser */
+        /* Tiket */
         .ticket {
-            position: absolute;
-            background: #e6b35e; /* Warna tiket vintage */
-            color: #222;
-            padding: 10px; width: 280px;
-            font-family: 'Special Elite', cursive;
-            display: flex;
-            box-shadow: 4px 4px 12px rgba(0,0,0,0.5);
-            z-index: 35;
+            background: #3a86ff; color: #fff; padding: 10px;
+            font-family: 'Special Elite', cursive; display: flex;
+            box-shadow: 3px 4px 12px rgba(0,0,0,0.5); z-index: 6;
         }
 
-        /* 9. Teks Spidol (Marker) & Doily */
-        .marker {
-            position: absolute;
-            font-family: 'Permanent Marker', cursive;
-            font-size: 24px;
-            z-index: 50; /* Z-INDEX TINGGI BIAR GA KETIMPA */
-        }
-        .doily {
-            position: absolute;
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, #fff 40%, transparent 41%), repeating-radial-gradient(#fff 0%, #fff 5%, transparent 6%, transparent 10%);
-            border-radius: 50%; opacity: 0.6; z-index: 5;
-        }
+        /* Tulisan Marker & Stiker */
+        .marker { font-family: 'Permanent Marker', cursive; position: absolute; z-index: 15; }
+        .sticker { position: absolute; font-size: 20px; z-index: 12; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5)); }
 
-        /* 10. Spotify Embed - Nyaru jadi stiker */
-        .spotify-wrapper {
-            position: absolute;
-            width: 260px;
-            z-index: 45;
-            box-shadow: 4px 4px 15px rgba(0,0,0,0.6);
-            border: 5px solid #fff; /* Kasih border putih ala polaroid */
-            background: #fff;
-        }
-
-        /* ================= RESPONSIVE UNTUK HP ================= */
+        /* ================= RESPONSIVE LAYOUT ================= */
         @media (max-width: 800px) {
-            body { padding: 10px; align-items: flex-start; }
-            .scrapbook-book {
-                flex-direction: column; aspect-ratio: auto; min-height: 1800px;
-            }
-            .page { width: 100%; height: auto; min-height: 900px; overflow: visible; }
-            .page.left { border-right: none; border-bottom: 2px solid rgba(0, 0, 0, 0.6); border-radius: 8px 8px 0 0; }
-            .page.right { border-left: none; border-radius: 0 0 8px 8px; }
-
-            /* Ubah ke posisi yang aman di HP */
-            .torn-paper { top: 2%; left: 5%; font-size: 14px; transform: rotate(-2deg); }
-            .stamp-container { top: 2%; right: 5%; left: auto; transform: rotate(10deg); }
-            .dried-flower { top: 15%; left: 5%; font-size: 50px; transform: rotate(-30deg); }
-            .receipt-container { top: 15%; right: 5%; width: 180px; transform: rotate(5deg); }
-            
-            /* Foto-foto di halaman kiri HP */
-            .photo { width: 150px; }
-            .photo-1 { top: 50%; left: 5%; transform: rotate(-8deg); }
-            .photo-2 { top: 60%; right: 5%; transform: rotate(12deg); }
-            .marker.miss-you { top: 85%; right: 10%; font-size: 28px; } /* AMAN DI HP */
-
-            /* Halaman Kanan HP */
-            .doily { top: 10%; left: -20%; width: 200px; height: 200px; }
-            .film-strip { top: 5%; right: 5%; transform: rotate(15deg); }
-            .photo-3 { top: 20%; left: 10%; transform: rotate(-5deg); }
-            .spotify-wrapper { top: 45%; left: 10%; transform: rotate(2deg); width: 80%; }
-            .ticket { top: 75%; left: 5%; width: 90%; transform: rotate(-2deg); }
-            .marker.bday { top: 90%; left: 5%; font-size: 26px; }
+            body { padding: 15px 5px; }
+            .scrapbook { flex-direction: column; }
+            .page { width: 100%; border: none !important; border-radius: 0 !important; }
+            .page.left { border-bottom: 3px solid rgba(0,0,0,0.7) !important; padding-bottom: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="scrapbook-book">
+    <div class="scrapbook">
         
         <div class="page left">
             
-            <div class="stamp-container">
-                <div class="stamp"><img src="https://via.placeholder.com/60?text=Jpn" alt="Stamp"></div>
-                <div class="postmark">OKAYAMA<br>MAR 2026</div>
+            <div class="news-scrap" style="top: -10px; left: -10px; width: 200px; height: 150px; transform: rotate(5deg);">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+            </div>
+            <div class="news-scrap" style="bottom: 100px; right: -20px; width: 250px; height: 180px; transform: rotate(-10deg);">
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+            </div>
+            <div class="coffee-stain" style="top: 40%; left: 10%;"></div>
+
+            <div class="cluster" style="top: 5%; left: 5%; transform: rotate(-4deg);">
+                <div class="ransom">GREETINGS FROM PURWOKERTO</div>
+                <div class="tape masking" style="top: -10px; left: 10px; transform: rotate(-5deg);"></div>
+                <div style="background: #fff; padding: 4px; border: 2px dashed #ccc; width: 60px; height: 70px; position: absolute; top: 40px; right: -20px; transform: rotate(15deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.4);">
+                    <img src="https://via.placeholder.com/50?text=JP" style="width: 100%; height: 100%; filter: sepia(40%);">
+                </div>
             </div>
 
-            <div class="torn-paper" style="top: 8%; left: 25%; font-size: 18px; transform: rotate(-4deg);">
-                GREETINGS FROM PURWOKERTO...
+            <div class="cluster" style="top: 15%; right: 10%; transform: rotate(6deg);">
+                <div class="photo" style="width: 160px; height: 180px;">
+                    <img src="https://via.placeholder.com/150?text=Foto+1" alt="Foto">
+                    <div class="caption">Zaman piyik</div>
+                </div>
+                <div class="tape grid" style="top: -10px; right: 20px; transform: rotate(15deg);"></div>
+                <div class="sticker" style="top: -15px; left: -15px; font-size: 30px;">📌</div>
             </div>
 
-            <div class="dried-flower" style="bottom: 10%; left: 10%; transform: rotate(-40deg);">🥀</div>
-            <div class="tape tape-clear" style="bottom: 15%; left: 12%; transform: rotate(-20deg);"></div>
-
-            <div class="photo photo-1" style="width: 180px; top: 35%; left: 15%; transform: rotate(-8deg);">
-                <div class="tape tape-pattern" style="top: -8px; left: 30%; transform: rotate(5deg);"></div>
-                <img src="https://via.placeholder.com/200?text=Foto+1" alt="Foto">
-                <div class="photo-caption">Zaman piyik</div>
-            </div>
-
-            <div class="receipt-container">
-                <div class="receipt">
-                    <h3 style="margin: 0 0 10px 0; border-bottom: 1px dashed #333; padding-bottom: 5px; text-align: center;">RECEIPTIFY</h3>
-                    <p style="text-align: center; font-size: 9px; margin-bottom: 10px;">ORDER #2026 - TETEH</p>
+            <div class="cluster" style="top: 40%; left: 8%; transform: rotate(-6deg);">
+                <div class="receipt" style="width: 180px;">
+                    <h3 style="margin: 0 0 5px 0; border-bottom: 1px dashed #333; text-align: center;">RECEIPTIFY</h3>
+                    <p style="font-size: 9px; text-align: center; margin-bottom: 10px;">ORDER #2026 - TETEH</p>
                     <ul style="list-style: none; padding: 0; margin: 0;">
                         <li style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Berantem</span> <span>2:30</span></li>
                         <li style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Liburan</span> <span>4:15</span></li>
                         <li style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Kangen</span> <span>∞</span></li>
                     </ul>
-                    <p style="text-align: center; margin-top: 15px; font-weight: bold;">PRICELESS</p>
+                    <p style="text-align: center; margin-top: 10px; font-weight: bold;">PRICELESS</p>
+                </div>
+                <div style="position: absolute; bottom: -20px; width: 220px; height: 80px; background: #e8dbc8; border: 1px solid #c9bca9; box-shadow: 0 -2px 10px rgba(0,0,0,0.2); z-index: 7;"></div>
+            </div>
+
+            <div class="cluster" style="bottom: 8%; right: 10%; transform: rotate(-5deg);">
+                <div class="photo" style="width: 140px; height: 150px; transform: rotate(12deg); margin-bottom: 15px;">
+                    <img src="https://via.placeholder.com/150?text=Square" alt="Foto">
+                </div>
+                <div class="marker" style="color: #fff; font-size: 26px; transform: rotate(-10deg); white-space: nowrap; margin-right: 40px;">
+                    Miss you! 🤍 <br> <span style="font-size: 14px; font-family: sans-serif;">(Cepat pulang)</span>
                 </div>
             </div>
 
-            <div class="photo photo-2" style="width: 130px; bottom: 20%; right: 25%; transform: rotate(15deg); padding-bottom: 8px;">
-                <div class="tape tape-clear" style="top: -8px; right: 10%; transform: rotate(-25deg);"></div>
-                <img src="https://via.placeholder.com/150?text=Square" alt="Foto">
-            </div>
+            <div class="sticker" style="top: 35%; right: 40%;">⭐</div>
+            <div class="sticker" style="bottom: 15%; left: 45%;">✨</div>
+            <div style="position: absolute; bottom: 25%; left: 5%; font-size: 50px; filter: grayscale(50%) sepia(50%); transform: rotate(-30deg); z-index: 10;">🥀</div>
 
-            <div class="marker miss-you" style="bottom: 5%; right: 10%; transform: rotate(-8deg); color: #fff;">
-                Miss you! 🤍 <br> <span style="font-size: 14px; font-family: sans-serif;">(Cepat pulang)</span>
-            </div>
-
-            <div class="marker" style="top: 25%; right: 35%; font-size: 30px; color: #ffd700;">★</div>
-            <div class="marker" style="bottom: 30%; left: 30%; font-size: 20px; color: #ffd700;">✦</div>
         </div>
 
         <div class="page right">
             
-            <div class="doily" style="top: 10%; right: -50px;"></div>
+            <div style="position: absolute; top: 5%; right: -10%; width: 280px; height: 280px; background: radial-gradient(circle, #fff 40%, transparent 41%), repeating-radial-gradient(#fff 0%, #fff 5%, transparent 6%, transparent 10%); border-radius: 50%; opacity: 0.5; z-index: 1;"></div>
+            <div class="coffee-stain" style="bottom: 15%; right: 20%; width: 80px; height: 80px; border-width: 3px;"></div>
 
-            <div class="film-strip" style="top: 10%; left: 10%; transform: rotate(-5deg);">
-                <img src="https://via.placeholder.com/60?text=A" alt="Film">
-                <img src="https://via.placeholder.com/60?text=B" alt="Film">
-                <img src="https://via.placeholder.com/60?text=C" alt="Film">
-                <div class="tape tape-clear" style="top: 20%; left: -20px; transform: rotate(85deg);"></div>
-            </div>
-
-            <div class="photo photo-3" style="width: 200px; top: 25%; right: 15%; transform: rotate(7deg);">
-                <div class="tape tape-pattern" style="top: -10px; right: 40%; transform: rotate(-5deg);"></div>
-                <img src="https://via.placeholder.com/200?text=Foto+Utama" alt="Foto">
-                <div class="photo-caption">Happy Birthday!</div>
-            </div>
-
-            <div class="spotify-wrapper" style="bottom: 35%; left: 8%; transform: rotate(-4deg);">
-                <div class="tape tape-clear" style="top: -10px; left: 10%; transform: rotate(15deg);"></div>
-                <iframe style="margin-bottom: -5px;" src="https://open.spotify.com/embed/track/2fE97dG3uN2B7x50p58r3X?utm_source=generator2" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                <iframe src="https://open.spotify.com/embed/track/2fE97dG3uN2B7x50p58r3X?utm_source=generator3" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-
-            <div class="ticket" style="bottom: 10%; right: 5%; transform: rotate(-6deg);">
-                <div style="flex: 3; border-right: 2px dashed #222; padding-right: 10px;">
-                    <h3 style="margin: 0; font-size: 16px;">FLIGHT TO OKAYAMA</h3>
-                    <p style="margin: 5px 0 0 0; font-size: 10px; font-family: sans-serif;">PASSENGER: TETEH <br> DATE: MAR 2026</p>
+            <div class="cluster" style="top: 8%; left: 8%; transform: rotate(3deg); width: 220px;">
+                <div class="tape masking" style="top: -10px; left: -10px; transform: rotate(-25deg); z-index: 15;"></div>
+                
+                <div style="background: #111; padding: 4px; display: flex; gap: 4px; box-shadow: 2px 2px 8px rgba(0,0,0,0.5); border-top: 3px dashed #ddd; border-bottom: 3px dashed #ddd; margin-bottom: 15px; transform: rotate(-5deg); z-index: 6;">
+                    <img src="https://via.placeholder.com/50?text=A" style="width: 50px; height: 50px; filter: grayscale(100%);">
+                    <img src="https://via.placeholder.com/50?text=B" style="width: 50px; height: 50px; filter: grayscale(100%);">
+                    <img src="https://via.placeholder.com/50?text=C" style="width: 50px; height: 50px; filter: grayscale(100%);">
                 </div>
-                <div style="flex: 1; text-align: center; font-size: 14px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                    ADMIT<br>ONE
+
+                <div style="background: #fff; padding: 5px; box-shadow: 2px 4px 10px rgba(0,0,0,0.5); width: 100%; transform: rotate(2deg); z-index: 6;">
+                    <iframe src="https://open.spotify.com/embed/track/2fE97dG3uN2B7x50p58r3X?utm_source=generator4" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    <iframe src="https://open.spotify.com/embed/track/2fE97dG3uN2B7x50p58r3X?utm_source=generator5" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="margin-top: 5px;"></iframe>
                 </div>
-                <div class="tape tape-clear" style="bottom: -5px; right: 10%; transform: rotate(-25deg);"></div>
             </div>
 
-            <div class="marker bday" style="top: 40%; left: 10%; transform: rotate(-15deg); color: #fff; text-shadow: 2px 2px 0 #000;">
-                Semoga lancar <br> kerjanya! ✨
+            <div class="cluster" style="top: 30%; right: 12%; transform: rotate(-7deg);">
+                <div class="tape grid" style="top: -10px; right: 30px; transform: rotate(-10deg);"></div>
+                <div class="photo" style="width: 200px; height: 220px;">
+                    <img src="https://via.placeholder.com/200?text=Foto+Utama" alt="Foto">
+                    <div class="caption">Happy Birthday!</div>
+                </div>
+                <div class="sticker" style="bottom: -10px; right: -10px; font-size: 30px; transform: rotate(15deg);">🎀</div>
             </div>
+
+            <div class="cluster" style="bottom: 8%; left: 8%; transform: rotate(-4deg); align-items: flex-start;">
+                <div class="ticket" style="width: 250px;">
+                    <div style="flex: 3; border-right: 2px dashed #fff; padding-right: 10px;">
+                        <h3 style="margin: 0; font-size: 14px;">FLIGHT TO OKAYAMA</h3>
+                        <p style="margin: 3px 0 0 0; font-size: 9px; font-family: sans-serif;">PASSENGER: TETEH <br> DATE: MAR 2026</p>
+                    </div>
+                    <div style="flex: 1; text-align: center; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold;">ADMIT<br>ONE</div>
+                </div>
+                <div class="marker" style="color: #fff; text-shadow: 2px 2px 0 #000; font-size: 24px; transform: rotate(-10deg); margin-top: 15px; margin-left: 20px;">
+                    Semoga lancar <br> kerjanya! ✨
+                </div>
+            </div>
+
+            <div class="ransom" style="position: absolute; top: 5%; right: 25%; font-size: 12px; transform: rotate(12deg); z-index: 5;">MEMORIES</div>
+            <div class="sticker" style="top: 25%; left: 45%;">⭐</div>
+            <div class="sticker" style="bottom: 40%; right: 35%;">📍</div>
 
         </div>
     </div>
