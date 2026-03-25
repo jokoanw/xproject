@@ -3,122 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPO BEM KM MIPA UNSOED</title>
+    <title>SIPO BEM - Portal Eksklusif</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8f9fa; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1a1a1a; }
         .serif { font-family: 'Playfair Display', serif; }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
-        .token-timer { transition: width 1s linear; }
+        .input-field { 
+            background: #f9f9f9; 
+            border: 1px solid #eeeeee; 
+            transition: all 0.3s ease;
+        }
+        .input-field:focus { 
+            background: #ffffff; 
+            border-color: #000000; 
+            outline: none; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .tab-active { background: #000000; color: #ffffff; }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-6 text-[#1a1a1a]">
+<body class="min-h-screen flex items-center justify-center p-6">
 
-    <div class="flex gap-6 mb-12 opacity-80">
-        <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-xs font-bold text-gray-500">[LOGO UNSOED]</div>
-        <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-xs font-bold text-gray-500">[LOGO BEM]</div>
-    </div>
-
-    <div class="max-w-md w-full glass rounded-[2rem] p-10 shadow-2xl shadow-gray-200/50">
-        
-        <header class="text-center mb-10">
-            <h1 class="serif text-3xl mb-2">Sistem Poin Organisasi</h1>
-            <p class="text-sm text-gray-400 tracking-widest uppercase">Portal Yudisium Eksklusif</p>
+    <div class="max-w-md w-full">
+        <header class="text-center mb-12">
+            <div class="flex justify-center gap-4 mb-6 opacity-20">
+                <div class="w-10 h-10 bg-black rounded-full"></div>
+                <div class="w-10 h-10 bg-black rounded-full"></div>
+            </div>
+            <h1 class="serif text-4xl mb-3 tracking-tight">SIPO Portal</h1>
+            <p class="text-[10px] tracking-[0.4em] uppercase text-gray-400">Universitas Jenderal Soedirman</p>
         </header>
 
-        <div class="flex bg-gray-100 p-1 rounded-2xl mb-8">
-            <button onclick="showGate('mahasiswa')" id="btn-mhs" class="flex-1 py-3 text-sm font-semibold rounded-xl bg-white shadow-sm transition-all">Mahasiswa</button>
-            <button onclick="showGate('pengurus')" id="btn-adm" class="flex-1 py-3 text-sm font-semibold text-gray-500 transition-all">Pengurus</button>
+        <div class="flex mb-10 border-b border-gray-100">
+            <button onclick="switchTab('mhs')" id="tab-mhs" class="flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-black transition-all">Mahasiswa</button>
+            <button onclick="switchTab('adm')" id="tab-adm" class="flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-300 transition-all">Pengurus</button>
         </div>
 
-        <div id="gate-mahasiswa" class="space-y-6">
-            <div class="space-y-2">
-                <label class="text-xs font-bold text-gray-500 uppercase ml-1">NIM Mahasiswa</label>
-                <input type="text" placeholder="K1C0..." class="w-full px-5 py-4 rounded-2xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all bg-gray-50/50">
+        <div id="section-mhs" class="space-y-8">
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Identitas Akademik</label>
+                    <input type="text" placeholder="Masukkan NIM (Contoh: K1C0...)" class="input-field w-full mt-2 px-6 py-4 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Token Akses (1 Menit)</label>
+                    <input type="password" maxlength="6" placeholder="••••••" class="input-field w-full mt-2 px-6 py-4 rounded-xl text-center text-2xl tracking-[0.8em]">
+                </div>
             </div>
+            <button class="w-full bg-black text-white py-5 rounded-xl text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl shadow-black/10">Verifikasi & Masuk</button>
+            <p class="text-[10px] text-center text-gray-400 leading-relaxed italic">"Token diperbarui secara berkala oleh PSDM BEM untuk keamanan data yudisium."</p>
+        </div>
+
+        <div id="section-adm" class="hidden space-y-8">
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">ID Pengurus</label>
+                    <input type="text" id="admin-user" placeholder="Username" class="input-field w-full mt-2 px-6 py-4 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Kata Sandi</label>
+                    <input type="password" id="admin-pass" placeholder="••••••••" class="input-field w-full mt-2 px-6 py-4 rounded-xl text-sm">
+                </div>
+            </div>
+            <button onclick="loginAdmin()" class="w-full bg-black text-white py-5 rounded-xl text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-2xl shadow-black/10">Otorisasi Admin</button>
             
-            <div class="space-y-2">
-                <div class="flex justify-between items-end ml-1">
-                    <label class="text-xs font-bold text-gray-500 uppercase">Akses Kode Aktif</label>
-                    <span id="timer-text" class="text-[10px] text-red-400 font-mono">Ganti dalam 60s</span>
-                </div>
-                <input type="password" id="input-token" placeholder="••••••" class="w-full px-5 py-4 rounded-2xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all bg-gray-50/50 text-center text-2xl tracking-[0.5em]">
-                <div class="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-                    <div id="progress-bar" class="h-full bg-black token-timer" style="width: 100%"></div>
-                </div>
+            <div class="p-4 bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                <p class="text-[9px] text-gray-400 uppercase tracking-wider mb-1">Catatan Developer:</p>
+                <p class="text-[10px] text-gray-500">User: <strong>admin_bem</strong><br>Pass: <strong>unsoed2026</strong></p>
             </div>
-
-            <button class="w-full bg-[#1a1a1a] text-white py-5 rounded-2xl font-semibold hover:bg-black transition-all shadow-xl shadow-black/10">Masuk Dashboard</button>
-            <p class="text-[10px] text-center text-gray-400 px-6">Dapatkan kode akses dari pengurus PSDM BEM atau melalui mading digital fakultas.</p>
-        </div>
-
-        <div id="gate-pengurus" class="hidden space-y-6">
-            <div class="space-y-2">
-                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Username Pengurus</label>
-                <input type="text" placeholder="admin_psdm" class="w-full px-5 py-4 rounded-2xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-black/5 bg-gray-50/50">
-            </div>
-            <div class="space-y-2">
-                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Kata Sandi</label>
-                <input type="password" placeholder="••••••••" class="w-full px-5 py-4 rounded-2xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-black/5 bg-gray-50/50">
-            </div>
-            <button class="w-full bg-[#1a1a1a] text-white py-5 rounded-2xl font-semibold hover:bg-black transition-all shadow-xl shadow-black/10">Otorisasi Admin</button>
         </div>
 
     </div>
 
-    <footer class="mt-12 text-center text-gray-400">
-        <p class="text-xs uppercase tracking-widest">&copy; 2026 BEM FMIPA UNSOED — Digital Administrative System</p>
-    </footer>
-
     <script>
-        // Fungsi pindah Gate (Pintu Masuk)
-        function showGate(type) {
-            const mhs = document.getElementById('gate-mahasiswa');
-            const adm = document.getElementById('gate-pengurus');
-            const btnMhs = document.getElementById('btn-mhs');
-            const btnAdm = document.getElementById('btn-adm');
+        function switchTab(type) {
+            const secMhs = document.getElementById('section-mhs');
+            const secAdm = document.getElementById('section-adm');
+            const tabMhs = document.getElementById('tab-mhs');
+            const tabAdm = document.getElementById('tab-adm');
 
-            if(type === 'mahasiswa') {
-                mhs.classList.remove('hidden');
-                adm.classList.add('hidden');
-                btnMhs.className = "flex-1 py-3 text-sm font-semibold rounded-xl bg-white shadow-sm transition-all";
-                btnAdm.className = "flex-1 py-3 text-sm font-semibold text-gray-500 transition-all";
+            if(type === 'mhs') {
+                secMhs.classList.remove('hidden');
+                secAdm.classList.add('hidden');
+                tabMhs.className = "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-black transition-all";
+                tabAdm.className = "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-300 transition-all";
             } else {
-                adm.classList.remove('hidden');
-                mhs.classList.add('hidden');
-                btnAdm.className = "flex-1 py-3 text-sm font-semibold rounded-xl bg-white shadow-sm transition-all";
-                btnMhs.className = "flex-1 py-3 text-sm font-semibold text-gray-500 transition-all";
+                secAdm.classList.remove('hidden');
+                secMhs.classList.add('hidden');
+                tabAdm.className = "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-black transition-all";
+                tabMhs.className = "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-300 transition-all";
             }
         }
 
-        // Simulasi Rolling Token 1 Menit (60 Detik)
-        let timeLeft = 60;
-        const progressBar = document.getElementById('progress-bar');
-        const timerText = document.getElementById('timer-text');
+        function loginAdmin() {
+            const user = document.getElementById('admin-user').value;
+            const pass = document.getElementById('admin-pass').value;
 
-        setInterval(() => {
-            if (timeLeft > 0) {
-                timeLeft--;
+            // Kredensial untuk kamu coba
+            if(user === "admin_bem" && pass === "unsoed2026") {
+                alert("Otorisasi Berhasil. Mengalihkan ke Dashboard PSDM...");
             } else {
-                timeLeft = 60; // Reset ke 1 menit
-                // Di dunia nyata, di sini akan memanggil API untuk token baru
-                console.log("Token diperbarui!"); 
+                alert("Akses Ditolak. Username atau Password salah.");
             }
-            
-            const percentage = (timeLeft / 60) * 100;
-            progressBar.style.width = percentage + '%';
-            timerText.innerText = `Ganti dalam ${timeLeft}s`;
-            
-            // Perubahan warna saat kritis (di bawah 10 detik)
-            if(timeLeft <= 10) {
-                progressBar.classList.remove('bg-black');
-                progressBar.classList.add('bg-red-500');
-            } else {
-                progressBar.classList.add('bg-black');
-                progressBar.classList.remove('bg-red-500');
-            }
-        }, 1000);
+        }
     </script>
 </body>
 </html>
