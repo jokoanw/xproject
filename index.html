@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPO BEM - Portal Eksklusif</title>
+    <title>SIPO BEM KM MIPA UNSOED - 2026 </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -12,7 +12,7 @@
         .serif { font-family: 'Playfair Display', serif; }
         .input-field { background: #f9f9f9; border: 1px solid #eeeeee; transition: all 0.3s ease; }
         .input-field:focus { background: #ffffff; border-color: #000000; outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
@@ -89,10 +89,47 @@
                 </div>
 
                 <div class="space-y-4 border-t border-gray-100 pt-6">
+                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">⚙️ Pengaturan Ketentuan</h3>
+                    <div class="flex gap-3">
+                        <div class="w-1/2">
+                            <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Passing Grade</label>
+                            <input type="number" id="set-passing" value="120" class="input-field w-full mt-1 px-3 py-2 rounded-lg text-xs font-bold">
+                        </div>
+                        <div class="w-1/2">
+                            <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Default Angkatan</label>
+                            <input type="number" id="set-angkatan" value="2025" class="input-field w-full mt-1 px-3 py-2 rounded-lg text-xs font-bold">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Manajemen Bobot Poin</label>
+                        <div class="flex gap-2"><input type="text" value="Tingkat Nasional" class="input-field w-2/3 px-3 py-2 rounded-lg text-xs"><input type="number" value="50" class="input-field w-1/3 px-3 py-2 rounded-lg text-xs font-bold text-center"></div>
+                        <div class="flex gap-2"><input type="text" value="Tingkat Universitas" class="input-field w-2/3 px-3 py-2 rounded-lg text-xs"><input type="number" value="30" class="input-field w-1/3 px-3 py-2 rounded-lg text-xs font-bold text-center"></div>
+                    </div>
+                    <button onclick="simpanPengaturan()" class="w-full border-2 border-black text-black py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-black hover:text-white transition-all">Simpan Perubahan</button>
+                </div>
+
+                <div class="space-y-4 border-t border-gray-100 pt-6">
                     <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Antrian Verifikasi</h3>
                     <div id="list-antrian" class="space-y-3 max-h-48 overflow-y-auto pr-2">
                         </div>
                 </div>
+
+                <div class="space-y-3 border-t border-gray-100 pt-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">🎓 Rekapitulasi Yudisium</h3>
+                        <select class="text-[9px] border border-gray-200 rounded p-1 font-bold text-gray-500 bg-white">
+                            <option>Periode 1 (Maret)</option>
+                            <option>Periode 2 (Juni)</option>
+                            <option>Periode 3 (September)</option>
+                            <option>Periode 4 (Desember)</option>
+                        </select>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 text-xs">
+                        <p class="text-[10px] text-gray-400 italic text-center mb-2">Pilih periode untuk melihat mahasiswa yang telah mencapai Passing Grade.</p>
+                        <button onclick="alert('Mengunduh rekapitulasi ke format Excel (.xlsx)...')" class="w-full border border-gray-300 text-gray-500 py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Unduh Rekap Periode Ini</button>
+                    </div>
+                </div>
+
                 <button onclick="location.reload()" class="w-full text-xs text-red-400 font-bold uppercase mt-2">Keluar Panel</button>
             </div>
         </div>
@@ -112,7 +149,7 @@
             <div class="bg-black text-white p-6 rounded-2xl shadow-xl shadow-black/20">
                 <div class="flex justify-between items-end mb-2">
                     <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Progress Poin</p>
-                    <p class="text-[10px] text-gray-400">Target: 120</p>
+                    <p class="text-[10px] text-gray-400">Target: <span id="target-grade">120</span></p>
                 </div>
                 <div class="flex items-end gap-2 mb-4">
                     <span class="text-4xl font-bold tracking-tighter" id="user-poin-display">0</span>
@@ -122,6 +159,10 @@
                     <div class="bg-white h-1.5 rounded-full transition-all duration-1000" style="width: 0%" id="progress-bar"></div>
                 </div>
             </div>
+
+            <button id="btn-download-cert" onclick="downloadOfficialCert()" class="hidden w-full border-2 border-black text-black py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-md">
+                🎉 Unduh Sertifikat Kelulusan SIPO
+            </button>
 
             <div class="space-y-3 border-t border-gray-100 pt-4">
                 <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Riwayat Dokumen</h3>
@@ -135,7 +176,10 @@
                         <input type="text" id="input-nama-kegiatan" placeholder="Nama Kegiatan (Cth: LKMM)" class="input-field w-full px-4 py-2 rounded-lg text-xs font-medium">
                         <div class="flex gap-2">
                             <select id="input-kategori-kegiatan" class="input-field w-1/2 px-2 py-2 rounded-lg font-bold uppercase text-[9px] text-gray-500">
-                                <option value="">Kategori...</option><option value="50">Nasional (50)</option><option value="30">Univ (30)</option><option value="20">Fakultas (20)</option>
+                                <option value="">Kategori...</option>
+                                <option value="50">Nasional (50)</option>
+                                <option value="30">Univ (30)</option>
+                                <option value="20">Fakultas (20)</option>
                             </select>
                             <input type="url" placeholder="Link G-Drive" class="input-field w-1/2 px-3 py-2 rounded-lg text-xs">
                         </div>
@@ -154,12 +198,11 @@
         let currentUserNIM = "";
 
         function initDatabase() {
-            if(!localStorage.getItem("sipo_users")) {
-                localStorage.setItem("sipo_users", JSON.stringify({})); // Kosong di awal!
-            }
-            if(!localStorage.getItem("sipo_antrian")) {
-                localStorage.setItem("sipo_antrian", JSON.stringify([]));
-            }
+            if(!localStorage.getItem("sipo_users")) localStorage.setItem("sipo_users", JSON.stringify({}));
+            if(!localStorage.getItem("sipo_antrian")) localStorage.setItem("sipo_antrian", JSON.stringify([]));
+            if(!localStorage.getItem("sipo_passing_grade")) localStorage.setItem("sipo_passing_grade", "120");
+
+            document.getElementById('set-passing').value = localStorage.getItem("sipo_passing_grade");
         }
 
         function switchTab(type) {
@@ -170,7 +213,7 @@
         }
 
         // ==========================================
-        // LOGIKA MAHASISWA (CEK IDENTITAS)
+        // LOGIKA MAHASISWA
         // ==========================================
         function loginMahasiswa() {
             const nim = document.getElementById('mhs-nim').value.trim().toUpperCase();
@@ -179,12 +222,9 @@
             currentUserNIM = nim;
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
 
-            // Cek apakah NIM ini sudah ada datanya (Nama, Prodi, Angkatan)
             if (sipoUsers[nim] && sipoUsers[nim].nama) {
-                // DATA SUDAH ADA -> Langsung ke Dashboard
                 bukaDashboardMahasiswa(nim);
             } else {
-                // DATA BELUM ADA -> Minta lengkapi profil
                 document.getElementById('section-mhs').classList.add('hidden');
                 document.getElementById('main-header').classList.add('hidden');
                 document.getElementById('section-lengkapi-profil').classList.remove('hidden');
@@ -199,19 +239,9 @@
             if(!nama || !prodi || !angkatan) { alert("Semua kolom identitas wajib diisi!"); return; }
 
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
-            
-            // Simpan profil baru beserta struktur poin dan history yang masih 0/kosong
-            sipoUsers[currentUserNIM] = {
-                nama: nama,
-                prodi: prodi,
-                angkatan: angkatan,
-                poin: 0,
-                history: []
-            };
-            
+            sipoUsers[currentUserNIM] = { nama: nama, prodi: prodi, angkatan: angkatan, poin: 0, history: [] };
             localStorage.setItem("sipo_users", JSON.stringify(sipoUsers));
             
-            // Sembunyikan form profil, masuk ke dashboard
             document.getElementById('section-lengkapi-profil').classList.add('hidden');
             bukaDashboardMahasiswa(currentUserNIM);
         }
@@ -219,21 +249,29 @@
         function bukaDashboardMahasiswa(nim) {
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
             const userData = sipoUsers[nim];
+            const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
 
             document.getElementById('section-mhs').classList.add('hidden');
             document.getElementById('main-header').classList.add('hidden');
             document.getElementById('dashboard-mhs').classList.remove('hidden');
             
-            // Tampilkan Data
             document.getElementById('user-nim-display').innerText = nim;
             document.getElementById('user-nama-display').innerText = userData.nama;
             document.getElementById('user-prodi-display').innerText = userData.prodi;
             document.getElementById('user-angkatan-display').innerText = userData.angkatan;
             
+            document.getElementById('target-grade').innerText = passingGrade;
             document.getElementById('user-poin-display').innerText = userData.poin;
             
-            let persentase = (userData.poin / 120) * 100;
+            let persentase = (userData.poin / passingGrade) * 100;
             document.getElementById('progress-bar').style.width = Math.min(persentase, 100) + '%';
+
+            // LOGIKA SERTIFIKAT MUNCUL JIKA LULUS
+            if (userData.poin >= passingGrade) {
+                document.getElementById('btn-download-cert').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-download-cert').classList.add('hidden');
+            }
 
             renderRiwayatMahasiswa(userData.history);
         }
@@ -246,26 +284,18 @@
 
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
             const idAjuan = Date.now().toString(); 
-            const ajuanBaru = { 
-                id: idAjuan, 
-                nim: currentUserNIM, 
-                nama: sipoUsers[currentUserNIM].nama, 
-                kegiatan: namaKegiatan, 
-                poin: parseInt(bobot), 
-                status: "Menunggu" 
-            };
+            const ajuanBaru = { id: idAjuan, nim: currentUserNIM, nama: sipoUsers[currentUserNIM].nama, kegiatan: namaKegiatan, poin: parseInt(bobot), status: "Menunggu" };
 
-            // Simpan ke Riwayat Mahasiswa
             sipoUsers[currentUserNIM].history.unshift(ajuanBaru);
             localStorage.setItem("sipo_users", JSON.stringify(sipoUsers));
 
-            // Simpan ke Antrian Admin
             const antrian = JSON.parse(localStorage.getItem("sipo_antrian"));
             antrian.push(ajuanBaru);
             localStorage.setItem("sipo_antrian", JSON.stringify(antrian));
 
             alert("Dokumen berhasil diajukan! Silakan tunggu verifikasi admin.");
             document.getElementById('input-nama-kegiatan').value = '';
+            document.getElementById('input-kategori-kegiatan').value = '';
             renderRiwayatMahasiswa(sipoUsers[currentUserNIM].history);
         }
 
@@ -290,6 +320,26 @@
             });
         }
 
+        // FUNGSI DOWNLOAD SERTIFIKAT YANG HILANG (DIKEMBALIKAN!)
+        function downloadOfficialCert() {
+            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
+            const nama = sipoUsers[currentUserNIM].nama;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+            
+            doc.setFontSize(28); doc.text("SERTIFIKAT KELULUSAN SIPO", 148, 60, null, null, "center");
+            doc.setFontSize(14); doc.text("Badan Eksekutif Mahasiswa - Universitas Jenderal Soedirman", 148, 70, null, null, "center");
+            doc.setFontSize(20); doc.text("Diberikan kepada:", 148, 100, null, null, "center");
+            doc.setFontSize(26); doc.text(`${nama} (${currentUserNIM})`, 148, 115, null, null, "center");
+            doc.setFontSize(14); doc.text("Telah memenuhi seluruh persyaratan sistem poin kemahasiswaan (SIPO)", 148, 140, null, null, "center");
+            doc.text("dan dinyatakan LULUS YUDISIUM.", 148, 148, null, null, "center");
+            doc.setFontSize(10); doc.text("Purwokerto, " + new Date().toLocaleDateString('id-ID'), 200, 175);
+            doc.text("Ketua PSDM BEM Unsoed", 200, 195);
+            
+            doc.save(`Sertifikat_SIPO_${currentUserNIM}.pdf`);
+        }
+
         // ==========================================
         // LOGIKA ADMIN
         // ==========================================
@@ -306,6 +356,12 @@
             document.getElementById('display-token').innerText = Math.floor(100000 + Math.random() * 900000).toString();
         }
 
+        function simpanPengaturan() {
+            const newGrade = document.getElementById('set-passing').value;
+            localStorage.setItem("sipo_passing_grade", newGrade);
+            alert("Pengaturan Ketentuan Sistem berhasil disimpan! Passing Grade: " + newGrade);
+        }
+
         function renderAntrianAdmin() {
             const antrian = JSON.parse(localStorage.getItem("sipo_antrian"));
             const container = document.getElementById('list-antrian');
@@ -318,7 +374,7 @@
 
             antrian.forEach(item => {
                 container.innerHTML += `
-                    <div class="p-4 bg-white border border-gray-200 rounded-xl space-y-3 shadow-sm text-xs">
+                    <div class="p-4 bg-white border border-gray-200 rounded-xl space-y-3 shadow-sm text-xs transition-all">
                         <div class="flex justify-between font-bold"><span>${item.nim} - ${item.nama}</span><span class="text-green-600">+${item.poin}</span></div>
                         <p class="text-gray-500 text-[10px]">${item.kegiatan}</p>
                         <div class="flex gap-2 mt-2">
