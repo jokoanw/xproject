@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPO BEM KM MIPA UNSOED - 2026 </title>
+    <title>SIPO BEM - Portal Eksklusif</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -16,6 +16,7 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+        .accordion-btn { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-50/30" onload="initDatabase()">
@@ -42,7 +43,7 @@
             <div class="space-y-3">
                 <div>
                     <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Nomor Induk Mahasiswa</label>
-                    <input type="text" id="mhs-nim" placeholder="Masukkan NIM (Cth: K1C0...)" class="input-field w-full mt-1 px-5 py-4 rounded-xl text-sm uppercase">
+                    <input type="text" id="mhs-nim" placeholder="Cth: K1C025036" class="input-field w-full mt-1 px-5 py-4 rounded-xl text-sm uppercase">
                 </div>
                 <div>
                     <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Token Akses (Aktif)</label>
@@ -58,7 +59,7 @@
                 <p class="text-[10px] text-gray-400 mt-2">NIM Anda baru pertama kali mengakses sistem ini.</p>
             </div>
             <div class="space-y-3">
-                <input type="text" id="reg-nama" placeholder="Nama Lengkap" class="input-field w-full px-5 py-3 rounded-xl text-sm">
+                <input type="text" id="reg-nama" placeholder="Nama Lengkap (Cth: Afdhi Abdilah)" class="input-field w-full px-5 py-3 rounded-xl text-sm">
                 <div class="flex gap-2">
                     <select id="reg-prodi" class="input-field w-2/3 px-4 py-3 rounded-xl text-sm text-gray-600">
                         <option value="">Pilih Program Studi...</option>
@@ -69,7 +70,7 @@
                     <input type="number" id="reg-angkatan" placeholder="Angkatan" class="input-field w-1/3 px-4 py-3 rounded-xl text-sm">
                 </div>
             </div>
-            <button onclick="simpanProfilBaru()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-black/10">Simpan & Masuk Dashboard</button>
+            <button onclick="simpanProfilBaru()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-black/10">Simpan & Masuk</button>
         </div>
 
         <div id="section-adm" class="hidden">
@@ -81,56 +82,84 @@
                 <button onclick="loginAdmin()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all">Otorisasi Sistem</button>
             </div>
 
-            <div id="admin-dashboard-mini" class="hidden space-y-8">
-                <div class="text-center bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                    <h2 class="serif text-xl">Generator Token</h2>
-                    <h1 id="display-token" class="text-4xl font-bold tracking-[0.2em] my-3">882912</h1>
-                    <button onclick="generateToken()" class="w-full bg-black text-white py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest">Buat Token Baru</button>
+            <div id="admin-dashboard-mini" class="hidden space-y-4">
+                
+                <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 text-center mb-4">
+                    <h1 id="display-token" class="text-3xl font-bold tracking-[0.2em] mb-2">882912</h1>
+                    <button onclick="generateToken()" class="w-full bg-black text-white py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest">Generate Token</button>
                 </div>
 
-                <div class="space-y-4 border-t border-gray-100 pt-6">
-                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">⚙️ Pengaturan Ketentuan</h3>
-                    <div class="flex gap-3">
-                        <div class="w-1/2">
-                            <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Passing Grade</label>
-                            <input type="number" id="set-passing" value="120" class="input-field w-full mt-1 px-3 py-2 rounded-lg text-xs font-bold">
+                <div class="border border-gray-100 rounded-xl overflow-hidden">
+                    <button onclick="toggleAdminMenu('menu-pengaturan')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
+                        ⚙️ Pengaturan Ketentuan <span id="icon-menu-pengaturan">▼</span>
+                    </button>
+                    <div id="menu-pengaturan" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
+                        <div class="flex gap-3">
+                            <div class="w-1/2">
+                                <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Passing Grade</label>
+                                <input type="number" id="set-passing" class="input-field w-full mt-1 px-3 py-2 rounded-lg text-xs font-bold">
+                            </div>
+                            <div class="w-1/2">
+                                <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Default Angkatan</label>
+                                <input type="number" id="set-angkatan" class="input-field w-full mt-1 px-3 py-2 rounded-lg text-xs font-bold">
+                            </div>
                         </div>
-                        <div class="w-1/2">
-                            <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Default Angkatan</label>
-                            <input type="number" id="set-angkatan" value="2025" class="input-field w-full mt-1 px-3 py-2 rounded-lg text-xs font-bold">
+                        <button onclick="simpanPengaturan()" class="w-full border border-black text-black py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Simpan Ketentuan</button>
+                    </div>
+                </div>
+
+                <div class="border border-gray-100 rounded-xl overflow-hidden">
+                    <button onclick="toggleAdminMenu('menu-bobot')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
+                        📊 Manajemen Bobot Poin <span id="icon-menu-bobot">▼</span>
+                    </button>
+                    <div id="menu-bobot" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
+                        <div id="list-kategori-admin" class="space-y-2 max-h-32 overflow-y-auto"></div>
+                        <div class="flex gap-2 border-t border-gray-100 pt-3">
+                            <input type="text" id="add-kategori-nama" placeholder="Kategori Baru" class="input-field w-2/3 px-3 py-2 rounded-lg text-[10px]">
+                            <input type="number" id="add-kategori-bobot" placeholder="Poin" class="input-field w-1/3 px-3 py-2 rounded-lg text-[10px] text-center">
                         </div>
+                        <button onclick="tambahKategori()" class="w-full bg-black text-white py-2 rounded-lg text-[9px] font-bold uppercase hover:opacity-90">Tambah Kategori</button>
                     </div>
-                    <div class="space-y-2">
-                        <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Manajemen Bobot Poin</label>
-                        <div class="flex gap-2"><input type="text" value="Tingkat Nasional" class="input-field w-2/3 px-3 py-2 rounded-lg text-xs"><input type="number" value="50" class="input-field w-1/3 px-3 py-2 rounded-lg text-xs font-bold text-center"></div>
-                        <div class="flex gap-2"><input type="text" value="Tingkat Universitas" class="input-field w-2/3 px-3 py-2 rounded-lg text-xs"><input type="number" value="30" class="input-field w-1/3 px-3 py-2 rounded-lg text-xs font-bold text-center"></div>
-                    </div>
-                    <button onclick="simpanPengaturan()" class="w-full border-2 border-black text-black py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-black hover:text-white transition-all">Simpan Perubahan</button>
                 </div>
 
-                <div class="space-y-4 border-t border-gray-100 pt-6">
-                    <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Antrian Verifikasi</h3>
-                    <div id="list-antrian" class="space-y-3 max-h-48 overflow-y-auto pr-2">
+                <div class="border border-gray-100 rounded-xl overflow-hidden">
+                    <button onclick="toggleAdminMenu('menu-periode')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
+                        📅 Manajemen Periode Yudisium <span id="icon-menu-periode">▼</span>
+                    </button>
+                    <div id="menu-periode" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
+                        <div id="list-periode-admin" class="space-y-2 max-h-32 overflow-y-auto"></div>
+                        <div class="space-y-2 border-t border-gray-100 pt-3">
+                            <input type="text" id="add-periode-nama" placeholder="Nama Periode (Cth: Gelombang 1 2026)" class="input-field w-full px-3 py-2 rounded-lg text-[10px]">
+                            <div class="flex gap-2">
+                                <div class="w-1/2"><label class="text-[8px] text-gray-400 uppercase">Mulai</label><input type="date" id="add-periode-start" class="input-field w-full px-2 py-1 rounded-lg text-[10px]"></div>
+                                <div class="w-1/2"><label class="text-[8px] text-gray-400 uppercase">Selesai</label><input type="date" id="add-periode-end" class="input-field w-full px-2 py-1 rounded-lg text-[10px]"></div>
+                            </div>
                         </div>
-                </div>
-
-                <div class="space-y-3 border-t border-gray-100 pt-6">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">🎓 Rekapitulasi Yudisium</h3>
-                        <select class="text-[9px] border border-gray-200 rounded p-1 font-bold text-gray-500 bg-white">
-                            <option>Periode 1 (Maret)</option>
-                            <option>Periode 2 (Juni)</option>
-                            <option>Periode 3 (September)</option>
-                            <option>Periode 4 (Desember)</option>
-                        </select>
-                    </div>
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 text-xs">
-                        <p class="text-[10px] text-gray-400 italic text-center mb-2">Pilih periode untuk melihat mahasiswa yang telah mencapai Passing Grade.</p>
-                        <button onclick="alert('Mengunduh rekapitulasi ke format Excel (.xlsx)...')" class="w-full border border-gray-300 text-gray-500 py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Unduh Rekap Periode Ini</button>
+                        <button onclick="tambahPeriode()" class="w-full bg-black text-white py-2 rounded-lg text-[9px] font-bold uppercase hover:opacity-90">Tambah Periode</button>
                     </div>
                 </div>
 
-                <button onclick="location.reload()" class="w-full text-xs text-red-400 font-bold uppercase mt-2">Keluar Panel</button>
+                <div class="border border-gray-100 rounded-xl overflow-hidden">
+                    <button onclick="toggleAdminMenu('menu-antrian')" class="accordion-btn w-full bg-black text-white px-4 py-3 text-[10px] font-bold uppercase tracking-widest">
+                        ✅ Antrian Verifikasi <span id="icon-menu-antrian">▼</span>
+                    </button>
+                    <div id="menu-antrian" class="hidden p-4 bg-white border-t border-gray-100">
+                        <div id="list-antrian" class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="border border-gray-100 rounded-xl overflow-hidden">
+                    <button onclick="toggleAdminMenu('menu-rekap')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
+                        🎓 Rekapitulasi & Download <span id="icon-menu-rekap">▼</span>
+                    </button>
+                    <div id="menu-rekap" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
+                        <select id="select-rekap-periode" class="input-field w-full px-3 py-2 rounded-lg text-[10px] font-bold text-gray-600"></select>
+                        <button onclick="alert('Mengunduh rekapitulasi ke Excel (.xlsx)...')" class="w-full border border-gray-300 text-gray-500 py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Unduh Rekap Periode</button>
+                    </div>
+                </div>
+
+                <button onclick="location.reload()" class="w-full text-[10px] text-red-400 font-bold uppercase mt-4">Keluar Panel Admin</button>
             </div>
         </div>
 
@@ -165,24 +194,17 @@
             </button>
 
             <div class="space-y-3 border-t border-gray-100 pt-4">
-                <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Riwayat Dokumen</h3>
-                <div id="riwayat-sipo" class="space-y-2 max-h-40 overflow-y-auto pr-1">
-                    </div>
+                <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Riwayat Dokumen (Real-Time)</h3>
+                <div id="riwayat-sipo" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
             </div>
 
             <div class="pt-2 space-y-3">
-                <div id="tempat-sertifikat" class="space-y-3">
-                    <div class="sertifikat-item p-4 border border-gray-200 rounded-xl space-y-3 bg-gray-50">
-                        <input type="text" id="input-nama-kegiatan" placeholder="Nama Kegiatan (Cth: LKMM)" class="input-field w-full px-4 py-2 rounded-lg text-xs font-medium">
-                        <div class="flex gap-2">
-                            <select id="input-kategori-kegiatan" class="input-field w-1/2 px-2 py-2 rounded-lg font-bold uppercase text-[9px] text-gray-500">
-                                <option value="">Kategori...</option>
-                                <option value="50">Nasional (50)</option>
-                                <option value="30">Univ (30)</option>
-                                <option value="20">Fakultas (20)</option>
+                <div class="sertifikat-item p-4 border border-gray-200 rounded-xl space-y-3 bg-gray-50">
+                    <input type="text" id="input-nama-kegiatan" placeholder="Nama Kegiatan (Cth: LKMM)" class="input-field w-full px-4 py-2 rounded-lg text-xs font-medium">
+                    <div class="flex gap-2">
+                        <select id="input-kategori-kegiatan" class="input-field w-1/2 px-2 py-2 rounded-lg font-bold uppercase text-[9px] text-gray-500">
                             </select>
-                            <input type="url" placeholder="Link G-Drive" class="input-field w-1/2 px-3 py-2 rounded-lg text-xs">
-                        </div>
+                        <input type="url" id="input-link-kegiatan" placeholder="Link G-Drive" class="input-field w-1/2 px-3 py-2 rounded-lg text-xs">
                     </div>
                 </div>
                 <button onclick="submitAjuanBaru()" class="w-full bg-black text-white py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90">Kirim Ajuan Baru</button>
@@ -193,7 +215,7 @@
 
     <script>
         // ==========================================
-        // SISTEM DATABASE LOKAL (LOCAL STORAGE)
+        // SISTEM DATABASE LOKAL LENGKAP
         // ==========================================
         let currentUserNIM = "";
 
@@ -201,15 +223,48 @@
             if(!localStorage.getItem("sipo_users")) localStorage.setItem("sipo_users", JSON.stringify({}));
             if(!localStorage.getItem("sipo_antrian")) localStorage.setItem("sipo_antrian", JSON.stringify([]));
             if(!localStorage.getItem("sipo_passing_grade")) localStorage.setItem("sipo_passing_grade", "120");
+            if(!localStorage.getItem("sipo_default_angkatan")) localStorage.setItem("sipo_default_angkatan", "2025");
+            
+            // Database Kategori Dinamis
+            if(!localStorage.getItem("sipo_kategori")) {
+                localStorage.setItem("sipo_kategori", JSON.stringify([
+                    { id: Date.now()+1, nama: "Tingkat Nasional", bobot: 50 },
+                    { id: Date.now()+2, nama: "Tingkat Universitas", bobot: 30 },
+                    { id: Date.now()+3, nama: "Tingkat Fakultas", bobot: 20 }
+                ]));
+            }
+            
+            // Database Periode Dinamis
+            if(!localStorage.getItem("sipo_periode")) {
+                localStorage.setItem("sipo_periode", JSON.stringify([
+                    { id: Date.now()+4, nama: "Gelombang 1 - 2026", start: "2026-03-01", end: "2026-03-31" }
+                ]));
+            }
 
             document.getElementById('set-passing').value = localStorage.getItem("sipo_passing_grade");
+            document.getElementById('set-angkatan').value = localStorage.getItem("sipo_default_angkatan");
         }
 
+        // ==========================================
+        // UI HELPERS (TAB & ACCORDION)
+        // ==========================================
         function switchTab(type) {
             document.getElementById('section-mhs').classList.toggle('hidden', type !== 'mhs');
             document.getElementById('section-adm').classList.toggle('hidden', type !== 'adm');
             document.getElementById('tab-mhs').className = type === 'mhs' ? "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-black transition-all" : "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-300 transition-all";
             document.getElementById('tab-adm').className = type === 'adm' ? "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-black transition-all" : "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-300 transition-all";
+        }
+
+        function toggleAdminMenu(menuId) {
+            const el = document.getElementById(menuId);
+            const icon = document.getElementById('icon-' + menuId);
+            if(el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                icon.innerText = "▲";
+            } else {
+                el.classList.add('hidden');
+                icon.innerText = "▼";
+            }
         }
 
         // ==========================================
@@ -228,6 +283,7 @@
                 document.getElementById('section-mhs').classList.add('hidden');
                 document.getElementById('main-header').classList.add('hidden');
                 document.getElementById('section-lengkapi-profil').classList.remove('hidden');
+                document.getElementById('reg-angkatan').value = localStorage.getItem("sipo_default_angkatan");
             }
         }
 
@@ -266,25 +322,39 @@
             let persentase = (userData.poin / passingGrade) * 100;
             document.getElementById('progress-bar').style.width = Math.min(persentase, 100) + '%';
 
-            // LOGIKA SERTIFIKAT MUNCUL JIKA LULUS
             if (userData.poin >= passingGrade) {
                 document.getElementById('btn-download-cert').classList.remove('hidden');
-            } else {
-                document.getElementById('btn-download-cert').classList.add('hidden');
             }
 
+            loadDropdownKategoriMhs();
             renderRiwayatMahasiswa(userData.history);
+        }
+
+        function loadDropdownKategoriMhs() {
+            const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
+            const select = document.getElementById('input-kategori-kegiatan');
+            select.innerHTML = '<option value="">Pilih Kategori Bobot...</option>';
+            kategori.forEach(k => {
+                select.innerHTML += `<option value="${k.bobot}">${k.nama} (${k.bobot})</option>`;
+            });
         }
 
         function submitAjuanBaru() {
             const namaKegiatan = document.getElementById('input-nama-kegiatan').value;
             const bobot = document.getElementById('input-kategori-kegiatan').value;
+            const link = document.getElementById('input-link-kegiatan').value;
             
             if(!namaKegiatan || !bobot) { alert("Isi form pengajuan dengan lengkap!"); return; }
 
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
             const idAjuan = Date.now().toString(); 
-            const ajuanBaru = { id: idAjuan, nim: currentUserNIM, nama: sipoUsers[currentUserNIM].nama, kegiatan: namaKegiatan, poin: parseInt(bobot), status: "Menunggu" };
+            const waktuAju = new Date().toLocaleString('id-ID'); // TIMESTAMP DIAJUKAN
+            
+            const ajuanBaru = { 
+                id: idAjuan, nim: currentUserNIM, nama: sipoUsers[currentUserNIM].nama, 
+                kegiatan: namaKegiatan, link: link, poin: parseInt(bobot), 
+                status: "Menunggu", waktu: waktuAju 
+            };
 
             sipoUsers[currentUserNIM].history.unshift(ajuanBaru);
             localStorage.setItem("sipo_users", JSON.stringify(sipoUsers));
@@ -293,9 +363,10 @@
             antrian.push(ajuanBaru);
             localStorage.setItem("sipo_antrian", JSON.stringify(antrian));
 
-            alert("Dokumen berhasil diajukan! Silakan tunggu verifikasi admin.");
+            alert("Dokumen berhasil diajukan pada " + waktuAju);
             document.getElementById('input-nama-kegiatan').value = '';
             document.getElementById('input-kategori-kegiatan').value = '';
+            document.getElementById('input-link-kegiatan').value = '';
             renderRiwayatMahasiswa(sipoUsers[currentUserNIM].history);
         }
 
@@ -313,21 +384,22 @@
                                   `<span class="text-[9px] font-bold text-yellow-600 bg-yellow-50 px-2 py-1 rounded">Menunggu ⏳</span>`;
 
                 container.innerHTML += `
-                    <div class="flex justify-between items-center p-3 border border-gray-100 rounded-xl bg-white">
-                        <div class="w-2/3"><p class="font-bold text-xs truncate">${item.kegiatan}</p></div>
+                    <div class="flex justify-between items-center p-3 border border-gray-100 rounded-xl bg-white mb-2">
+                        <div class="w-2/3">
+                            <p class="font-bold text-[11px] truncate">${item.kegiatan}</p>
+                            <p class="text-[8px] text-gray-400 mt-1">🕒 ${item.waktu}</p>
+                        </div>
                         <div class="text-right w-1/3">${statusBadge}</div>
                     </div>`;
             });
         }
 
-        // FUNGSI DOWNLOAD SERTIFIKAT YANG HILANG (DIKEMBALIKAN!)
         function downloadOfficialCert() {
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
             const nama = sipoUsers[currentUserNIM].nama;
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'landscape' });
-            
             doc.setFontSize(28); doc.text("SERTIFIKAT KELULUSAN SIPO", 148, 60, null, null, "center");
             doc.setFontSize(14); doc.text("Badan Eksekutif Mahasiswa - Universitas Jenderal Soedirman", 148, 70, null, null, "center");
             doc.setFontSize(20); doc.text("Diberikan kepada:", 148, 100, null, null, "center");
@@ -336,18 +408,21 @@
             doc.text("dan dinyatakan LULUS YUDISIUM.", 148, 148, null, null, "center");
             doc.setFontSize(10); doc.text("Purwokerto, " + new Date().toLocaleDateString('id-ID'), 200, 175);
             doc.text("Ketua PSDM BEM Unsoed", 200, 195);
-            
             doc.save(`Sertifikat_SIPO_${currentUserNIM}.pdf`);
         }
 
         // ==========================================
-        // LOGIKA ADMIN
+        // LOGIKA ADMIN (DINAMIS & CRUD)
         // ==========================================
         function loginAdmin() {
             if(document.getElementById('admin-user').value === "admin_bem" && document.getElementById('admin-pass').value === "unsoed2026") {
                 document.getElementById('admin-login-form').classList.add('hidden');
                 document.getElementById('main-header').classList.add('hidden');
                 document.getElementById('admin-dashboard-mini').classList.remove('hidden');
+                
+                // Load semua data dinamis saat login
+                renderListKategoriAdmin();
+                renderListPeriodeAdmin();
                 renderAntrianAdmin();
             } else { alert("Akses Ditolak!"); }
         }
@@ -357,41 +432,115 @@
         }
 
         function simpanPengaturan() {
-            const newGrade = document.getElementById('set-passing').value;
-            localStorage.setItem("sipo_passing_grade", newGrade);
-            alert("Pengaturan Ketentuan Sistem berhasil disimpan! Passing Grade: " + newGrade);
+            localStorage.setItem("sipo_passing_grade", document.getElementById('set-passing').value);
+            localStorage.setItem("sipo_default_angkatan", document.getElementById('set-angkatan').value);
+            alert("Ketentuan berhasil diperbarui!");
         }
 
+        // CRUD MANAJEMEN BOBOT (KATEGORI)
+        function renderListKategoriAdmin() {
+            const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
+            const container = document.getElementById('list-kategori-admin');
+            container.innerHTML = "";
+            kategori.forEach(k => {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center p-2 bg-gray-50 border border-gray-100 rounded-lg text-[10px]">
+                        <span class="font-bold">${k.nama}</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-green-600 font-bold">+${k.bobot}</span>
+                            <button onclick="hapusKategori(${k.id})" class="text-red-500 font-bold hover:underline">Hapus</button>
+                        </div>
+                    </div>`;
+            });
+        }
+        function tambahKategori() {
+            const nama = document.getElementById('add-kategori-nama').value;
+            const bobot = document.getElementById('add-kategori-bobot').value;
+            if(!nama || !bobot) return alert("Isi form kategori!");
+            const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
+            kategori.push({ id: Date.now(), nama: nama, bobot: parseInt(bobot) });
+            localStorage.setItem("sipo_kategori", JSON.stringify(kategori));
+            document.getElementById('add-kategori-nama').value = '';
+            document.getElementById('add-kategori-bobot').value = '';
+            renderListKategoriAdmin();
+        }
+        function hapusKategori(id) {
+            let kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
+            kategori = kategori.filter(k => k.id !== id);
+            localStorage.setItem("sipo_kategori", JSON.stringify(kategori));
+            renderListKategoriAdmin();
+        }
+
+        // CRUD MANAJEMEN PERIODE
+        function renderListPeriodeAdmin() {
+            const periode = JSON.parse(localStorage.getItem("sipo_periode"));
+            const container = document.getElementById('list-periode-admin');
+            const selectRekap = document.getElementById('select-rekap-periode');
+            container.innerHTML = "";
+            selectRekap.innerHTML = "<option value=''>Pilih Periode Yudisium...</option>";
+            periode.forEach(p => {
+                container.innerHTML += `
+                    <div class="p-2 bg-gray-50 border border-gray-100 rounded-lg text-[10px]">
+                        <div class="flex justify-between font-bold mb-1"><span>${p.nama}</span><button onclick="hapusPeriode(${p.id})" class="text-red-500 hover:underline">Hapus</button></div>
+                        <span class="text-[8px] text-gray-500">${p.start} s/d ${p.end}</span>
+                    </div>`;
+                selectRekap.innerHTML += `<option value="${p.id}">${p.nama} (${p.start} s/d ${p.end})</option>`;
+            });
+        }
+        function tambahPeriode() {
+            const nama = document.getElementById('add-periode-nama').value;
+            const start = document.getElementById('add-periode-start').value;
+            const end = document.getElementById('add-periode-end').value;
+            if(!nama || !start || !end) return alert("Isi lengkap data periode!");
+            const periode = JSON.parse(localStorage.getItem("sipo_periode"));
+            periode.push({ id: Date.now(), nama: nama, start: start, end: end });
+            localStorage.setItem("sipo_periode", JSON.stringify(periode));
+            renderListPeriodeAdmin();
+        }
+        function hapusPeriode(id) {
+            let periode = JSON.parse(localStorage.getItem("sipo_periode"));
+            periode = periode.filter(p => p.id !== id);
+            localStorage.setItem("sipo_periode", JSON.stringify(periode));
+            renderListPeriodeAdmin();
+        }
+
+        // ANTRIAN & APPROVAL
         function renderAntrianAdmin() {
             const antrian = JSON.parse(localStorage.getItem("sipo_antrian"));
             const container = document.getElementById('list-antrian');
             container.innerHTML = "";
-            
             if(antrian.length === 0) {
-                container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Antrian bersih. Belum ada pengajuan.</p>";
+                container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Antrian bersih.</p>";
                 return;
             }
-
             antrian.forEach(item => {
                 container.innerHTML += `
-                    <div class="p-4 bg-white border border-gray-200 rounded-xl space-y-3 shadow-sm text-xs transition-all">
-                        <div class="flex justify-between font-bold"><span>${item.nim} - ${item.nama}</span><span class="text-green-600">+${item.poin}</span></div>
-                        <p class="text-gray-500 text-[10px]">${item.kegiatan}</p>
-                        <div class="flex gap-2 mt-2">
-                            <button onclick="prosesDokumen('${item.id}', '${item.nim}', ${item.poin}, 'Disetujui')" class="flex-1 bg-black text-white py-2 rounded-lg font-bold text-[10px]">Setujui</button>
-                            <button onclick="prosesDokumen('${item.id}', '${item.nim}', 0, 'Ditolak')" class="flex-1 border border-red-200 text-red-500 bg-red-50 py-2 rounded-lg font-bold text-[10px]">Tolak</button>
+                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2 shadow-sm text-xs">
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                            <span class="font-bold">${item.nim}</span>
+                            <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
+                        </div>
+                        <div class="flex justify-between mt-1">
+                            <span class="font-bold text-[10px]">${item.kegiatan}</span>
+                            <span class="text-green-600 font-bold">+${item.poin}</span>
+                        </div>
+                        <div class="flex gap-2 mt-2 pt-1">
+                            <button onclick="prosesDokumen('${item.id}', '${item.nim}', ${item.poin}, 'Disetujui')" class="flex-1 bg-black text-white py-2 rounded-lg font-bold text-[9px] hover:bg-gray-800">Setujui</button>
+                            <button onclick="prosesDokumen('${item.id}', '${item.nim}', 0, 'Ditolak')" class="flex-1 border border-red-200 text-red-500 bg-white py-2 rounded-lg font-bold text-[9px] hover:bg-red-50">Tolak</button>
                         </div>
                     </div>`;
             });
         }
 
         function prosesDokumen(idAjuan, nim, poinDitambah, statusBaru) {
+            const waktuProses = new Date().toLocaleString('id-ID'); // WAKTU DISETUJUI/DITOLAK
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
             const userHistory = sipoUsers[nim].history;
             const indexHistory = userHistory.findIndex(h => h.id === idAjuan);
             
             if(indexHistory !== -1) {
                 userHistory[indexHistory].status = statusBaru;
+                userHistory[indexHistory].waktu = waktuProses; // Update waktu menjadi waktu diproses
             }
             
             if(statusBaru === "Disetujui") {
