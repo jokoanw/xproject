@@ -149,6 +149,16 @@
                     </div>
                 </div>
 
+                <div class="border border-gray-100 rounded-xl overflow-hidden mt-2">
+                    <button onclick="toggleAdminMenu('menu-riwayat-admin')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
+                        📜 Riwayat Verifikasi <span id="icon-menu-riwayat-admin">▼</span>
+                    </button>
+                    <div id="menu-riwayat-admin" class="hidden p-4 bg-white border-t border-gray-100">
+                        <div id="list-riwayat-admin" class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                            </div>
+                    </div>
+                </div>
+
                 <div class="border border-gray-100 rounded-xl overflow-hidden">
                     <button onclick="toggleAdminMenu('menu-rekap')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
                         🎓 Rekapitulasi & Download <span id="icon-menu-rekap">▼</span>
@@ -170,7 +180,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="isi-tabel-rekap" class="divide-y divide-gray-100">
-                                    </tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -221,7 +231,7 @@
                     <div class="flex gap-2">
                         <select id="input-kategori-kegiatan" class="input-field w-1/2 px-2 py-2 rounded-lg font-bold uppercase text-[9px] text-gray-500">
                             </select>
-                        <input type="url" id="input-link-kegiatan" placeholder="Link G-Drive" class="input-field w-1/2 px-3 py-2 rounded-lg text-xs">
+                        <input type="url" id="input-link-kegiatan" placeholder="Link Bukti (G-Drive)" class="input-field w-1/2 px-3 py-2 rounded-lg text-xs">
                     </div>
                 </div>
                 <button onclick="submitAjuanBaru()" class="w-full bg-black text-white py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90">Kirim Ajuan Baru</button>
@@ -239,6 +249,7 @@
         function initDatabase() {
             if(!localStorage.getItem("sipo_users")) localStorage.setItem("sipo_users", JSON.stringify({}));
             if(!localStorage.getItem("sipo_antrian")) localStorage.setItem("sipo_antrian", JSON.stringify([]));
+            if(!localStorage.getItem("sipo_riwayat_admin")) localStorage.setItem("sipo_riwayat_admin", JSON.stringify([])); // DB Baru untuk Admin
             if(!localStorage.getItem("sipo_passing_grade")) localStorage.setItem("sipo_passing_grade", "120");
             if(!localStorage.getItem("sipo_default_angkatan")) localStorage.setItem("sipo_default_angkatan", "2025");
             
@@ -260,15 +271,13 @@
             document.getElementById('set-angkatan').value = localStorage.getItem("sipo_default_angkatan");
         }
 
-        // Listener untuk Auto-Refresh jika ada perubahan di tab lain
         window.addEventListener('storage', function(e) {
-            // Jika tab ini adalah tab mahasiswa yang sedang login
             if (currentUserNIM && !document.getElementById('dashboard-mhs').classList.contains('hidden')) {
                 bukaDashboardMahasiswa(currentUserNIM);
             }
-            // Jika tab ini adalah tab admin yang sedang login
             if (!document.getElementById('admin-dashboard-mini').classList.contains('hidden')) {
                 renderAntrianAdmin();
+                renderRiwayatAdmin();
             }
         });
 
@@ -371,7 +380,7 @@
             const bobot = document.getElementById('input-kategori-kegiatan').value;
             const link = document.getElementById('input-link-kegiatan').value;
             
-            if(!namaKegiatan || !bobot) { alert("Isi form pengajuan dengan lengkap!"); return; }
+            if(!namaKegiatan || !bobot || !link) { alert("Isi form pengajuan dengan lengkap, termasuk Link G-Drive!"); return; }
 
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
             const idAjuan = Date.now().toString(); 
@@ -395,7 +404,6 @@
             document.getElementById('input-kategori-kegiatan').value = '';
             document.getElementById('input-link-kegiatan').value = '';
             
-            // Auto-refresh UI ini
             renderRiwayatMahasiswa(sipoUsers[currentUserNIM].history);
         }
 
@@ -430,7 +438,6 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'landscape' });
             
-            // Ornamen Garis Tepi (Eksklusif)
             doc.setDrawColor(0, 0, 0);
             doc.setLineWidth(1);
             doc.rect(10, 10, 277, 190);
@@ -461,6 +468,7 @@
                 renderListKategoriAdmin();
                 renderListPeriodeAdmin();
                 renderAntrianAdmin();
+                renderRiwayatAdmin();
             } else { alert("Akses Ditolak!"); }
         }
 
@@ -542,7 +550,7 @@
             renderListPeriodeAdmin();
         }
 
-        // ANTRIAN
+        // ANTRIAN (DENGAN LINK G-DRIVE)
         function renderAntrianAdmin() {
             const antrian = JSON.parse(localStorage.getItem("sipo_antrian"));
             const container = document.getElementById('list-antrian');
@@ -558,13 +566,44 @@
                             <span class="font-bold">${item.nim}</span>
                             <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
                         </div>
-                        <div class="flex justify-between mt-1">
-                            <span class="font-bold text-[10px] truncate max-w-[70%]">${item.kegiatan}</span>
-                            <span class="text-green-600 font-bold">+${item.poin}</span>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="font-bold text-[10px] truncate max-w-[60%]">${item.kegiatan}</span>
+                            <div class="flex items-center gap-2">
+                                <a href="${item.link}" target="_blank" class="text-[8px] bg-blue-50 text-blue-600 px-2 py-1 rounded font-bold hover:bg-blue-100 transition-all">🔗 Cek Bukti</a>
+                                <span class="text-green-600 font-bold text-[10px]">+${item.poin}</span>
+                            </div>
                         </div>
                         <div class="flex gap-2 mt-2 pt-1">
                             <button onclick="prosesDokumen('${item.id}', '${item.nim}', ${item.poin}, 'Disetujui')" class="flex-1 bg-black text-white py-2 rounded-lg font-bold text-[9px] hover:bg-gray-800">Setujui</button>
                             <button onclick="prosesDokumen('${item.id}', '${item.nim}', 0, 'Ditolak')" class="flex-1 border border-red-200 text-red-500 bg-white py-2 rounded-lg font-bold text-[9px] hover:bg-red-50">Tolak</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // RIWAYAT ADMIN (BARU)
+        function renderRiwayatAdmin() {
+            const riwayat = JSON.parse(localStorage.getItem("sipo_riwayat_admin"));
+            const container = document.getElementById('list-riwayat-admin');
+            container.innerHTML = "";
+            if(riwayat.length === 0) {
+                container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada riwayat verifikasi.</p>";
+                return;
+            }
+            riwayat.forEach(item => {
+                let statusBadge = item.status === "Disetujui" 
+                    ? `<span class="text-[8px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Disetujui (+${item.poin})</span>` 
+                    : `<span class="text-[8px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Ditolak ❌</span>`;
+                
+                container.innerHTML += `
+                    <div class="p-3 bg-white border border-gray-100 rounded-xl space-y-2 shadow-sm text-xs mb-2">
+                        <div class="flex justify-between items-center border-b border-gray-100 pb-1">
+                            <span class="font-bold text-[10px]">${item.nim} - ${item.nama}</span>
+                            <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="font-bold text-[10px] truncate max-w-[60%]">${item.kegiatan}</span>
+                            ${statusBadge}
                         </div>
                     </div>`;
             });
@@ -576,9 +615,11 @@
             const userHistory = sipoUsers[nim].history;
             const indexHistory = userHistory.findIndex(h => h.id === idAjuan);
             
+            let itemProcessed = null;
             if(indexHistory !== -1) {
                 userHistory[indexHistory].status = statusBaru;
                 userHistory[indexHistory].waktu = waktuProses; 
+                itemProcessed = {...userHistory[indexHistory], nim: nim, nama: sipoUsers[nim].nama};
             }
             
             if(statusBaru === "Disetujui") {
@@ -590,7 +631,15 @@
             antrian = antrian.filter(a => a.id !== idAjuan);
             localStorage.setItem("sipo_antrian", JSON.stringify(antrian));
 
-            renderAntrianAdmin(); // UI Auto Update tanpa reload
+            // Simpan ke Riwayat Admin
+            if(itemProcessed) {
+                let riwayatAdmin = JSON.parse(localStorage.getItem("sipo_riwayat_admin"));
+                riwayatAdmin.unshift(itemProcessed); // Taruh di atas
+                localStorage.setItem("sipo_riwayat_admin", JSON.stringify(riwayatAdmin));
+            }
+
+            renderAntrianAdmin(); 
+            renderRiwayatAdmin();
         }
 
         // ==========================================
@@ -641,7 +690,7 @@
             const eligible = getEligibleStudents();
             if(eligible.length === 0) return alert("Tidak ada data untuk diunduh (Belum ada yang lulus).");
 
-            let csvContent = "\uFEFF"; // BOM untuk Excel agar baca format UTF-8
+            let csvContent = "\uFEFF"; 
             csvContent += "NIM,Nama Lengkap,Program Studi,Angkatan,Total Poin\n";
 
             eligible.forEach(mhs => {
