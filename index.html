@@ -154,12 +154,26 @@
                         📜 Riwayat Verifikasi <span id="icon-menu-riwayat-admin">▼</span>
                     </button>
                     <div id="menu-riwayat-admin" class="hidden p-4 bg-white border-t border-gray-100">
+                        <div class="flex justify-end mb-2">
+                            <button onclick="hapusSemuaRiwayatAdmin()" class="text-[8px] bg-red-50 text-red-500 font-bold px-2 py-1 rounded hover:bg-red-100">🗑️ Kosongkan Riwayat</button>
+                        </div>
                         <div id="list-riwayat-admin" class="space-y-3 max-h-60 overflow-y-auto pr-1">
                             </div>
                     </div>
                 </div>
 
-                <div class="border border-gray-100 rounded-xl overflow-hidden">
+                <div class="border border-gray-100 rounded-xl overflow-hidden mt-2">
+                    <button onclick="toggleAdminMenu('menu-spionase')" class="accordion-btn w-full bg-blue-50 text-blue-800 px-4 py-3 text-[10px] font-bold uppercase tracking-widest border border-blue-100">
+                        🕵️ Spionase Mahasiswa <span id="icon-menu-spionase">▼</span>
+                    </button>
+                    <div id="menu-spionase" class="hidden p-4 bg-white border-t border-blue-100">
+                        <p class="text-[9px] text-gray-500 italic mb-3">Daftar seluruh mahasiswa yang pernah mengakses & mengajukan SIPO.</p>
+                        <div id="list-spionase" class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="border border-gray-100 rounded-xl overflow-hidden mt-2">
                     <button onclick="toggleAdminMenu('menu-rekap')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
                         🎓 Rekapitulasi & Download <span id="icon-menu-rekap">▼</span>
                     </button>
@@ -167,7 +181,7 @@
                         <select id="select-rekap-periode" class="input-field w-full px-3 py-2 rounded-lg text-[10px] font-bold text-gray-600"></select>
                         
                         <div class="flex gap-2">
-                            <button onclick="tampilkanDataRekap()" class="w-1/2 border border-black text-black py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Lihat Data</button>
+                            <button id="btn-lihat-data" onclick="toggleTampilkanDataRekap()" class="w-1/2 border border-black text-black py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Lihat Data</button>
                             <button onclick="downloadRekapCSV()" class="w-1/2 bg-green-600 text-white py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-green-700 transition-all">Unduh Excel (.csv)</button>
                         </div>
                         
@@ -249,7 +263,7 @@
         function initDatabase() {
             if(!localStorage.getItem("sipo_users")) localStorage.setItem("sipo_users", JSON.stringify({}));
             if(!localStorage.getItem("sipo_antrian")) localStorage.setItem("sipo_antrian", JSON.stringify([]));
-            if(!localStorage.getItem("sipo_riwayat_admin")) localStorage.setItem("sipo_riwayat_admin", JSON.stringify([])); // DB Baru untuk Admin
+            if(!localStorage.getItem("sipo_riwayat_admin")) localStorage.setItem("sipo_riwayat_admin", JSON.stringify([]));
             if(!localStorage.getItem("sipo_passing_grade")) localStorage.setItem("sipo_passing_grade", "120");
             if(!localStorage.getItem("sipo_default_angkatan")) localStorage.setItem("sipo_default_angkatan", "2025");
             
@@ -278,6 +292,7 @@
             if (!document.getElementById('admin-dashboard-mini').classList.contains('hidden')) {
                 renderAntrianAdmin();
                 renderRiwayatAdmin();
+                renderSpionaseMahasiswa();
             }
         });
 
@@ -389,7 +404,7 @@
             const ajuanBaru = { 
                 id: idAjuan, nim: currentUserNIM, nama: sipoUsers[currentUserNIM].nama, 
                 kegiatan: namaKegiatan, link: link, poin: parseInt(bobot), 
-                status: "Menunggu", waktu: waktuAju 
+                status: "Menunggu", waktu: waktuAju, alasan: ""
             };
 
             sipoUsers[currentUserNIM].history.unshift(ajuanBaru);
@@ -419,12 +434,15 @@
                 let statusBadge = item.status === "Disetujui" ? `<span class="text-[9px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Disetujui (+${item.poin})</span>` :
                                   item.status === "Ditolak" ? `<span class="text-[9px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Ditolak ❌</span>` :
                                   `<span class="text-[9px] font-bold text-yellow-600 bg-yellow-50 px-2 py-1 rounded">Menunggu ⏳</span>`;
+                
+                let alasanHtml = (item.status === "Ditolak" && item.alasan) ? `<p class="text-[8px] text-red-500 mt-1 font-bold">Alasan Penolakan: ${item.alasan}</p>` : "";
 
                 container.innerHTML += `
                     <div class="flex justify-between items-center p-3 border border-gray-100 rounded-xl bg-white mb-2">
                         <div class="w-2/3">
                             <p class="font-bold text-[11px] truncate">${item.kegiatan}</p>
                             <p class="text-[8px] text-gray-400 mt-1">🕒 ${item.waktu}</p>
+                            ${alasanHtml}
                         </div>
                         <div class="text-right w-1/3">${statusBadge}</div>
                     </div>`;
@@ -469,6 +487,7 @@
                 renderListPeriodeAdmin();
                 renderAntrianAdmin();
                 renderRiwayatAdmin();
+                renderSpionaseMahasiswa();
             } else { alert("Akses Ditolak!"); }
         }
 
@@ -483,7 +502,7 @@
             alert("Ketentuan berhasil diperbarui!");
         }
 
-        // CRUD KATEGORI
+        // CRUD KATEGORI & PERIODE
         function renderListKategoriAdmin() {
             const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
             const container = document.getElementById('list-kategori-admin');
@@ -506,8 +525,6 @@
             const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
             kategori.push({ id: Date.now(), nama: nama, bobot: parseInt(bobot) });
             localStorage.setItem("sipo_kategori", JSON.stringify(kategori));
-            document.getElementById('add-kategori-nama').value = '';
-            document.getElementById('add-kategori-bobot').value = '';
             renderListKategoriAdmin();
         }
         function hapusKategori(id) {
@@ -517,7 +534,6 @@
             renderListKategoriAdmin();
         }
 
-        // CRUD PERIODE
         function renderListPeriodeAdmin() {
             const periode = JSON.parse(localStorage.getItem("sipo_periode"));
             const container = document.getElementById('list-periode-admin');
@@ -550,7 +566,7 @@
             renderListPeriodeAdmin();
         }
 
-        // ANTRIAN (DENGAN LINK G-DRIVE)
+        // ANTRIAN
         function renderAntrianAdmin() {
             const antrian = JSON.parse(localStorage.getItem("sipo_antrian"));
             const container = document.getElementById('list-antrian');
@@ -581,7 +597,7 @@
             });
         }
 
-        // RIWAYAT ADMIN (BARU)
+        // RIWAYAT ADMIN (DENGAN FITUR HAPUS)
         function renderRiwayatAdmin() {
             const riwayat = JSON.parse(localStorage.getItem("sipo_riwayat_admin"));
             const container = document.getElementById('list-riwayat-admin');
@@ -599,17 +615,44 @@
                     <div class="p-3 bg-white border border-gray-100 rounded-xl space-y-2 shadow-sm text-xs mb-2">
                         <div class="flex justify-between items-center border-b border-gray-100 pb-1">
                             <span class="font-bold text-[10px]">${item.nim} - ${item.nama}</span>
-                            <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
+                                <button onclick="hapusSatuRiwayatAdmin('${item.id}')" class="text-red-500 font-bold hover:bg-red-50 px-1 rounded">✕</button>
+                            </div>
                         </div>
-                        <div class="flex justify-between items-center mt-1">
-                            <span class="font-bold text-[10px] truncate max-w-[60%]">${item.kegiatan}</span>
+                        <div class="flex justify-between items-start mt-1">
+                            <div class="max-w-[70%]">
+                                <span class="font-bold text-[10px]">${item.kegiatan}</span>
+                                ${item.alasan ? `<p class="text-[8px] text-red-500 font-bold mt-1">Alasan: ${item.alasan}</p>` : ''}
+                            </div>
                             ${statusBadge}
                         </div>
                     </div>`;
             });
         }
 
+        function hapusSatuRiwayatAdmin(id) {
+            if(!confirm("Hapus riwayat ini?")) return;
+            let riwayat = JSON.parse(localStorage.getItem("sipo_riwayat_admin"));
+            riwayat = riwayat.filter(r => r.id !== id);
+            localStorage.setItem("sipo_riwayat_admin", JSON.stringify(riwayat));
+            renderRiwayatAdmin();
+        }
+
+        function hapusSemuaRiwayatAdmin() {
+            if(!confirm("YAKIN ingin mengosongkan SELURUH riwayat verifikasi?")) return;
+            localStorage.setItem("sipo_riwayat_admin", JSON.stringify([]));
+            renderRiwayatAdmin();
+        }
+
+        // PROSES DOKUMEN & ALASAN PENOLAKAN
         function prosesDokumen(idAjuan, nim, poinDitambah, statusBaru) {
+            let alasan = "";
+            if(statusBaru === "Ditolak") {
+                alasan = prompt("Masukkan alasan penolakan berkas ini:");
+                if(alasan === null) return; // Batal jika cancel
+            }
+
             const waktuProses = new Date().toLocaleString('id-ID'); 
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
             const userHistory = sipoUsers[nim].history;
@@ -619,6 +662,7 @@
             if(indexHistory !== -1) {
                 userHistory[indexHistory].status = statusBaru;
                 userHistory[indexHistory].waktu = waktuProses; 
+                userHistory[indexHistory].alasan = alasan; // Simpan alasan
                 itemProcessed = {...userHistory[indexHistory], nim: nim, nama: sipoUsers[nim].nama};
             }
             
@@ -631,15 +675,38 @@
             antrian = antrian.filter(a => a.id !== idAjuan);
             localStorage.setItem("sipo_antrian", JSON.stringify(antrian));
 
-            // Simpan ke Riwayat Admin
             if(itemProcessed) {
                 let riwayatAdmin = JSON.parse(localStorage.getItem("sipo_riwayat_admin"));
-                riwayatAdmin.unshift(itemProcessed); // Taruh di atas
+                riwayatAdmin.unshift(itemProcessed); 
                 localStorage.setItem("sipo_riwayat_admin", JSON.stringify(riwayatAdmin));
             }
 
             renderAntrianAdmin(); 
             renderRiwayatAdmin();
+            renderSpionaseMahasiswa();
+        }
+
+        // SPIONASE MAHASISWA
+        function renderSpionaseMahasiswa() {
+            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
+            const container = document.getElementById('list-spionase');
+            container.innerHTML = "";
+            
+            let adaData = false;
+            for(let nim in sipoUsers) {
+                if(sipoUsers[nim].nama) {
+                    adaData = true;
+                    container.innerHTML += `
+                        <div class="p-3 bg-blue-50/30 border border-blue-100 rounded-xl flex justify-between items-center text-xs">
+                            <div>
+                                <span class="font-bold">${sipoUsers[nim].nama}</span> <span class="text-[9px] text-gray-500">(${nim})</span>
+                                <p class="text-[8px] text-gray-500 mt-1">${sipoUsers[nim].prodi} • Angkatan ${sipoUsers[nim].angkatan}</p>
+                            </div>
+                            <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded text-[10px]">${sipoUsers[nim].poin} Poin</span>
+                        </div>`;
+                }
+            }
+            if(!adaData) container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada data mahasiswa.</p>";
         }
 
         // ==========================================
@@ -658,29 +725,42 @@
             return eligible;
         }
 
-        function tampilkanDataRekap() {
-            const periodeId = document.getElementById('select-rekap-periode').value;
-            if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
+        function toggleTampilkanDataRekap() {
+            const tabel = document.getElementById('tabel-rekap-admin');
+            const btn = document.getElementById('btn-lihat-data');
             
-            const eligible = getEligibleStudents();
-            const tbody = document.getElementById('isi-tabel-rekap');
-            tbody.innerHTML = "";
-            
-            if(eligible.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" class="px-2 py-4 text-center text-gray-400 italic">Belum ada mahasiswa yang memenuhi Passing Grade.</td></tr>`;
+            if(tabel.classList.contains('hidden')) {
+                // Saat mau BUKA data
+                const periodeId = document.getElementById('select-rekap-periode').value;
+                if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
+                
+                const eligible = getEligibleStudents();
+                const tbody = document.getElementById('isi-tabel-rekap');
+                tbody.innerHTML = "";
+                
+                if(eligible.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="2" class="px-2 py-4 text-center text-gray-400 italic">Belum ada yang memenuhi Passing Grade.</td></tr>`;
+                } else {
+                    eligible.forEach(mhs => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="px-2 py-2">
+                                    <span class="font-bold">${mhs.nama}</span><br>
+                                    <span class="text-[8px] text-gray-400">${mhs.nim} • ${mhs.prodi} • ${mhs.angkatan}</span>
+                                </td>
+                                <td class="px-2 py-2 text-center text-green-600 font-bold">${mhs.poin}</td>
+                            </tr>`;
+                    });
+                }
+                tabel.classList.remove('hidden');
+                btn.innerText = "Tutup Data";
+                btn.classList.add('bg-gray-200');
             } else {
-                eligible.forEach(mhs => {
-                    tbody.innerHTML += `
-                        <tr>
-                            <td class="px-2 py-2">
-                                <span class="font-bold">${mhs.nama}</span><br>
-                                <span class="text-[8px] text-gray-400">${mhs.nim} • ${mhs.prodi} • ${mhs.angkatan}</span>
-                            </td>
-                            <td class="px-2 py-2 text-center text-green-600 font-bold">${mhs.poin}</td>
-                        </tr>`;
-                });
+                // Saat mau TUTUP data
+                tabel.classList.add('hidden');
+                btn.innerText = "Lihat Data";
+                btn.classList.remove('bg-gray-200');
             }
-            document.getElementById('tabel-rekap-admin').classList.remove('hidden');
         }
 
         function downloadRekapCSV() {
