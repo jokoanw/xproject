@@ -105,7 +105,6 @@
             </div>
 
             <div id="admin-dashboard-mini" class="hidden space-y-4">
-                
                 <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 text-center mb-4">
                     <h1 id="display-token" class="text-3xl font-bold tracking-[0.2em] mb-2">882912</h1>
                     <button onclick="generateToken()" class="w-full bg-black text-white py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest">Generate Token</button>
@@ -279,7 +278,8 @@
     </footer>
 
     <script>
-        let supabase;
+        // MENGGANTI NAMA VARIABEL AGAR TIDAK BENTROK DENGAN SUPABASE BAWAAN
+        let sipoDB; 
         let currentUserNIM = "";
         let currentUserName = "";
 
@@ -304,15 +304,15 @@
             if (window.supabase) {
                 const supabaseUrl = 'https://izcgyvllxehrspgbmoks.supabase.co';
                 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6Y2d5dmxseGVocnNwZ2Jtb2tzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzM2MjcsImV4cCI6MjA5MDEwOTYyN30.WPNv5ijYvPntNSlaxERse9LZHS3LwvyQsx9z-_KXgPI';
-                supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+                sipoDB = window.supabase.createClient(supabaseUrl, supabaseKey);
             }
         }
 
         async function resetFactoryData() {
             if(confirm("PERINGATAN KERAS! 🚨\n\nIni akan menghapus SELURUH data dari SUPABASE dan Browser.\n\nApakah Anda YAKIN?")) {
-                if(supabase) {
-                    await supabase.from('sipo_pengajuan').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-                    await supabase.from('sipo_users').delete().neq('nim', '0');
+                if(sipoDB) {
+                    await sipoDB.from('sipo_pengajuan').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+                    await sipoDB.from('sipo_users').delete().neq('nim', '0');
                 }
                 localStorage.clear();
                 alert("Semua data berhasil dibersihkan! Sistem akan dimuat ulang.");
@@ -324,22 +324,20 @@
         // MAHASISWA
         // ==========================================
         async function loginMahasiswa() {
-            if(!supabase) {
-                alert("Sistem Database belum termuat. Pastikan koneksi internet stabil.");
-                return;
-            }
+            if(!sipoDB) return alert("Sistem Database belum termuat. Pastikan koneksi internet stabil.");
             
             const nim = document.getElementById('mhs-nim').value.trim().toUpperCase();
             if(!nim) { alert("NIM harus diisi!"); return; }
 
             currentUserNIM = nim;
+            document.getElementById('mhs-nim').value = "Loading...";
 
             try {
-                const { data, error } = await supabase.from('sipo_users').select('*').eq('nim', nim).maybeSingle();
+                const { data, error } = await sipoDB.from('sipo_users').select('*').eq('nim', nim).maybeSingle();
+                document.getElementById('mhs-nim').value = nim;
 
                 if (error) {
-                    console.error("Supabase Error:", error);
-                    alert("Error dari Supabase: " + error.message);
+                    alert("Error dari Server: " + error.message);
                     return;
                 }
 
@@ -352,8 +350,8 @@
                     document.getElementById('reg-angkatan').value = localStorage.getItem("sipo_default_angkatan");
                 }
             } catch (err) {
-                console.error("JS Error:", err);
                 alert("Terjadi kesalahan sistem. Coba lagi.");
+                document.getElementById('mhs-nim').value = nim;
             }
         }
 
@@ -367,10 +365,9 @@
             const newUser = { nim: currentUserNIM, nama: nama, prodi: prodi, angkatan: angkatan, poin: 0 };
             
             try {
-                const { error } = await supabase.from('sipo_users').insert([newUser]);
+                const { error } = await sipoDB.from('sipo_users').insert([newUser]);
                 
                 if(error) { 
-                    console.error("Insert Error:", error);
                     alert("Gagal menyimpan data: " + error.message); 
                     return; 
                 }
@@ -378,7 +375,6 @@
                 document.getElementById('section-lengkapi-profil').classList.add('hidden');
                 bukaDashboardMahasiswa(newUser);
             } catch(err) {
-                console.error("JS Error:", err);
                 alert("Terjadi kesalahan saat menyimpan.");
             }
         }
@@ -433,7 +429,7 @@
             };
 
             try {
-                const { error } = await supabase.from('sipo_pengajuan').insert([ajuanBaru]);
+                const { error } = await sipoDB.from('sipo_pengajuan').insert([ajuanBaru]);
                 
                 if(error) { 
                     alert("Gagal mengirim ajuan. Detail: " + error.message); 
@@ -452,7 +448,7 @@
         }
 
         async function loadRiwayatMhsDariSupabase() {
-            const { data, error } = await supabase.from('sipo_pengajuan').select('*').eq('nim', currentUserNIM).order('waktu', { ascending: false });
+            const { data, error } = await sipoDB.from('sipo_pengajuan').select('*').eq('nim', currentUserNIM).order('waktu', { ascending: false });
             const container = document.getElementById('riwayat-sipo');
             container.innerHTML = "";
             
@@ -486,10 +482,7 @@
         // ADMIN
         // ==========================================
         function loginAdmin() {
-            if(!supabase) {
-                alert("Database belum siap. Tunggu atau Refresh halaman!");
-                return;
-            }
+            if(!sipoDB) return alert("Database belum siap. Tunggu atau Refresh halaman!");
             if(document.getElementById('admin-user').value === "admin_bem" && document.getElementById('admin-pass').value === "unsoed2026") {
                 document.getElementById('admin-login-form').classList.add('hidden');
                 document.getElementById('main-header').classList.add('hidden');
@@ -563,7 +556,7 @@
         }
 
         async function loadAntrianAdminDariSupabase() {
-            const { data, error } = await supabase.from('sipo_pengajuan').select('*').eq('status', 'Menunggu').order('waktu', { ascending: true });
+            const { data, error } = await sipoDB.from('sipo_pengajuan').select('*').eq('status', 'Menunggu').order('waktu', { ascending: true });
             const container = document.getElementById('list-antrian');
             container.innerHTML = "";
             if(!data || data.length === 0) { container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Antrian bersih.</p>"; return; }
@@ -590,7 +583,7 @@
         }
 
         async function loadRiwayatAdminDariSupabase() {
-            const { data, error } = await supabase.from('sipo_pengajuan').select('*').neq('status', 'Menunggu').order('waktu', { ascending: false });
+            const { data, error } = await sipoDB.from('sipo_pengajuan').select('*').neq('status', 'Menunggu').order('waktu', { ascending: false });
             const container = document.getElementById('list-riwayat-admin');
             container.innerHTML = "";
             if(!data || data.length === 0) { container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada riwayat verifikasi.</p>"; return; }
@@ -620,13 +613,13 @@
 
         async function hapusSatuRiwayatAdminSupabase(id) {
             if(!confirm("Hapus riwayat ini dari database?")) return;
-            await supabase.from('sipo_pengajuan').delete().eq('id', id);
+            await sipoDB.from('sipo_pengajuan').delete().eq('id', id);
             loadRiwayatAdminDariSupabase();
         }
 
         async function hapusSemuaRiwayatAdminSupabase() {
             if(!confirm("YAKIN ingin mengosongkan SELURUH riwayat verifikasi dari database?")) return;
-            await supabase.from('sipo_pengajuan').delete().neq('status', 'Menunggu');
+            await sipoDB.from('sipo_pengajuan').delete().neq('status', 'Menunggu');
             loadRiwayatAdminDariSupabase();
         }
 
@@ -637,17 +630,17 @@
                 if(alasan === null) return; 
             }
             const waktuProses = new Date().toLocaleString('id-ID'); 
-            await supabase.from('sipo_pengajuan').update({ status: statusBaru, waktu: waktuProses, alasan: alasan }).eq('id', idAjuan);
+            await sipoDB.from('sipo_pengajuan').update({ status: statusBaru, waktu: waktuProses, alasan: alasan }).eq('id', idAjuan);
             
             if(statusBaru === "Disetujui") {
-                const { data: user } = await supabase.from('sipo_users').select('poin').eq('nim', nim).single();
-                if(user) await supabase.from('sipo_users').update({ poin: user.poin + poinDitambah }).eq('nim', nim);
+                const { data: user } = await sipoDB.from('sipo_users').select('poin').eq('nim', nim).single();
+                if(user) await sipoDB.from('sipo_users').update({ poin: user.poin + poinDitambah }).eq('nim', nim);
             }
             loadAntrianAdminDariSupabase(); loadRiwayatAdminDariSupabase(); loadSpionaseDariSupabase();
         }
 
         async function loadSpionaseDariSupabase() {
-            const { data, error } = await supabase.from('sipo_users').select('*').order('poin', { ascending: false });
+            const { data, error } = await sipoDB.from('sipo_users').select('*').order('poin', { ascending: false });
             const container = document.getElementById('list-spionase');
             container.innerHTML = "";
             if(!data || data.length === 0) { container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada data mahasiswa terdaftar.</p>"; return; }
@@ -671,7 +664,7 @@
                 if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
                 
                 const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
-                const { data: eligible } = await supabase.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
+                const { data: eligible } = await sipoDB.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
                 const tbody = document.getElementById('isi-tabel-rekap');
                 tbody.innerHTML = "";
                 
@@ -697,7 +690,7 @@
             if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
 
             const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
-            const { data: eligible } = await supabase.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
+            const { data: eligible } = await sipoDB.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
 
             if(!eligible || eligible.length === 0) return alert("Tidak ada data untuk diunduh.");
 
