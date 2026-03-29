@@ -151,7 +151,7 @@
                     <div id="menu-periode" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
                         <div id="list-periode-admin" class="space-y-2 max-h-32 overflow-y-auto"></div>
                         <div class="space-y-2 border-t border-gray-100 pt-3">
-                            <input type="text" id="add-periode-nama" placeholder="Nama Periode (Cth: Gel. 1 2026)" class="input-field w-full px-3 py-2 rounded-lg text-[10px]">
+                            <input type="text" id="add-periode-nama" placeholder="Nama Periode" class="input-field w-full px-3 py-2 rounded-lg text-[10px]">
                             <div class="flex gap-2">
                                 <div class="w-1/2"><label class="text-[8px] text-gray-400 uppercase">Mulai</label><input type="date" id="add-periode-start" class="input-field w-full px-2 py-1 rounded-lg text-[10px]"></div>
                                 <div class="w-1/2"><label class="text-[8px] text-gray-400 uppercase">Selesai</label><input type="date" id="add-periode-end" class="input-field w-full px-2 py-1 rounded-lg text-[10px]"></div>
@@ -271,6 +271,7 @@
                 <button onclick="submitAjuanBaru()" class="w-full bg-black text-white py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90">Kirim Ajuan Baru</button>
             </div>
         </div>
+
     </div> 
 
     <footer class="mt-8 text-center text-[9px] text-gray-400 font-bold uppercase tracking-widest pb-4">
@@ -282,7 +283,6 @@
         let currentUserNIM = "";
         let currentUserName = "";
 
-        // INISIALISASI SISTEM
         function initSystem() {
             if(!localStorage.getItem("sipo_passing_grade")) localStorage.setItem("sipo_passing_grade", "120");
             if(!localStorage.getItem("sipo_default_angkatan")) localStorage.setItem("sipo_default_angkatan", "2025");
@@ -324,19 +324,24 @@
         // MAHASISWA
         // ==========================================
         async function loginMahasiswa() {
-            if(!supabase) return alert("Sistem Database belum termuat. Pastikan koneksi internet stabil.");
+            if(!supabase) {
+                alert("Sistem Database belum termuat. Pastikan koneksi internet stabil.");
+                return;
+            }
             
             const nim = document.getElementById('mhs-nim').value.trim().toUpperCase();
             if(!nim) { alert("NIM harus diisi!"); return; }
 
             currentUserNIM = nim;
-            const btn = event.target;
-            btn.innerText = "Memeriksa...";
 
             try {
                 const { data, error } = await supabase.from('sipo_users').select('*').eq('nim', nim).maybeSingle();
 
-                btn.innerText = "Otorisasi";
+                if (error) {
+                    console.error("Supabase Error:", error);
+                    alert("Error dari Supabase: " + error.message);
+                    return;
+                }
 
                 if (data) {
                     bukaDashboardMahasiswa(data);
@@ -347,8 +352,8 @@
                     document.getElementById('reg-angkatan').value = localStorage.getItem("sipo_default_angkatan");
                 }
             } catch (err) {
-                alert("Error Koneksi Database. Coba lagi.");
-                btn.innerText = "Otorisasi";
+                console.error("JS Error:", err);
+                alert("Terjadi kesalahan sistem. Coba lagi.");
             }
         }
 
@@ -361,19 +366,21 @@
 
             const newUser = { nim: currentUserNIM, nama: nama, prodi: prodi, angkatan: angkatan, poin: 0 };
             
-            const btn = event.target;
-            btn.innerText = "Menyimpan...";
-
-            const { error } = await supabase.from('sipo_users').insert([newUser]);
-            
-            if(error) { 
-                alert("Gagal menyimpan data: " + error.message); 
-                btn.innerText = "Simpan & Masuk";
-                return; 
+            try {
+                const { error } = await supabase.from('sipo_users').insert([newUser]);
+                
+                if(error) { 
+                    console.error("Insert Error:", error);
+                    alert("Gagal menyimpan data: " + error.message); 
+                    return; 
+                }
+                
+                document.getElementById('section-lengkapi-profil').classList.add('hidden');
+                bukaDashboardMahasiswa(newUser);
+            } catch(err) {
+                console.error("JS Error:", err);
+                alert("Terjadi kesalahan saat menyimpan.");
             }
-            
-            document.getElementById('section-lengkapi-profil').classList.add('hidden');
-            bukaDashboardMahasiswa(newUser);
         }
 
         function bukaDashboardMahasiswa(userData) {
@@ -425,24 +432,23 @@
                 poin: parseInt(bobot), status: "Menunggu", waktu: waktuAju, alasan: ""
             };
 
-            const btn = event.target;
-            btn.innerText = "Mengirim...";
+            try {
+                const { error } = await supabase.from('sipo_pengajuan').insert([ajuanBaru]);
+                
+                if(error) { 
+                    alert("Gagal mengirim ajuan. Detail: " + error.message); 
+                    return; 
+                }
 
-            const { error } = await supabase.from('sipo_pengajuan').insert([ajuanBaru]);
-            
-            if(error) { 
-                alert("Gagal mengirim ajuan. Detail: " + error.message); 
-                btn.innerText = "Kirim Ajuan Baru";
-                return; 
+                alert("Dokumen berhasil diajukan ke server!");
+                document.getElementById('input-nama-kegiatan').value = '';
+                document.getElementById('input-kategori-kegiatan').value = '';
+                document.getElementById('input-link-kegiatan').value = '';
+                
+                loadRiwayatMhsDariSupabase();
+            } catch(err) {
+                alert("Kesalahan sistem saat mengirim data.");
             }
-
-            alert("Dokumen berhasil diajukan ke server!");
-            document.getElementById('input-nama-kegiatan').value = '';
-            document.getElementById('input-kategori-kegiatan').value = '';
-            document.getElementById('input-link-kegiatan').value = '';
-            btn.innerText = "Kirim Ajuan Baru";
-            
-            loadRiwayatMhsDariSupabase();
         }
 
         async function loadRiwayatMhsDariSupabase() {
@@ -480,7 +486,10 @@
         // ADMIN
         // ==========================================
         function loginAdmin() {
-            if(!supabase) return alert("Database belum siap. Tunggu atau Refresh halaman!");
+            if(!supabase) {
+                alert("Database belum siap. Tunggu atau Refresh halaman!");
+                return;
+            }
             if(document.getElementById('admin-user').value === "admin_bem" && document.getElementById('admin-pass').value === "unsoed2026") {
                 document.getElementById('admin-login-form').classList.add('hidden');
                 document.getElementById('main-header').classList.add('hidden');
