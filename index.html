@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1a1a1a; }
         .serif { font-family: 'Playfair Display', serif; }
@@ -50,7 +51,7 @@
                     <input type="password" id="mhs-token" maxlength="6" placeholder="••••••" class="input-field w-full mt-1 px-5 py-4 rounded-xl text-center text-2xl tracking-[0.8em]">
                 </div>
             </div>
-            <button onclick="loginMahasiswa()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all">Otorisasi</button>
+            <button onclick="loginMahasiswa()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg">Otorisasi</button>
         </div>
 
         <div id="section-lengkapi-profil" class="hidden space-y-6">
@@ -70,7 +71,7 @@
                     <input type="number" id="reg-angkatan" placeholder="Angkatan" class="input-field w-1/3 px-4 py-3 rounded-xl text-sm">
                 </div>
             </div>
-            <button onclick="simpanProfilBaru()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg shadow-black/10">Simpan & Masuk</button>
+            <button onclick="simpanProfilBaru()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg">Simpan & Masuk</button>
         </div>
 
         <div id="section-adm" class="hidden">
@@ -79,7 +80,7 @@
                     <input type="text" id="admin-user" placeholder="Username Admin (admin_bem)" class="input-field w-full px-5 py-4 rounded-xl text-sm">
                     <input type="password" id="admin-pass" placeholder="Password (unsoed2026)" class="input-field w-full px-5 py-4 rounded-xl text-sm">
                 </div>
-                <button onclick="loginAdmin()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all">Otorisasi Sistem</button>
+                <button onclick="loginAdmin()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg">Otorisasi Sistem</button>
             </div>
 
             <div id="admin-dashboard-mini" class="hidden space-y-4">
@@ -144,8 +145,7 @@
                         ✅ Antrian Verifikasi <span id="icon-menu-antrian">▼</span>
                     </button>
                     <div id="menu-antrian" class="hidden p-4 bg-white border-t border-gray-100">
-                        <div id="list-antrian" class="space-y-3 max-h-60 overflow-y-auto pr-1">
-                            </div>
+                        <div id="list-antrian" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
                     </div>
                 </div>
 
@@ -157,8 +157,7 @@
                         <div class="flex justify-end mb-2">
                             <button onclick="hapusSemuaRiwayatAdmin()" class="text-[8px] bg-red-50 text-red-500 font-bold px-2 py-1 rounded hover:bg-red-100">🗑️ Kosongkan Riwayat</button>
                         </div>
-                        <div id="list-riwayat-admin" class="space-y-3 max-h-60 overflow-y-auto pr-1">
-                            </div>
+                        <div id="list-riwayat-admin" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
                     </div>
                 </div>
 
@@ -168,8 +167,7 @@
                     </button>
                     <div id="menu-spionase" class="hidden p-4 bg-white border-t border-blue-100">
                         <p class="text-[9px] text-gray-500 italic mb-3">Daftar seluruh mahasiswa yang pernah mengakses & mengajukan SIPO.</p>
-                        <div id="list-spionase" class="space-y-3 max-h-60 overflow-y-auto pr-1">
-                            </div>
+                        <div id="list-spionase" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
                     </div>
                 </div>
 
@@ -202,7 +200,7 @@
 
                 <div class="mt-6 pt-4 border-t border-red-100">
                     <button onclick="resetFactoryDemo()" class="w-full bg-red-50 text-red-500 border border-red-200 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">
-                        Hapus Semua Data Sistem (Reset Data)
+                        💥 Hapus Semua Data Sistem (Reset Data)
                     </button>
                 </div>
 
@@ -237,7 +235,7 @@
             </div>
 
             <button id="btn-download-cert" onclick="downloadOfficialCert()" class="hidden w-full border-2 border-black text-black py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-md">
-                Unduh Sertifikat Kelulusan SIPO
+                🎉 Unduh Sertifikat Kelulusan SIPO
             </button>
 
             <div class="space-y-3 border-t border-gray-100 pt-4">
@@ -249,8 +247,7 @@
                 <div class="sertifikat-item p-4 border border-gray-200 rounded-xl space-y-3 bg-gray-50">
                     <input type="text" id="input-nama-kegiatan" placeholder="Nama Kegiatan (Cth: LKMM)" class="input-field w-full px-4 py-2 rounded-lg text-xs font-medium">
                     <div class="flex gap-2">
-                        <select id="input-kategori-kegiatan" class="input-field w-1/2 px-2 py-2 rounded-lg font-bold uppercase text-[9px] text-gray-500">
-                            </select>
+                        <select id="input-kategori-kegiatan" class="input-field w-1/2 px-2 py-2 rounded-lg font-bold uppercase text-[9px] text-gray-500"></select>
                         <input type="url" id="input-link-kegiatan" placeholder="Link Bukti (G-Drive)" class="input-field w-1/2 px-3 py-2 rounded-lg text-xs">
                     </div>
                 </div>
@@ -258,20 +255,27 @@
             </div>
         </div>
 
-    </div> <footer class="mt-8 text-center text-[9px] text-gray-400 font-bold uppercase tracking-widest pb-4">
-    &copy; 2026 BEM KM MIPA - UNSOED<br>Kementerian Dalam Negeri
-</footer>
+    </div> 
+    
+    <footer class="mt-8 text-center text-[9px] text-gray-400 font-bold uppercase tracking-widest pb-4">
+        &copy; 2026 BEM KM MIPA - UNSOED<br>Kementerian Dalam Negeri
+    </footer>
 
     <script>
         // ==========================================
-        // SISTEM DATABASE & REAL-TIME EVENT
+        // INISIALISASI SUPABASE KILAT
         // ==========================================
-        let currentUserNIM = "";
+        const supabaseUrl = 'https://izcgyvllxehrspgbmoks.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6Y2d5dmxseGVocnNwZ2Jtb2tzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzM2MjcsImV4cCI6MjA5MDEwOTYyN30.WPNv5ijYvPntNSlaxERse9LZHS3LwvyQsx9z-_KXgPI';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+        let currentUserNIM = "";
+        let currentUserName = "";
+
+        // ==========================================
+        // PENGATURAN LOKAL (TETAP DI BROWSER UNTUK KECEPATAN)
+        // ==========================================
         function initDatabase() {
-            if(!localStorage.getItem("sipo_users")) localStorage.setItem("sipo_users", JSON.stringify({}));
-            if(!localStorage.getItem("sipo_antrian")) localStorage.setItem("sipo_antrian", JSON.stringify([]));
-            if(!localStorage.getItem("sipo_riwayat_admin")) localStorage.setItem("sipo_riwayat_admin", JSON.stringify([]));
             if(!localStorage.getItem("sipo_passing_grade")) localStorage.setItem("sipo_passing_grade", "120");
             if(!localStorage.getItem("sipo_default_angkatan")) localStorage.setItem("sipo_default_angkatan", "2025");
             
@@ -292,17 +296,6 @@
             document.getElementById('set-passing').value = localStorage.getItem("sipo_passing_grade");
             document.getElementById('set-angkatan').value = localStorage.getItem("sipo_default_angkatan");
         }
-
-        window.addEventListener('storage', function(e) {
-            if (currentUserNIM && !document.getElementById('dashboard-mhs').classList.contains('hidden')) {
-                bukaDashboardMahasiswa(currentUserNIM);
-            }
-            if (!document.getElementById('admin-dashboard-mini').classList.contains('hidden')) {
-                renderAntrianAdmin();
-                renderRiwayatAdmin();
-                renderSpionaseMahasiswa();
-            }
-        });
 
         // ==========================================
         // UI HELPERS
@@ -326,26 +319,32 @@
             }
         }
 
-        function resetFactoryDemo() {
-            if(confirm("PERINGATAN KERAS! 🚨\n\nIni akan menghapus SELURUH data Mahasiswa, Riwayat, Antrian, dan Pengaturan dari sistem demo ini.\n\nApakah Anda YAKIN ingin mengembalikan web ke kondisi pabrik?")) {
+        async function resetFactoryDemo() {
+            if(confirm("PERINGATAN KERAS! 🚨\n\nIni akan menghapus SELURUH data Mahasiswa, Riwayat, dan Antrian dari SUPABASE dan Browser.\n\nApakah Anda YAKIN ingin mengembalikan web ke kondisi pabrik?")) {
+                // Hapus dari Supabase
+                await supabase.from('sipo_pengajuan').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+                await supabase.from('sipo_users').delete().neq('nim', '0');
+                
+                // Hapus pengaturan browser
                 localStorage.clear();
+                
                 alert("Semua data berhasil dibersihkan! Sistem akan dimuat ulang.");
                 location.reload();
             }
         }
 
         // ==========================================
-        // LOGIKA MAHASISWA
+        // LOGIKA MAHASISWA -> SUPABASE
         // ==========================================
-        function loginMahasiswa() {
+        async function loginMahasiswa() {
             const nim = document.getElementById('mhs-nim').value.trim().toUpperCase();
             if(!nim) { alert("NIM harus diisi!"); return; }
-
             currentUserNIM = nim;
-            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
 
-            if (sipoUsers[nim] && sipoUsers[nim].nama) {
-                bukaDashboardMahasiswa(nim);
+            const { data, error } = await supabase.from('sipo_users').select('*').eq('nim', nim).maybeSingle();
+
+            if (data) {
+                bukaDashboardMahasiswa(data);
             } else {
                 document.getElementById('section-mhs').classList.add('hidden');
                 document.getElementById('main-header').classList.add('hidden');
@@ -354,31 +353,31 @@
             }
         }
 
-        function simpanProfilBaru() {
+        async function simpanProfilBaru() {
             const nama = document.getElementById('reg-nama').value.trim();
             const prodi = document.getElementById('reg-prodi').value;
             const angkatan = document.getElementById('reg-angkatan').value.trim();
 
             if(!nama || !prodi || !angkatan) { alert("Semua kolom identitas wajib diisi!"); return; }
 
-            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
-            sipoUsers[currentUserNIM] = { nama: nama, prodi: prodi, angkatan: angkatan, poin: 0, history: [] };
-            localStorage.setItem("sipo_users", JSON.stringify(sipoUsers));
+            const newUser = { nim: currentUserNIM, nama: nama, prodi: prodi, angkatan: angkatan, poin: 0 };
+            
+            const { error } = await supabase.from('sipo_users').insert([newUser]);
+            if(error) { alert("Gagal menyimpan data: " + error.message); return; }
             
             document.getElementById('section-lengkapi-profil').classList.add('hidden');
-            bukaDashboardMahasiswa(currentUserNIM);
+            bukaDashboardMahasiswa(newUser);
         }
 
-        function bukaDashboardMahasiswa(nim) {
-            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
-            const userData = sipoUsers[nim];
+        function bukaDashboardMahasiswa(userData) {
+            currentUserName = userData.nama;
             const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
 
             document.getElementById('section-mhs').classList.add('hidden');
             document.getElementById('main-header').classList.add('hidden');
             document.getElementById('dashboard-mhs').classList.remove('hidden');
             
-            document.getElementById('user-nim-display').innerText = nim;
+            document.getElementById('user-nim-display').innerText = userData.nim;
             document.getElementById('user-nama-display').innerText = userData.nama;
             document.getElementById('user-prodi-display').innerText = userData.prodi;
             document.getElementById('user-angkatan-display').innerText = userData.angkatan;
@@ -394,7 +393,7 @@
             }
 
             loadDropdownKategoriMhs();
-            renderRiwayatMahasiswa(userData.history);
+            loadRiwayatMhsDariSupabase();
         }
 
         function loadDropdownKategoriMhs() {
@@ -406,47 +405,49 @@
             });
         }
 
-        function submitAjuanBaru() {
+        async function submitAjuanBaru() {
             const namaKegiatan = document.getElementById('input-nama-kegiatan').value;
             const bobot = document.getElementById('input-kategori-kegiatan').value;
             const link = document.getElementById('input-link-kegiatan').value;
             
             if(!namaKegiatan || !bobot || !link) { alert("Isi form pengajuan dengan lengkap, termasuk Link G-Drive!"); return; }
 
-            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
-            const idAjuan = Date.now().toString(); 
             const waktuAju = new Date().toLocaleString('id-ID'); 
             
             const ajuanBaru = { 
-                id: idAjuan, nim: currentUserNIM, nama: sipoUsers[currentUserNIM].nama, 
-                kegiatan: namaKegiatan, link: link, poin: parseInt(bobot), 
-                status: "Menunggu", waktu: waktuAju, alasan: ""
+                nim: currentUserNIM, 
+                nama: currentUserName, 
+                kegiatan: namaKegiatan, 
+                link: link, 
+                poin: parseInt(bobot), 
+                status: "Menunggu", 
+                waktu: waktuAju, 
+                alasan: ""
             };
 
-            sipoUsers[currentUserNIM].history.unshift(ajuanBaru);
-            localStorage.setItem("sipo_users", JSON.stringify(sipoUsers));
+            const { error } = await supabase.from('sipo_pengajuan').insert([ajuanBaru]);
+            if(error) { alert("Gagal mengirim ajuan: " + error.message); return; }
 
-            const antrian = JSON.parse(localStorage.getItem("sipo_antrian"));
-            antrian.push(ajuanBaru);
-            localStorage.setItem("sipo_antrian", JSON.stringify(antrian));
-
-            alert("Dokumen berhasil diajukan pada " + waktuAju);
+            alert("Dokumen berhasil diajukan ke server!");
             document.getElementById('input-nama-kegiatan').value = '';
             document.getElementById('input-kategori-kegiatan').value = '';
             document.getElementById('input-link-kegiatan').value = '';
             
-            renderRiwayatMahasiswa(sipoUsers[currentUserNIM].history);
+            loadRiwayatMhsDariSupabase();
         }
 
-        function renderRiwayatMahasiswa(historyArray) {
+        async function loadRiwayatMhsDariSupabase() {
+            const { data, error } = await supabase.from('sipo_pengajuan').select('*').eq('nim', currentUserNIM).order('waktu', { ascending: false });
+            
             const container = document.getElementById('riwayat-sipo');
             container.innerHTML = "";
-            if(historyArray.length === 0) {
+
+            if(!data || data.length === 0) {
                 container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada dokumen yang diajukan.</p>";
                 return;
             }
 
-            historyArray.forEach(item => {
+            data.forEach(item => {
                 let statusBadge = item.status === "Disetujui" ? `<span class="text-[9px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Disetujui (+${item.poin})</span>` :
                                   item.status === "Ditolak" ? `<span class="text-[9px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Ditolak ❌</span>` :
                                   `<span class="text-[9px] font-bold text-yellow-600 bg-yellow-50 px-2 py-1 rounded">Menunggu ⏳</span>`;
@@ -454,7 +455,7 @@
                 let alasanHtml = (item.status === "Ditolak" && item.alasan) ? `<p class="text-[8px] text-red-500 mt-1 font-bold">Alasan Penolakan: ${item.alasan}</p>` : "";
 
                 container.innerHTML += `
-                    <div class="flex justify-between items-center p-3 border border-gray-100 rounded-xl bg-white mb-2">
+                    <div class="flex justify-between items-center p-3 border border-gray-100 rounded-xl bg-white mb-2 shadow-sm">
                         <div class="w-2/3">
                             <p class="font-bold text-[11px] truncate">${item.kegiatan}</p>
                             <div class="flex items-center gap-2 mt-1">
@@ -469,8 +470,7 @@
         }
 
         function downloadOfficialCert() {
-            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
-            const nama = sipoUsers[currentUserNIM].nama;
+            const nama = currentUserName;
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'landscape' });
@@ -494,7 +494,7 @@
         }
 
         // ==========================================
-        // LOGIKA ADMIN
+        // LOGIKA ADMIN -> SUPABASE
         // ==========================================
         function loginAdmin() {
             if(document.getElementById('admin-user').value === "admin_bem" && document.getElementById('admin-pass').value === "unsoed2026") {
@@ -504,9 +504,9 @@
                 
                 renderListKategoriAdmin();
                 renderListPeriodeAdmin();
-                renderAntrianAdmin();
-                renderRiwayatAdmin();
-                renderSpionaseMahasiswa();
+                loadAntrianAdminDariSupabase();
+                loadRiwayatAdminDariSupabase();
+                loadSpionaseDariSupabase();
             } else { alert("Akses Ditolak!"); }
         }
 
@@ -521,7 +521,7 @@
             alert("Ketentuan berhasil diperbarui!");
         }
 
-        // CRUD KATEGORI & PERIODE
+        // CRUD KATEGORI & PERIODE (TETAP LOKAL)
         function renderListKategoriAdmin() {
             const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
             const container = document.getElementById('list-kategori-admin');
@@ -585,18 +585,21 @@
             renderListPeriodeAdmin();
         }
 
-        // ANTRIAN 
-        function renderAntrianAdmin() {
-            const antrian = JSON.parse(localStorage.getItem("sipo_antrian"));
+        // ANTRIAN -> SUPABASE
+        async function loadAntrianAdminDariSupabase() {
+            const { data, error } = await supabase.from('sipo_pengajuan').select('*').eq('status', 'Menunggu').order('waktu', { ascending: true });
+            
             const container = document.getElementById('list-antrian');
             container.innerHTML = "";
-            if(antrian.length === 0) {
+
+            if(!data || data.length === 0) {
                 container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Antrian bersih.</p>";
                 return;
             }
-            antrian.forEach(item => {
+
+            data.forEach(item => {
                 container.innerHTML += `
-                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2 shadow-sm text-xs">
+                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2 shadow-sm text-xs transition-all">
                         <div class="flex justify-between items-center border-b border-gray-200 pb-2">
                             <span class="font-bold">${item.nim}</span>
                             <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
@@ -609,23 +612,26 @@
                             </div>
                         </div>
                         <div class="flex gap-2 mt-2 pt-1">
-                            <button onclick="prosesDokumen('${item.id}', '${item.nim}', ${item.poin}, 'Disetujui')" class="flex-1 bg-black text-white py-2 rounded-lg font-bold text-[9px] hover:bg-gray-800">Setujui</button>
-                            <button onclick="prosesDokumen('${item.id}', '${item.nim}', 0, 'Ditolak')" class="flex-1 border border-red-200 text-red-500 bg-white py-2 rounded-lg font-bold text-[9px] hover:bg-red-50">Tolak</button>
+                            <button onclick="prosesDokumenSupabase('${item.id}', '${item.nim}', ${item.poin}, 'Disetujui')" class="flex-1 bg-black text-white py-2 rounded-lg font-bold text-[9px] hover:bg-gray-800">Setujui</button>
+                            <button onclick="prosesDokumenSupabase('${item.id}', '${item.nim}', 0, 'Ditolak')" class="flex-1 border border-red-200 text-red-500 bg-white py-2 rounded-lg font-bold text-[9px] hover:bg-red-50">Tolak</button>
                         </div>
                     </div>`;
             });
         }
 
-        // RIWAYAT ADMIN (LINK G-DRIVE + FITUR HAPUS)
-        function renderRiwayatAdmin() {
-            const riwayat = JSON.parse(localStorage.getItem("sipo_riwayat_admin"));
+        // RIWAYAT ADMIN -> SUPABASE
+        async function loadRiwayatAdminDariSupabase() {
+            const { data, error } = await supabase.from('sipo_pengajuan').select('*').neq('status', 'Menunggu').order('waktu', { ascending: false });
+            
             const container = document.getElementById('list-riwayat-admin');
             container.innerHTML = "";
-            if(riwayat.length === 0) {
+
+            if(!data || data.length === 0) {
                 container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada riwayat verifikasi.</p>";
                 return;
             }
-            riwayat.forEach(item => {
+
+            data.forEach(item => {
                 let statusBadge = item.status === "Disetujui" 
                     ? `<span class="text-[8px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Disetujui (+${item.poin})</span>` 
                     : `<span class="text-[8px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Ditolak ❌</span>`;
@@ -636,7 +642,7 @@
                             <span class="font-bold text-[10px]">${item.nim} - ${item.nama}</span>
                             <div class="flex items-center gap-2">
                                 <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
-                                <button onclick="hapusSatuRiwayatAdmin('${item.id}')" class="text-red-500 font-bold hover:bg-red-50 px-1 rounded">✕</button>
+                                <button onclick="hapusSatuRiwayatAdminSupabase('${item.id}')" class="text-red-500 font-bold hover:bg-red-50 px-1 rounded">✕</button>
                             </div>
                         </div>
                         <div class="flex justify-between items-start mt-1">
@@ -653,101 +659,72 @@
             });
         }
 
-        function hapusSatuRiwayatAdmin(id) {
-            if(!confirm("Hapus riwayat verifikasi ini?")) return;
-            let riwayat = JSON.parse(localStorage.getItem("sipo_riwayat_admin"));
-            riwayat = riwayat.filter(r => r.id !== id);
-            localStorage.setItem("sipo_riwayat_admin", JSON.stringify(riwayat));
-            renderRiwayatAdmin();
+        async function hapusSatuRiwayatAdminSupabase(id) {
+            if(!confirm("Hapus riwayat verifikasi ini dari database?")) return;
+            await supabase.from('sipo_pengajuan').delete().eq('id', id);
+            loadRiwayatAdminDariSupabase();
         }
 
-        function hapusSemuaRiwayatAdmin() {
-            if(!confirm("YAKIN ingin mengosongkan SELURUH riwayat verifikasi?")) return;
-            localStorage.setItem("sipo_riwayat_admin", JSON.stringify([]));
-            renderRiwayatAdmin();
+        async function hapusSemuaRiwayatAdmin() {
+            if(!confirm("YAKIN ingin mengosongkan SELURUH riwayat verifikasi dari database?")) return;
+            await supabase.from('sipo_pengajuan').delete().neq('status', 'Menunggu');
+            loadRiwayatAdminDariSupabase();
         }
 
-        // PROSES DOKUMEN & ALASAN PENOLAKAN
-        function prosesDokumen(idAjuan, nim, poinDitambah, statusBaru) {
+        // PROSES DOKUMEN -> SUPABASE
+        async function prosesDokumenSupabase(idAjuan, nim, poinDitambah, statusBaru) {
             let alasan = "";
             if(statusBaru === "Ditolak") {
-                alasan = prompt("Masukkan alasan penolakan berkas ini (Cth: Sertifikat buram, link di private):");
+                alasan = prompt("Masukkan alasan penolakan berkas ini:");
                 if(alasan === null) return; 
             }
 
             const waktuProses = new Date().toLocaleString('id-ID'); 
-            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
-            const userHistory = sipoUsers[nim].history;
-            const indexHistory = userHistory.findIndex(h => h.id === idAjuan);
             
-            let itemProcessed = null;
-            if(indexHistory !== -1) {
-                userHistory[indexHistory].status = statusBaru;
-                userHistory[indexHistory].waktu = waktuProses; 
-                userHistory[indexHistory].alasan = alasan; 
-                itemProcessed = {...userHistory[indexHistory], nim: nim, nama: sipoUsers[nim].nama};
-            }
-            
+            // 1. Update Status di tabel pengajuan
+            await supabase.from('sipo_pengajuan').update({ status: statusBaru, waktu: waktuProses, alasan: alasan }).eq('id', idAjuan);
+
+            // 2. Jika disetujui, update poin di tabel users
             if(statusBaru === "Disetujui") {
-                sipoUsers[nim].poin += poinDitambah;
-            }
-            localStorage.setItem("sipo_users", JSON.stringify(sipoUsers));
-
-            let antrian = JSON.parse(localStorage.getItem("sipo_antrian"));
-            antrian = antrian.filter(a => a.id !== idAjuan);
-            localStorage.setItem("sipo_antrian", JSON.stringify(antrian));
-
-            if(itemProcessed) {
-                let riwayatAdmin = JSON.parse(localStorage.getItem("sipo_riwayat_admin"));
-                riwayatAdmin.unshift(itemProcessed); 
-                localStorage.setItem("sipo_riwayat_admin", JSON.stringify(riwayatAdmin));
+                const { data: user } = await supabase.from('sipo_users').select('poin').eq('nim', nim).single();
+                if(user) {
+                    await supabase.from('sipo_users').update({ poin: user.poin + poinDitambah }).eq('nim', nim);
+                }
             }
 
-            renderAntrianAdmin(); 
-            renderRiwayatAdmin();
-            renderSpionaseMahasiswa();
+            loadAntrianAdminDariSupabase(); 
+            loadRiwayatAdminDariSupabase();
+            loadSpionaseDariSupabase();
         }
 
-        // SPIONASE MAHASISWA
-        function renderSpionaseMahasiswa() {
-            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
+        // SPIONASE MAHASISWA -> SUPABASE
+        async function loadSpionaseDariSupabase() {
+            const { data, error } = await supabase.from('sipo_users').select('*').order('poin', { ascending: false });
+            
             const container = document.getElementById('list-spionase');
             container.innerHTML = "";
             
-            let adaData = false;
-            for(let nim in sipoUsers) {
-                if(sipoUsers[nim].nama) {
-                    adaData = true;
-                    container.innerHTML += `
-                        <div class="p-3 bg-blue-50/30 border border-blue-100 rounded-xl flex justify-between items-center text-xs">
-                            <div>
-                                <span class="font-bold">${sipoUsers[nim].nama}</span> <span class="text-[9px] text-gray-500">(${nim})</span>
-                                <p class="text-[8px] text-gray-500 mt-1">${sipoUsers[nim].prodi} • Angkatan ${sipoUsers[nim].angkatan}</p>
-                            </div>
-                            <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded text-[10px]">${sipoUsers[nim].poin} Poin</span>
-                        </div>`;
-                }
+            if(!data || data.length === 0) {
+                container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada data mahasiswa terdaftar.</p>";
+                return;
             }
-            if(!adaData) container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada data mahasiswa terdaftar.</p>";
+
+            data.forEach(user => {
+                container.innerHTML += `
+                    <div class="p-3 bg-blue-50/30 border border-blue-100 rounded-xl flex justify-between items-center text-xs mb-2 shadow-sm">
+                        <div>
+                            <span class="font-bold">${user.nama}</span> <span class="text-[9px] text-gray-500">(${user.nim})</span>
+                            <p class="text-[8px] text-gray-500 mt-1">${user.prodi} • Angkatan ${user.angkatan}</p>
+                        </div>
+                        <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded text-[10px]">${user.poin} Poin</span>
+                    </div>`;
+            });
         }
 
         // ==========================================
-        // FITUR REKAPITULASI & DOWNLOAD EXCEL RAPI
+        // FITUR REKAPITULASI EXCEL (DARI SUPABASE)
         // ==========================================
-        function getEligibleStudents() {
-            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
-            const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
-            let eligible = [];
-            
-            for (const nim in sipoUsers) {
-                if (sipoUsers[nim].poin >= passingGrade) {
-                    eligible.push({ nim: nim, ...sipoUsers[nim] });
-                }
-            }
-            return eligible;
-        }
-
-        function toggleTampilkanDataRekap() {
+        async function toggleTampilkanDataRekap() {
             const tabel = document.getElementById('tabel-rekap-admin');
             const btn = document.getElementById('btn-lihat-data');
             
@@ -755,11 +732,13 @@
                 const periodeId = document.getElementById('select-rekap-periode').value;
                 if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
                 
-                const eligible = getEligibleStudents();
+                const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
+                const { data: eligible } = await supabase.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
+
                 const tbody = document.getElementById('isi-tabel-rekap');
                 tbody.innerHTML = "";
                 
-                if(eligible.length === 0) {
+                if(!eligible || eligible.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="2" class="px-2 py-4 text-center text-gray-400 italic">Belum ada yang memenuhi Passing Grade.</td></tr>`;
                 } else {
                     eligible.forEach(mhs => {
@@ -783,12 +762,14 @@
             }
         }
 
-        function downloadRekapExcel() {
+        async function downloadRekapExcel() {
             const periodeId = document.getElementById('select-rekap-periode').value;
             if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
 
-            const eligible = getEligibleStudents();
-            if(eligible.length === 0) return alert("Tidak ada data untuk diunduh (Belum ada yang lulus).");
+            const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
+            const { data: eligible } = await supabase.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
+
+            if(!eligible || eligible.length === 0) return alert("Tidak ada data untuk diunduh (Belum ada yang lulus).");
 
             let tableHtml = `
             <html xmlns:x="urn:schemas-microsoft-com:office:excel">
