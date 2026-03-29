@@ -305,6 +305,38 @@
                 const supabaseUrl = 'https://izcgyvllxehrspgbmoks.supabase.co';
                 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6Y2d5dmxseGVocnNwZ2Jtb2tzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzM2MjcsImV4cCI6MjA5MDEwOTYyN30.WPNv5ijYvPntNSlaxERse9LZHS3LwvyQsx9z-_KXgPI';
                 sipoDB = window.supabase.createClient(supabaseUrl, supabaseKey);
+                // KODE CCTV REAL-TIME (Ditaruh di dalam function initSystem)
+        sipoDB
+          .channel('schema-db-changes')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'sipo_pengajuan' }, (payload) => {
+              console.log('Ada perubahan di pengajuan!', payload);
+              // Jika sedang di dashboard mahasiswa, update riwayatnya
+              if(currentUserNIM) loadRiwayatMhsDariSupabase();
+              // Jika sedang di dashboard admin, update antrian dan riwayatnya
+              if(!document.getElementById('admin-dashboard-mini').classList.contains('hidden')) {
+                  loadAntrianAdminDariSupabase();
+                  loadRiwayatAdminDariSupabase();
+              }
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'sipo_users' }, (payload) => {
+              console.log('Ada perubahan di profil/poin!', payload);
+              // Update progress bar poin mahasiswa secara real-time
+              if(currentUserNIM) {
+                  const updatedUser = payload.new;
+                  if(updatedUser.nim === currentUserNIM) {
+                      document.getElementById('user-poin-display').innerText = updatedUser.poin;
+                      let passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
+                      let persentase = (updatedUser.poin / passingGrade) * 100;
+                      document.getElementById('progress-bar').style.width = Math.min(persentase, 100) + '%';
+                      if (updatedUser.poin >= passingGrade) document.getElementById('btn-download-cert').classList.remove('hidden');
+                  }
+              }
+              // Update list spionase admin
+              if(!document.getElementById('admin-dashboard-mini').classList.contains('hidden')) {
+                  loadSpionaseDariSupabase();
+              }
+          })
+          .subscribe();
             }
         }
 
