@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPO BEM - Portal Eksklusif</title>
+    <title>SIPO BEM KM MIPA - Portal Eksklusif</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -13,7 +13,7 @@
         .input-field { background: #f9f9f9; border: 1px solid #eeeeee; transition: all 0.3s ease; }
         .input-field:focus { background: #ffffff; border-color: #000000; outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
         .hidden { display: none !important; }
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
         .accordion-btn { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
@@ -30,7 +30,7 @@
                     <div class="w-10 h-10 bg-black rounded-full"></div>
                 </div>
                 <h1 class="serif text-3xl mb-2 tracking-tight">SIPO Portal</h1>
-                <p class="text-[9px] tracking-[0.3em] uppercase text-gray-400 font-bold">Universitas Jenderal Soedirman</p>
+                <p class="text-[9px] tracking-[0.3em] uppercase text-gray-400 font-bold">BEM KM MIPA UNSOED</p>
             </header>
 
             <div id="tab-buttons" class="flex mb-8 border-b border-gray-100">
@@ -155,7 +155,24 @@
                     </button>
                     <div id="menu-rekap" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
                         <select id="select-rekap-periode" class="input-field w-full px-3 py-2 rounded-lg text-[10px] font-bold text-gray-600"></select>
-                        <button onclick="alert('Mengunduh rekapitulasi ke Excel (.xlsx)...')" class="w-full border border-gray-300 text-gray-500 py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Unduh Rekap Periode</button>
+                        
+                        <div class="flex gap-2">
+                            <button onclick="tampilkanDataRekap()" class="w-1/2 border border-black text-black py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Lihat Data</button>
+                            <button onclick="downloadRekapCSV()" class="w-1/2 bg-green-600 text-white py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-green-700 transition-all">Unduh Excel (.csv)</button>
+                        </div>
+                        
+                        <div id="tabel-rekap-admin" class="hidden mt-3 max-h-40 overflow-y-auto border border-gray-200 rounded-lg">
+                            <table class="w-full text-left text-[9px]">
+                                <thead class="bg-gray-100 text-gray-500 uppercase">
+                                    <tr>
+                                        <th class="px-2 py-2">NIM & Nama</th>
+                                        <th class="px-2 py-2 text-center">Poin</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="isi-tabel-rekap" class="divide-y divide-gray-100">
+                                    </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -215,7 +232,7 @@
 
     <script>
         // ==========================================
-        // SISTEM DATABASE LOKAL LENGKAP
+        // SISTEM DATABASE & REAL-TIME EVENT
         // ==========================================
         let currentUserNIM = "";
 
@@ -225,7 +242,6 @@
             if(!localStorage.getItem("sipo_passing_grade")) localStorage.setItem("sipo_passing_grade", "120");
             if(!localStorage.getItem("sipo_default_angkatan")) localStorage.setItem("sipo_default_angkatan", "2025");
             
-            // Database Kategori Dinamis
             if(!localStorage.getItem("sipo_kategori")) {
                 localStorage.setItem("sipo_kategori", JSON.stringify([
                     { id: Date.now()+1, nama: "Tingkat Nasional", bobot: 50 },
@@ -234,7 +250,6 @@
                 ]));
             }
             
-            // Database Periode Dinamis
             if(!localStorage.getItem("sipo_periode")) {
                 localStorage.setItem("sipo_periode", JSON.stringify([
                     { id: Date.now()+4, nama: "Gelombang 1 - 2026", start: "2026-03-01", end: "2026-03-31" }
@@ -244,6 +259,18 @@
             document.getElementById('set-passing').value = localStorage.getItem("sipo_passing_grade");
             document.getElementById('set-angkatan').value = localStorage.getItem("sipo_default_angkatan");
         }
+
+        // Listener untuk Auto-Refresh jika ada perubahan di tab lain
+        window.addEventListener('storage', function(e) {
+            // Jika tab ini adalah tab mahasiswa yang sedang login
+            if (currentUserNIM && !document.getElementById('dashboard-mhs').classList.contains('hidden')) {
+                bukaDashboardMahasiswa(currentUserNIM);
+            }
+            // Jika tab ini adalah tab admin yang sedang login
+            if (!document.getElementById('admin-dashboard-mini').classList.contains('hidden')) {
+                renderAntrianAdmin();
+            }
+        });
 
         // ==========================================
         // UI HELPERS (TAB & ACCORDION)
@@ -348,7 +375,7 @@
 
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
             const idAjuan = Date.now().toString(); 
-            const waktuAju = new Date().toLocaleString('id-ID'); // TIMESTAMP DIAJUKAN
+            const waktuAju = new Date().toLocaleString('id-ID'); 
             
             const ajuanBaru = { 
                 id: idAjuan, nim: currentUserNIM, nama: sipoUsers[currentUserNIM].nama, 
@@ -367,6 +394,8 @@
             document.getElementById('input-nama-kegiatan').value = '';
             document.getElementById('input-kategori-kegiatan').value = '';
             document.getElementById('input-link-kegiatan').value = '';
+            
+            // Auto-refresh UI ini
             renderRiwayatMahasiswa(sipoUsers[currentUserNIM].history);
         }
 
@@ -400,19 +429,28 @@
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'landscape' });
+            
+            // Ornamen Garis Tepi (Eksklusif)
+            doc.setDrawColor(0, 0, 0);
+            doc.setLineWidth(1);
+            doc.rect(10, 10, 277, 190);
+            doc.setLineWidth(0.3);
+            doc.rect(12, 12, 273, 186);
+
             doc.setFontSize(28); doc.text("SERTIFIKAT KELULUSAN SIPO", 148, 60, null, null, "center");
-            doc.setFontSize(14); doc.text("Badan Eksekutif Mahasiswa - Universitas Jenderal Soedirman", 148, 70, null, null, "center");
-            doc.setFontSize(20); doc.text("Diberikan kepada:", 148, 100, null, null, "center");
+            doc.setFontSize(14); doc.text("Badan Eksekutif Mahasiswa KM MIPA - Universitas Jenderal Soedirman", 148, 70, null, null, "center");
+            doc.setFontSize(18); doc.text("Diberikan kepada:", 148, 100, null, null, "center");
             doc.setFontSize(26); doc.text(`${nama} (${currentUserNIM})`, 148, 115, null, null, "center");
-            doc.setFontSize(14); doc.text("Telah memenuhi seluruh persyaratan sistem poin kemahasiswaan (SIPO)", 148, 140, null, null, "center");
+            doc.setFontSize(14); doc.text("Telah memenuhi seluruh persyaratan Sistem Poin Organisasi (SIPO)", 148, 140, null, null, "center");
             doc.text("dan dinyatakan LULUS YUDISIUM.", 148, 148, null, null, "center");
             doc.setFontSize(10); doc.text("Purwokerto, " + new Date().toLocaleDateString('id-ID'), 200, 175);
-            doc.text("Ketua PSDM BEM Unsoed", 200, 195);
+            doc.text("Ketua PSDM BEM KM MIPA", 200, 195);
+            
             doc.save(`Sertifikat_SIPO_${currentUserNIM}.pdf`);
         }
 
         // ==========================================
-        // LOGIKA ADMIN (DINAMIS & CRUD)
+        // LOGIKA ADMIN
         // ==========================================
         function loginAdmin() {
             if(document.getElementById('admin-user').value === "admin_bem" && document.getElementById('admin-pass').value === "unsoed2026") {
@@ -420,7 +458,6 @@
                 document.getElementById('main-header').classList.add('hidden');
                 document.getElementById('admin-dashboard-mini').classList.remove('hidden');
                 
-                // Load semua data dinamis saat login
                 renderListKategoriAdmin();
                 renderListPeriodeAdmin();
                 renderAntrianAdmin();
@@ -432,12 +469,13 @@
         }
 
         function simpanPengaturan() {
-            localStorage.setItem("sipo_passing_grade", document.getElementById('set-passing').value);
+            const newGrade = document.getElementById('set-passing').value;
+            localStorage.setItem("sipo_passing_grade", newGrade);
             localStorage.setItem("sipo_default_angkatan", document.getElementById('set-angkatan').value);
             alert("Ketentuan berhasil diperbarui!");
         }
 
-        // CRUD MANAJEMEN BOBOT (KATEGORI)
+        // CRUD KATEGORI
         function renderListKategoriAdmin() {
             const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
             const container = document.getElementById('list-kategori-admin');
@@ -471,7 +509,7 @@
             renderListKategoriAdmin();
         }
 
-        // CRUD MANAJEMEN PERIODE
+        // CRUD PERIODE
         function renderListPeriodeAdmin() {
             const periode = JSON.parse(localStorage.getItem("sipo_periode"));
             const container = document.getElementById('list-periode-admin');
@@ -504,7 +542,7 @@
             renderListPeriodeAdmin();
         }
 
-        // ANTRIAN & APPROVAL
+        // ANTRIAN
         function renderAntrianAdmin() {
             const antrian = JSON.parse(localStorage.getItem("sipo_antrian"));
             const container = document.getElementById('list-antrian');
@@ -521,7 +559,7 @@
                             <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
                         </div>
                         <div class="flex justify-between mt-1">
-                            <span class="font-bold text-[10px]">${item.kegiatan}</span>
+                            <span class="font-bold text-[10px] truncate max-w-[70%]">${item.kegiatan}</span>
                             <span class="text-green-600 font-bold">+${item.poin}</span>
                         </div>
                         <div class="flex gap-2 mt-2 pt-1">
@@ -533,14 +571,14 @@
         }
 
         function prosesDokumen(idAjuan, nim, poinDitambah, statusBaru) {
-            const waktuProses = new Date().toLocaleString('id-ID'); // WAKTU DISETUJUI/DITOLAK
+            const waktuProses = new Date().toLocaleString('id-ID'); 
             const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
             const userHistory = sipoUsers[nim].history;
             const indexHistory = userHistory.findIndex(h => h.id === idAjuan);
             
             if(indexHistory !== -1) {
                 userHistory[indexHistory].status = statusBaru;
-                userHistory[indexHistory].waktu = waktuProses; // Update waktu menjadi waktu diproses
+                userHistory[indexHistory].waktu = waktuProses; 
             }
             
             if(statusBaru === "Disetujui") {
@@ -552,7 +590,74 @@
             antrian = antrian.filter(a => a.id !== idAjuan);
             localStorage.setItem("sipo_antrian", JSON.stringify(antrian));
 
-            renderAntrianAdmin();
+            renderAntrianAdmin(); // UI Auto Update tanpa reload
+        }
+
+        // ==========================================
+        // FITUR REKAPITULASI & DOWNLOAD
+        // ==========================================
+        function getEligibleStudents() {
+            const sipoUsers = JSON.parse(localStorage.getItem("sipo_users"));
+            const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
+            let eligible = [];
+            
+            for (const nim in sipoUsers) {
+                if (sipoUsers[nim].poin >= passingGrade) {
+                    eligible.push({ nim: nim, ...sipoUsers[nim] });
+                }
+            }
+            return eligible;
+        }
+
+        function tampilkanDataRekap() {
+            const periodeId = document.getElementById('select-rekap-periode').value;
+            if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
+            
+            const eligible = getEligibleStudents();
+            const tbody = document.getElementById('isi-tabel-rekap');
+            tbody.innerHTML = "";
+            
+            if(eligible.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" class="px-2 py-4 text-center text-gray-400 italic">Belum ada mahasiswa yang memenuhi Passing Grade.</td></tr>`;
+            } else {
+                eligible.forEach(mhs => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="px-2 py-2">
+                                <span class="font-bold">${mhs.nama}</span><br>
+                                <span class="text-[8px] text-gray-400">${mhs.nim} • ${mhs.prodi} • ${mhs.angkatan}</span>
+                            </td>
+                            <td class="px-2 py-2 text-center text-green-600 font-bold">${mhs.poin}</td>
+                        </tr>`;
+                });
+            }
+            document.getElementById('tabel-rekap-admin').classList.remove('hidden');
+        }
+
+        function downloadRekapCSV() {
+            const periodeId = document.getElementById('select-rekap-periode').value;
+            if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
+
+            const eligible = getEligibleStudents();
+            if(eligible.length === 0) return alert("Tidak ada data untuk diunduh (Belum ada yang lulus).");
+
+            let csvContent = "\uFEFF"; // BOM untuk Excel agar baca format UTF-8
+            csvContent += "NIM,Nama Lengkap,Program Studi,Angkatan,Total Poin\n";
+
+            eligible.forEach(mhs => {
+                csvContent += `${mhs.nim},${mhs.nama},${mhs.prodi},${mhs.angkatan},${mhs.poin}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Rekap_SIPO_${Date.now()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
