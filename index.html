@@ -7,7 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1a1a1a; }
         .serif { font-family: 'Playfair Display', serif; }
@@ -51,7 +53,7 @@
                     <input type="password" id="mhs-token" maxlength="6" placeholder="••••••" class="input-field w-full mt-1 px-5 py-4 rounded-xl text-center text-2xl tracking-[0.8em]">
                 </div>
             </div>
-            <button onclick="loginMahasiswa()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg">Otorisasi</button>
+            <button onclick="loginMahasiswa()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-md">Otorisasi</button>
         </div>
 
         <div id="section-lengkapi-profil" class="hidden space-y-6">
@@ -80,7 +82,7 @@
                     <input type="text" id="admin-user" placeholder="Username Admin (admin_bem)" class="input-field w-full px-5 py-4 rounded-xl text-sm">
                     <input type="password" id="admin-pass" placeholder="Password (unsoed2026)" class="input-field w-full px-5 py-4 rounded-xl text-sm">
                 </div>
-                <button onclick="loginAdmin()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg">Otorisasi Sistem</button>
+                <button onclick="loginAdmin()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-md">Otorisasi Sistem</button>
             </div>
 
             <div id="admin-dashboard-mini" class="hidden space-y-4">
@@ -130,7 +132,7 @@
                     <div id="menu-periode" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
                         <div id="list-periode-admin" class="space-y-2 max-h-32 overflow-y-auto"></div>
                         <div class="space-y-2 border-t border-gray-100 pt-3">
-                            <input type="text" id="add-periode-nama" placeholder="Nama Periode (Cth: Gelombang 1 2026)" class="input-field w-full px-3 py-2 rounded-lg text-[10px]">
+                            <input type="text" id="add-periode-nama" placeholder="Nama Periode (Cth: Gel. 1 2026)" class="input-field w-full px-3 py-2 rounded-lg text-[10px]">
                             <div class="flex gap-2">
                                 <div class="w-1/2"><label class="text-[8px] text-gray-400 uppercase">Mulai</label><input type="date" id="add-periode-start" class="input-field w-full px-2 py-1 rounded-lg text-[10px]"></div>
                                 <div class="w-1/2"><label class="text-[8px] text-gray-400 uppercase">Selesai</label><input type="date" id="add-periode-end" class="input-field w-full px-2 py-1 rounded-lg text-[10px]"></div>
@@ -155,7 +157,7 @@
                     </button>
                     <div id="menu-riwayat-admin" class="hidden p-4 bg-white border-t border-gray-100">
                         <div class="flex justify-end mb-2">
-                            <button onclick="hapusSemuaRiwayatAdmin()" class="text-[8px] bg-red-50 text-red-500 font-bold px-2 py-1 rounded hover:bg-red-100">🗑️ Kosongkan Riwayat</button>
+                            <button onclick="hapusSemuaRiwayatAdminSupabase()" class="text-[8px] bg-red-50 text-red-500 font-bold px-2 py-1 rounded hover:bg-red-100">🗑️ Kosongkan Riwayat</button>
                         </div>
                         <div id="list-riwayat-admin" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
                     </div>
@@ -166,7 +168,7 @@
                         🕵️ Spionase Mahasiswa <span id="icon-menu-spionase">▼</span>
                     </button>
                     <div id="menu-spionase" class="hidden p-4 bg-white border-t border-blue-100">
-                        <p class="text-[9px] text-gray-500 italic mb-3">Daftar seluruh mahasiswa yang pernah mengakses & mengajukan SIPO.</p>
+                        <p class="text-[9px] text-gray-500 italic mb-3">Daftar mahasiswa yang pernah mengakses & mengajukan SIPO.</p>
                         <div id="list-spionase" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
                     </div>
                 </div>
@@ -191,8 +193,7 @@
                                         <th class="px-2 py-2 text-center">Poin</th>
                                     </tr>
                                 </thead>
-                                <tbody id="isi-tabel-rekap" class="divide-y divide-gray-100">
-                                </tbody>
+                                <tbody id="isi-tabel-rekap" class="divide-y divide-gray-100"></tbody>
                             </table>
                         </div>
                     </div>
@@ -200,7 +201,7 @@
 
                 <div class="mt-6 pt-4 border-t border-red-100">
                     <button onclick="resetFactoryDemo()" class="w-full bg-red-50 text-red-500 border border-red-200 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">
-                        💥 Hapus Semua Data Sistem (Reset Data)
+                        💥 Hapus Data Server (Reset Data)
                     </button>
                 </div>
 
@@ -254,9 +255,8 @@
                 <button onclick="submitAjuanBaru()" class="w-full bg-black text-white py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90">Kirim Ajuan Baru</button>
             </div>
         </div>
-
     </div> 
-    
+
     <footer class="mt-8 text-center text-[9px] text-gray-400 font-bold uppercase tracking-widest pb-4">
         &copy; 2026 BEM KM MIPA - UNSOED<br>Kementerian Dalam Negeri
     </footer>
@@ -273,32 +273,29 @@
         let currentUserName = "";
 
         // ==========================================
-        // PENGATURAN LOKAL (TETAP DI BROWSER UNTUK KECEPATAN)
+        // SETUP AWAL LOKAL (UI)
         // ==========================================
         function initDatabase() {
             if(!localStorage.getItem("sipo_passing_grade")) localStorage.setItem("sipo_passing_grade", "120");
             if(!localStorage.getItem("sipo_default_angkatan")) localStorage.setItem("sipo_default_angkatan", "2025");
-            
             if(!localStorage.getItem("sipo_kategori")) {
                 localStorage.setItem("sipo_kategori", JSON.stringify([
-                    { id: Date.now()+1, nama: "Tingkat Nasional", bobot: 50 },
-                    { id: Date.now()+2, nama: "Tingkat Universitas", bobot: 30 },
-                    { id: Date.now()+3, nama: "Tingkat Fakultas", bobot: 20 }
+                    { id: 1, nama: "Tingkat Nasional", bobot: 50 },
+                    { id: 2, nama: "Tingkat Universitas", bobot: 30 },
+                    { id: 3, nama: "Tingkat Fakultas", bobot: 20 }
                 ]));
             }
-            
             if(!localStorage.getItem("sipo_periode")) {
                 localStorage.setItem("sipo_periode", JSON.stringify([
-                    { id: Date.now()+4, nama: "Gelombang 1 - 2026", start: "2026-03-01", end: "2026-03-31" }
+                    { id: 4, nama: "Gelombang 1 - 2026", start: "2026-03-01", end: "2026-03-31" }
                 ]));
             }
-
             document.getElementById('set-passing').value = localStorage.getItem("sipo_passing_grade");
             document.getElementById('set-angkatan').value = localStorage.getItem("sipo_default_angkatan");
         }
 
         // ==========================================
-        // UI HELPERS
+        // UI HELPERS (TAB & TOGGLE)
         // ==========================================
         function switchTab(type) {
             document.getElementById('section-mhs').classList.toggle('hidden', type !== 'mhs');
@@ -320,14 +317,10 @@
         }
 
         async function resetFactoryDemo() {
-            if(confirm("PERINGATAN KERAS! 🚨\n\nIni akan menghapus SELURUH data Mahasiswa, Riwayat, dan Antrian dari SUPABASE dan Browser.\n\nApakah Anda YAKIN ingin mengembalikan web ke kondisi pabrik?")) {
-                // Hapus dari Supabase
+            if(confirm("PERINGATAN KERAS! 🚨\n\nIni akan menghapus SELURUH data Mahasiswa, Riwayat, dan Antrian dari SUPABASE dan Browser.\n\nApakah Anda YAKIN?")) {
                 await supabase.from('sipo_pengajuan').delete().neq('id', '00000000-0000-0000-0000-000000000000');
                 await supabase.from('sipo_users').delete().neq('nim', '0');
-                
-                // Hapus pengaturan browser
                 localStorage.clear();
-                
                 alert("Semua data berhasil dibersihkan! Sistem akan dimuat ulang.");
                 location.reload();
             }
@@ -340,8 +333,11 @@
             const nim = document.getElementById('mhs-nim').value.trim().toUpperCase();
             if(!nim) { alert("NIM harus diisi!"); return; }
             currentUserNIM = nim;
+            document.getElementById('mhs-nim').value = 'Mencari Data...';
 
             const { data, error } = await supabase.from('sipo_users').select('*').eq('nim', nim).maybeSingle();
+
+            document.getElementById('mhs-nim').value = nim;
 
             if (data) {
                 bukaDashboardMahasiswa(data);
@@ -361,7 +357,6 @@
             if(!nama || !prodi || !angkatan) { alert("Semua kolom identitas wajib diisi!"); return; }
 
             const newUser = { nim: currentUserNIM, nama: nama, prodi: prodi, angkatan: angkatan, poin: 0 };
-            
             const { error } = await supabase.from('sipo_users').insert([newUser]);
             if(error) { alert("Gagal menyimpan data: " + error.message); return; }
             
@@ -410,10 +405,9 @@
             const bobot = document.getElementById('input-kategori-kegiatan').value;
             const link = document.getElementById('input-link-kegiatan').value;
             
-            if(!namaKegiatan || !bobot || !link) { alert("Isi form pengajuan dengan lengkap, termasuk Link G-Drive!"); return; }
+            if(!namaKegiatan || !bobot || !link) { alert("Isi form pengajuan dengan lengkap!"); return; }
 
             const waktuAju = new Date().toLocaleString('id-ID'); 
-            
             const ajuanBaru = { 
                 nim: currentUserNIM, 
                 nama: currentUserName, 
@@ -438,22 +432,18 @@
 
         async function loadRiwayatMhsDariSupabase() {
             const { data, error } = await supabase.from('sipo_pengajuan').select('*').eq('nim', currentUserNIM).order('waktu', { ascending: false });
-            
             const container = document.getElementById('riwayat-sipo');
             container.innerHTML = "";
-
             if(!data || data.length === 0) {
                 container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada dokumen yang diajukan.</p>";
                 return;
             }
-
             data.forEach(item => {
                 let statusBadge = item.status === "Disetujui" ? `<span class="text-[9px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Disetujui (+${item.poin})</span>` :
                                   item.status === "Ditolak" ? `<span class="text-[9px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Ditolak ❌</span>` :
                                   `<span class="text-[9px] font-bold text-yellow-600 bg-yellow-50 px-2 py-1 rounded">Menunggu ⏳</span>`;
-                
                 let alasanHtml = (item.status === "Ditolak" && item.alasan) ? `<p class="text-[8px] text-red-500 mt-1 font-bold">Alasan Penolakan: ${item.alasan}</p>` : "";
-
+                
                 container.innerHTML += `
                     <div class="flex justify-between items-center p-3 border border-gray-100 rounded-xl bg-white mb-2 shadow-sm">
                         <div class="w-2/3">
@@ -469,33 +459,7 @@
             });
         }
 
-        function downloadOfficialCert() {
-            const nama = currentUserName;
-
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'landscape' });
-            
-            doc.setDrawColor(0, 0, 0);
-            doc.setLineWidth(1);
-            doc.rect(10, 10, 277, 190);
-            doc.setLineWidth(0.3);
-            doc.rect(12, 12, 273, 186);
-
-            doc.setFontSize(28); doc.text("SERTIFIKAT KELULUSAN SIPO", 148, 60, null, null, "center");
-            doc.setFontSize(14); doc.text("Badan Eksekutif Mahasiswa KM MIPA - Universitas Jenderal Soedirman", 148, 70, null, null, "center");
-            doc.setFontSize(18); doc.text("Diberikan kepada:", 148, 100, null, null, "center");
-            doc.setFontSize(26); doc.text(`${nama} (${currentUserNIM})`, 148, 115, null, null, "center");
-            doc.setFontSize(14); doc.text("Telah memenuhi seluruh persyaratan Sistem Poin Organisasi (SIPO)", 148, 140, null, null, "center");
-            doc.text("dan dinyatakan LULUS YUDISIUM.", 148, 148, null, null, "center");
-            doc.setFontSize(10); doc.text("Purwokerto, " + new Date().toLocaleDateString('id-ID'), 200, 175);
-            doc.text("Ketua PSDM BEM KM MIPA", 200, 195);
-            
-            doc.save(`Sertifikat_SIPO_${currentUserNIM}.pdf`);
-        }
-
-        // ==========================================
-        // LOGIKA ADMIN -> SUPABASE
-        // ==========================================
+        // --- ADMIN -> SUPABASE ---
         function loginAdmin() {
             if(document.getElementById('admin-user').value === "admin_bem" && document.getElementById('admin-pass').value === "unsoed2026") {
                 document.getElementById('admin-login-form').classList.add('hidden');
@@ -515,13 +479,11 @@
         }
 
         function simpanPengaturan() {
-            const newGrade = document.getElementById('set-passing').value;
-            localStorage.setItem("sipo_passing_grade", newGrade);
+            localStorage.setItem("sipo_passing_grade", document.getElementById('set-passing').value);
             localStorage.setItem("sipo_default_angkatan", document.getElementById('set-angkatan').value);
             alert("Ketentuan berhasil diperbarui!");
         }
 
-        // CRUD KATEGORI & PERIODE (TETAP LOKAL)
         function renderListKategoriAdmin() {
             const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
             const container = document.getElementById('list-kategori-admin');
@@ -585,23 +547,19 @@
             renderListPeriodeAdmin();
         }
 
-        // ANTRIAN -> SUPABASE
         async function loadAntrianAdminDariSupabase() {
             const { data, error } = await supabase.from('sipo_pengajuan').select('*').eq('status', 'Menunggu').order('waktu', { ascending: true });
-            
             const container = document.getElementById('list-antrian');
             container.innerHTML = "";
-
             if(!data || data.length === 0) {
                 container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Antrian bersih.</p>";
                 return;
             }
-
             data.forEach(item => {
                 container.innerHTML += `
                     <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2 shadow-sm text-xs transition-all">
                         <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-                            <span class="font-bold">${item.nim}</span>
+                            <span class="font-bold">${item.nim} - ${item.nama}</span>
                             <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
                         </div>
                         <div class="flex justify-between items-center mt-1">
@@ -619,23 +577,18 @@
             });
         }
 
-        // RIWAYAT ADMIN -> SUPABASE
         async function loadRiwayatAdminDariSupabase() {
             const { data, error } = await supabase.from('sipo_pengajuan').select('*').neq('status', 'Menunggu').order('waktu', { ascending: false });
-            
             const container = document.getElementById('list-riwayat-admin');
             container.innerHTML = "";
-
             if(!data || data.length === 0) {
                 container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada riwayat verifikasi.</p>";
                 return;
             }
-
             data.forEach(item => {
                 let statusBadge = item.status === "Disetujui" 
                     ? `<span class="text-[8px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Disetujui (+${item.poin})</span>` 
                     : `<span class="text-[8px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Ditolak ❌</span>`;
-                
                 container.innerHTML += `
                     <div class="p-3 bg-white border border-gray-100 rounded-xl space-y-2 shadow-sm text-xs mb-2">
                         <div class="flex justify-between items-center border-b border-gray-100 pb-1">
@@ -660,55 +613,42 @@
         }
 
         async function hapusSatuRiwayatAdminSupabase(id) {
-            if(!confirm("Hapus riwayat verifikasi ini dari database?")) return;
+            if(!confirm("Hapus riwayat ini dari database?")) return;
             await supabase.from('sipo_pengajuan').delete().eq('id', id);
             loadRiwayatAdminDariSupabase();
         }
 
-        async function hapusSemuaRiwayatAdmin() {
+        async function hapusSemuaRiwayatAdminSupabase() {
             if(!confirm("YAKIN ingin mengosongkan SELURUH riwayat verifikasi dari database?")) return;
             await supabase.from('sipo_pengajuan').delete().neq('status', 'Menunggu');
             loadRiwayatAdminDariSupabase();
         }
 
-        // PROSES DOKUMEN -> SUPABASE
         async function prosesDokumenSupabase(idAjuan, nim, poinDitambah, statusBaru) {
             let alasan = "";
             if(statusBaru === "Ditolak") {
                 alasan = prompt("Masukkan alasan penolakan berkas ini:");
                 if(alasan === null) return; 
             }
-
             const waktuProses = new Date().toLocaleString('id-ID'); 
-            
-            // 1. Update Status di tabel pengajuan
             await supabase.from('sipo_pengajuan').update({ status: statusBaru, waktu: waktuProses, alasan: alasan }).eq('id', idAjuan);
-
-            // 2. Jika disetujui, update poin di tabel users
             if(statusBaru === "Disetujui") {
                 const { data: user } = await supabase.from('sipo_users').select('poin').eq('nim', nim).single();
-                if(user) {
-                    await supabase.from('sipo_users').update({ poin: user.poin + poinDitambah }).eq('nim', nim);
-                }
+                if(user) await supabase.from('sipo_users').update({ poin: user.poin + poinDitambah }).eq('nim', nim);
             }
-
             loadAntrianAdminDariSupabase(); 
             loadRiwayatAdminDariSupabase();
             loadSpionaseDariSupabase();
         }
 
-        // SPIONASE MAHASISWA -> SUPABASE
         async function loadSpionaseDariSupabase() {
             const { data, error } = await supabase.from('sipo_users').select('*').order('poin', { ascending: false });
-            
             const container = document.getElementById('list-spionase');
             container.innerHTML = "";
-            
             if(!data || data.length === 0) {
                 container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada data mahasiswa terdaftar.</p>";
                 return;
             }
-
             data.forEach(user => {
                 container.innerHTML += `
                     <div class="p-3 bg-blue-50/30 border border-blue-100 rounded-xl flex justify-between items-center text-xs mb-2 shadow-sm">
@@ -721,20 +661,15 @@
             });
         }
 
-        // ==========================================
-        // FITUR REKAPITULASI EXCEL (DARI SUPABASE)
-        // ==========================================
         async function toggleTampilkanDataRekap() {
             const tabel = document.getElementById('tabel-rekap-admin');
             const btn = document.getElementById('btn-lihat-data');
-            
             if(tabel.classList.contains('hidden')) {
                 const periodeId = document.getElementById('select-rekap-periode').value;
                 if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
                 
                 const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
                 const { data: eligible } = await supabase.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
-
                 const tbody = document.getElementById('isi-tabel-rekap');
                 tbody.innerHTML = "";
                 
@@ -769,42 +704,12 @@
             const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
             const { data: eligible } = await supabase.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
 
-            if(!eligible || eligible.length === 0) return alert("Tidak ada data untuk diunduh (Belum ada yang lulus).");
+            if(!eligible || eligible.length === 0) return alert("Tidak ada data untuk diunduh.");
 
-            let tableHtml = `
-            <html xmlns:x="urn:schemas-microsoft-com:office:excel">
-            <head>
-                <meta charset="utf-8">
-                <style>
-                    table { border-collapse: collapse; font-family: Arial, sans-serif; }
-                    th { background-color: #1a1a1a; color: #ffffff; font-weight: bold; padding: 10px; border: 1px solid #dddddd; text-align: center; }
-                    td { padding: 8px; border: 1px solid #dddddd; text-align: left; }
-                    .poin { text-align: center; font-weight: bold; color: #16a34a; }
-                    .title { font-size: 16px; font-weight: bold; text-align: center; background-color: #f3f4f6; padding: 10px; }
-                </style>
-            </head>
-            <body>
-                <table>
-                    <tr><td colspan="5" class="title">REKAPITULASI KELULUSAN SIPO - BEM KM MIPA UNSOED</td></tr>
-                    <tr>
-                        <th>NO</th>
-                        <th>NIM</th>
-                        <th>NAMA LENGKAP</th>
-                        <th>PROGRAM STUDI</th>
-                        <th>TOTAL POIN</th>
-                    </tr>`;
-
+            let tableHtml = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><style>table { border-collapse: collapse; font-family: Arial, sans-serif; } th { background-color: #1a1a1a; color: #ffffff; font-weight: bold; padding: 10px; border: 1px solid #dddddd; text-align: center; } td { padding: 8px; border: 1px solid #dddddd; text-align: left; } .poin { text-align: center; font-weight: bold; color: #16a34a; } .title { font-size: 16px; font-weight: bold; text-align: center; background-color: #f3f4f6; padding: 10px; }</style></head><body><table><tr><td colspan="5" class="title">REKAPITULASI KELULUSAN SIPO - BEM KM MIPA UNSOED</td></tr><tr><th>NO</th><th>NIM</th><th>NAMA LENGKAP</th><th>PROGRAM STUDI</th><th>TOTAL POIN</th></tr>`;
             eligible.forEach((mhs, index) => {
-                tableHtml += `
-                    <tr>
-                        <td style="text-align:center;">${index + 1}</td>
-                        <td>${mhs.nim}</td>
-                        <td>${mhs.nama}</td>
-                        <td>${mhs.prodi} (Angkatan ${mhs.angkatan})</td>
-                        <td class="poin">${mhs.poin}</td>
-                    </tr>`;
+                tableHtml += `<tr><td style="text-align:center;">${index + 1}</td><td>${mhs.nim}</td><td>${mhs.nama}</td><td>${mhs.prodi} (Angkatan ${mhs.angkatan})</td><td class="poin">${mhs.poin}</td></tr>`;
             });
-
             tableHtml += `</table></body></html>`;
 
             const blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel' });
@@ -814,6 +719,22 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        function downloadOfficialCert() {
+            const nama = currentUserName;
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+            doc.setDrawColor(0, 0, 0); doc.setLineWidth(1); doc.rect(10, 10, 277, 190); doc.setLineWidth(0.3); doc.rect(12, 12, 273, 186);
+            doc.setFontSize(28); doc.text("SERTIFIKAT KELULUSAN SIPO", 148, 60, null, null, "center");
+            doc.setFontSize(14); doc.text("Badan Eksekutif Mahasiswa KM MIPA - Universitas Jenderal Soedirman", 148, 70, null, null, "center");
+            doc.setFontSize(18); doc.text("Diberikan kepada:", 148, 100, null, null, "center");
+            doc.setFontSize(26); doc.text(`${nama} (${currentUserNIM})`, 148, 115, null, null, "center");
+            doc.setFontSize(14); doc.text("Telah memenuhi seluruh persyaratan Sistem Poin Organisasi (SIPO)", 148, 140, null, null, "center");
+            doc.text("dan dinyatakan LULUS YUDISIUM.", 148, 148, null, null, "center");
+            doc.setFontSize(10); doc.text("Purwokerto, " + new Date().toLocaleDateString('id-ID'), 200, 175);
+            doc.text("Ketua PSDM BEM KM MIPA", 200, 195);
+            doc.save(`Sertifikat_SIPO_${currentUserNIM}.pdf`);
         }
     </script>
 </body>
