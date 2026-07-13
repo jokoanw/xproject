@@ -63,7 +63,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -83,7 +82,6 @@
             font-size: 15px;
         }
         
-        /* Summary Box */
         .summary-box {
             border-top: 2px double var(--crimson);
             padding-top: 15px;
@@ -95,10 +93,9 @@
             font-size: 20px;
             font-weight: bold;
             margin-top: 10px;
-            display: none; /* Hidden by default */
+            display: none;
         }
 
-        /* Form Styles */
         .form-group {
             margin-bottom: 20px;
         }
@@ -107,6 +104,7 @@
             font-weight: bold;
             margin-bottom: 8px;
             font-size: 15px;
+            line-height: 1.4;
         }
         select, input[type="text"], textarea {
             width: 100%;
@@ -155,7 +153,6 @@
                 </tr>
             </thead>
             <tbody id="khs-body">
-                <!-- Data will be injected via JS -->
             </tbody>
         </table>
         <div class="summary-box">
@@ -182,33 +179,37 @@
         <p style="font-style: italic; border-bottom: 1px solid #ccc; padding-bottom: 10px;">Skala: 1 (Tidak Pernah) - 4 (Selalu)</p>
         
         <div class="form-group">
-            <label>1. Seberapa jelas arah, target, dan ekspektasi kinerja divisi disampaikan sejak First Meet?</label>
+            <label>1. Seberapa sering instruksi, target, dan ekspektasi kinerja divisi tersampaikan dengan sangat jelas dan tidak ambigu sejak First Meet hingga saat ini?</label>
             <select><option value="4">4 - Selalu Jelas</option><option value="3">3 - Sering</option><option value="2">2 - Jarang</option><option value="1">1 - Tidak Pernah</option></select>
         </div>
         <div class="form-group">
-            <label>2. Selama Rapat Divisi 1-3, seberapa sering rapat berjalan efisien dan menghasilkan keputusan konkret?</label>
+            <label>2. Selama tiga kali Rapat Divisi, seberapa sering rapat berjalan dengan efisien, mengikuti agenda terstruktur, dan menghasilkan output keputusan konkret?</label>
             <select><option value="4">4 - Selalu Efisien</option><option value="3">3 - Sering</option><option value="2">2 - Jarang</option><option value="1">1 - Tidak Pernah</option></select>
         </div>
         <div class="form-group">
-            <label>3. Saat ada kendala, seberapa sering solusi logis/arahan diberikan dalam rapat?</label>
+            <label>3. Saat menghadapi kendala teknis atau kebingungan, seberapa sering saya memberikan arahan, solusi logis, atau jalan keluar taktis?</label>
             <select><option value="4">4 - Selalu Diberikan</option><option value="3">3 - Sering</option><option value="2">2 - Jarang</option><option value="1">1 - Tidak Pernah</option></select>
         </div>
         <div class="form-group">
-            <label>4. Seberapa sering porsi kerja dibagi secara adil pasca-rapat?</label>
+            <label>4. Pada saat distribusi action items pasca-rapat, seberapa sering beban kerja dibagikan secara adil, proporsional, dan sesuai kapasitas?</label>
             <select><option value="4">4 - Selalu Adil</option><option value="3">3 - Sering</option><option value="2">2 - Jarang</option><option value="1">1 - Tidak Pernah</option></select>
+        </div>
+        <div class="form-group">
+            <label>5. Seberapa sering saya menunjukkan sikap terbuka, mau menerima masukan, dan mengedepankan diskusi untuk mencapai mufakat?</label>
+            <select><option value="4">4 - Selalu Terbuka</option><option value="3">3 - Sering</option><option value="2">2 - Jarang</option><option value="1">1 - Tidak Pernah</option></select>
         </div>
 
         <h4 style="margin-top: 30px; border-bottom: 1px solid #ccc;">Umpan Balik Kualitatif</h4>
         <div class="form-group">
-            <label>START (Apa yang harus mulai diterapkan?)</label>
+            <label>START (Metode/kebiasaan baru apa yang sebaiknya mulai diterapkan?)</label>
             <textarea rows="2" placeholder="Tuliskan saran kebiasaan baru..."></textarea>
         </div>
         <div class="form-group">
-            <label>STOP (Apa hambatan yang harus dihentikan?)</label>
+            <label>STOP (Hambatan terbesar apa yang harus dihentikan?)</label>
             <textarea rows="2" placeholder="Tuliskan hal yang menghambat..."></textarea>
         </div>
         <div class="form-group">
-            <label>CONTINUE (Apa yang sudah baik dan harus dipertahankan?)</label>
+            <label>CONTINUE (Aspek terbaik apa yang sudah berjalan efektif dan wajib dipertahankan?)</label>
             <textarea rows="2" placeholder="Tuliskan apresiasi kinerja..."></textarea>
         </div>
 
@@ -220,7 +221,7 @@
         <h3>Buka Sesi Evaluasi Baru (Admin)</h3>
         <div class="form-group">
             <label>Nama Proyek / Periode Evaluasi</label>
-            <input type="text" id="new-eval-name" placeholder="Misal: Proyek ATP Final">
+            <input type="text" id="new-eval-name" placeholder="Misal: Evaluasi Bulan ke-3">
         </div>
         <div class="form-group">
             <label>Bobot (SKS)</label>
@@ -241,7 +242,6 @@
 </div>
 
 <script>
-    // Tab Navigation Logic
     function openTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
@@ -249,12 +249,10 @@
         event.currentTarget.classList.add('active');
     }
 
-    // Database Mockup
     let evaluations = [
-        { name: "Evaluasi Bulan 1 & 2 (First Meet, Rapat Div 1-3)", sks: 3, ip: 3.75 }
+        { name: "Evaluasi Bulan 1 & 2 (First Meet, Rapat Div 1-3)", sks: 3, ip: 3.80 }
     ];
 
-    // Render Dashboard & IPK Calculation
     function renderDashboard() {
         const tbody = document.getElementById('khs-body');
         tbody.innerHTML = '';
@@ -277,7 +275,6 @@
 
         document.getElementById('total-sks').innerText = totalSks;
 
-        // Core Logic: Show IPK only if > 1 evaluation
         if (evaluations.length > 1) {
             let ipk = totalWeightedPoints / totalSks;
             document.getElementById('ipk-value').innerText = ipk.toFixed(2);
@@ -289,7 +286,6 @@
         }
     }
 
-    // Add New Evaluation Function
     function addEvaluation() {
         const name = document.getElementById('new-eval-name').value;
         const sks = parseInt(document.getElementById('new-eval-sks').value);
@@ -301,16 +297,13 @@
         }
 
         evaluations.push({ name: name, sks: sks, ip: ip });
-        
-        // Clear form
         document.getElementById('new-eval-name').value = '';
         
         alert("Sesi evaluasi berhasil ditambahkan! Cek Dashboard KHS.");
         renderDashboard();
-        openTab('dashboard'); // Redirect to dashboard
+        openTab('dashboard'); 
     }
 
-    // Initial render
     renderDashboard();
 </script>
 
