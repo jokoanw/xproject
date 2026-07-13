@@ -2,759 +2,217 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIPO BEM KM MIPA © BEM 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>KHS Kepemimpinan - Universitas Harvard Aesthetic</title>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; color: #1a1a1a; }
-        .serif { font-family: 'Playfair Display', serif; }
-        .input-field { background: #f9f9f9; border: 1px solid #eeeeee; transition: all 0.3s ease; }
-        .input-field:focus { background: #ffffff; border-color: #000000; outline: none; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-        .hidden { display: none !important; }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
-        .accordion-btn { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-    </style>
-
-    <script>
-        function switchTab(type) {
-            document.getElementById('section-mhs').classList.toggle('hidden', type !== 'mhs');
-            document.getElementById('section-adm').classList.toggle('hidden', type !== 'adm');
-            document.getElementById('tab-mhs').className = type === 'mhs' ? "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-black transition-all" : "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-300 transition-all";
-            document.getElementById('tab-adm').className = type === 'adm' ? "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-black transition-all" : "flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-300 transition-all";
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #fcfbf9;
+            color: #1e1e1e;
+            margin: 0;
+            padding: 40px;
         }
-
-        function toggleAdminMenu(menuId) {
-            const el = document.getElementById(menuId);
-            const icon = document.getElementById('icon-' + menuId);
-            if(el.classList.contains('hidden')) {
-                el.classList.remove('hidden');
-                icon.innerText = "▲";
-            } else {
-                el.classList.add('hidden');
-                icon.innerText = "▼";
-            }
+        .transcript-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 50px;
+            border: 1px solid #dcd6cd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-    </script>
-</head>
-<body class="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-50/30" onload="initSystem()">
-
-    <div class="max-w-md w-full bg-white p-8 rounded-[2rem] shadow-2xl shadow-black/5" id="main-container">
+        .header-academic {
+            text-align: center;
+            border-bottom: 2px solid #A51C30;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header-academic h1 {
+            font-family: 'Georgia', serif;
+            color: #A51C30;
+            font-size: 26px;
+            letter-spacing: 2px;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+        }
+        .header-academic p {
+            font-style: italic;
+            margin: 0;
+            color: #555;
+            font-size: 14px;
+        }
+        .student-info {
+            width: 100%;
+            margin-bottom: 35px;
+            font-size: 14px;
+            border-collapse: collapse;
+        }
+        .student-info td {
+            padding: 6px 0;
+            vertical-align: top;
+        }
+        .student-info td.label {
+            width: 20%;
+            font-weight: bold;
+            color: #333;
+        }
+        .student-info td.value {
+            width: 30%;
+        }
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        .main-table th {
+            background-color: #A51C30;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+            font-weight: normal;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 12px;
+            text-align: left;
+            border: 1px solid #A51C30;
+        }
+        .main-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0dbd3;
+            font-size: 14px;
+        }
+        .main-table tr:nth-child(even) {
+            background-color: #faf9f6;
+        }
+        .text-center { text-align: center !important; }
+        .text-right { text-align: right !important; }
         
-        <div id="main-header">
-            <header class="text-center mb-10">
-                <div class="flex justify-center gap-3 mb-6 opacity-20">
-                    <div class="w-10 h-10 bg-black rounded-full"></div>
-                    <div class="w-10 h-10 bg-black rounded-full"></div>
-                </div>
-                <h1 class="serif text-3xl mb-2 tracking-tight">SIPO Portal</h1>
-                <p class="text-[9px] tracking-[0.3em] uppercase text-gray-400 font-bold">BEM KM MIPA UNSOED</p>
-            </header>
+        .summary-box {
+            width: 100%;
+            margin-top: 20px;
+            border-top: 2px double #A51C30;
+            padding-top: 15px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: flex-end;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+        .summary-label {
+            font-weight: bold;
+            width: 250px;
+            text-align: right;
+            padding-right: 20px;
+        }
+        .summary-value {
+            width: 80px;
+            text-align: right;
+            font-weight: bold;
+        }
+        .gpa-highlight {
+            font-size: 18px;
+            color: #A51C30;
+            border-top: 1px solid #dcd6cd;
+            padding-top: 5px;
+            margin-top: 5px;
+        }
+        .footer-signatures {
+            margin-top: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature-block {
+            text-align: center;
+            width: 40%;
+            font-size: 13px;
+        }
+        .signature-space {
+            height: 70px;
+        }
+        .signature-line {
+            border-top: 1px solid #333;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
 
-            <div id="tab-buttons" class="flex mb-8 border-b border-gray-100">
-                <button onclick="switchTab('mhs')" id="tab-mhs" class="flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-black transition-all">Mahasiswa</button>
-                <button onclick="switchTab('adm')" id="tab-adm" class="flex-1 pb-4 text-xs font-bold uppercase tracking-widest border-b-2 border-transparent text-gray-300 transition-all">Pengurus</button>
-            </div>
+<div class="transcript-container">
+    <div class="header-academic">
+        <h1>Official Report of Leadership Performance</h1>
+        <p>Office of Organizational Leadership & Development • Academic Year 2026</p>
+    </div>
+
+    <table class="student-info">
+        <tr>
+            <td class="label">Nama Pemimpin:</td>
+            <td class="value">Tuan Afdhi Abdilah</td>
+            <td class="label">ID Transkrip:</td>
+            <td class="value">LDR-2026-0036</td>
+        </tr>
+        <tr>
+            <td class="label">Komando/Fakultas:</td>
+            <td class="value">Computational Physics & Systems</td>
+            <td class="label">Tanggal Cetak:</td>
+            <td class="value">13 Juli 2026</td>
+        </tr>
+    </table>
+
+    <table class="main-table">
+        <thead>
+            <tr>
+                <th style="width: 15%;">Kode Proyek</th>
+                <th style="width: 45%;">Nama Evaluasi / Proyek</th>
+                <th style="width: 13%;" class="text-center">SKS (Bobot)</th>
+                <th style="width: 12%;" class="text-center">Nilai (IP)</th>
+                <th style="width: 15%;" class="text-center">Predikat</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center">LDR-001</td>
+                <td>Pengembangan Sistem Web Klasifikasi Kelas (ATP)</td>
+                <td class="text-center">3</td>
+                <td class="text-center">3.85</td>
+                <td class="text-center" style="color: #A51C30; font-weight: bold;">High Honors</td>
+            </tr>
+            <tr>
+                <td class="text-center">LDR-002</td>
+                <td>Simulasi Numerik & Kinematika Fisika D</td>
+                <td class="text-center">2</td>
+                <td class="text-center">3.60</td>
+                <td class="text-center">Honors</td>
+            </tr>
+            <tr>
+                <td class="text-center">LDR-003</td>
+                <td>Manajemen Distribusi Logistik Akhir Tahun</td>
+                <td class="text-center">4</td>
+                <td class="text-center">3.92</td>
+                <td class="text-center" style="color: #A51C30; font-weight: bold;">Highest Honors</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="summary-box">
+        <div class="summary-row">
+            <div class="summary-label">Total Kredit Bobot (SKS) Diambil:</div>
+            <div class="summary-value">9</div>
         </div>
-
-        <div id="section-mhs" class="space-y-6">
-            <div class="space-y-3">
-                <div>
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Nomor Induk Mahasiswa</label>
-                    <input type="text" id="mhs-nim" placeholder="Cth: K1C025036" class="input-field w-full mt-1 px-5 py-4 rounded-xl text-sm uppercase">
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-1">Token Akses (Aktif)</label>
-                    <input type="password" id="mhs-token" maxlength="6" placeholder="••••••" class="input-field w-full mt-1 px-5 py-4 rounded-xl text-center text-2xl tracking-[0.8em]">
-                </div>
-            </div>
-            <button onclick="loginMahasiswa()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-md">Otorisasi</button>
+        <div class="summary-row">
+            <div class="summary-label">Total Poin Mutu Terbobot:</div>
+            <div class="summary-value">34.43</div>
         </div>
-
-        <div id="section-lengkapi-profil" class="hidden space-y-6">
-            <div class="text-center mb-6">
-                <h2 class="serif text-2xl">Lengkapi Identitas</h2>
-                <p class="text-[10px] text-gray-400 mt-2">NIM Anda baru pertama kali mengakses sistem ini.</p>
-            </div>
-            <div class="space-y-3">
-                <input type="text" id="reg-nama" placeholder="Nama Lengkap" class="input-field w-full px-5 py-3 rounded-xl text-sm">
-                <div class="flex gap-2">
-                    <select id="reg-prodi" class="input-field w-2/3 px-4 py-3 rounded-xl text-sm text-gray-600">
-                        <option value="">Pilih Program Studi...</option>
-                        <option value="Fisika">Fisika</option>
-                        <option value="Matematika">Matematika</option>
-                        <option value="Kimia">Kimia</option>
-                    </select>
-                    <input type="number" id="reg-angkatan" placeholder="Angkatan" class="input-field w-1/3 px-4 py-3 rounded-xl text-sm">
-                </div>
-            </div>
-            <button onclick="simpanProfilBaru()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-lg">Simpan & Masuk</button>
+        <div class="summary-row gpa-highlight">
+            <div class="summary-label">Indeks Prestasi Kumulatif (IPK):</div>
+            <div class="summary-value">3.83</div>
         </div>
+    </div>
 
-        <div id="section-adm" class="hidden">
-            <div id="admin-login-form" class="space-y-6">
-                <div class="space-y-3">
-                    <input type="text" id="admin-user" placeholder="Username Admin (admin_bem)" class="input-field w-full px-5 py-4 rounded-xl text-sm">
-                    <input type="password" id="admin-pass" placeholder="Password (unsoed2026)" class="input-field w-full px-5 py-4 rounded-xl text-sm">
-                </div>
-                <button onclick="loginAdmin()" class="w-full bg-black text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-all shadow-md">Otorisasi Sistem</button>
-            </div>
+    <div style="margin-top: 40px; font-size: 12px; font-style: italic; color: #666; text-align: center; border: 1px dashed #dcd6cd; padding: 10px;">
+        *Catatan: Nilai di atas dihitung berdasarkan akumulasi evaluasi tertutup secara anonim oleh tim di bawah komando operasional. Informasi ini bersifat rahasia dan sah sebagai parameter performa kepemimpinan.
+    </div>
+</div>
 
-            <div id="admin-dashboard-mini" class="hidden space-y-4">
-                <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 text-center mb-4">
-                    <h1 id="display-token" class="text-3xl font-bold tracking-[0.2em] mb-2">882912</h1>
-                    <button onclick="generateToken()" class="w-full bg-black text-white py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest">Generate Token</button>
-                </div>
-
-                <div class="border border-gray-100 rounded-xl overflow-hidden">
-                    <button onclick="toggleAdminMenu('menu-pengaturan')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
-                        ⚙️ Pengaturan Ketentuan <span id="icon-menu-pengaturan">▼</span>
-                    </button>
-                    <div id="menu-pengaturan" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
-                        <div class="flex gap-3">
-                            <div class="w-1/2">
-                                <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Passing Grade</label>
-                                <input type="number" id="set-passing" class="input-field w-full mt-1 px-3 py-2 rounded-lg text-xs font-bold">
-                            </div>
-                            <div class="w-1/2">
-                                <label class="text-[9px] uppercase text-gray-400 font-bold ml-1">Default Angkatan</label>
-                                <input type="number" id="set-angkatan" class="input-field w-full mt-1 px-3 py-2 rounded-lg text-xs font-bold">
-                            </div>
-                        </div>
-                        <button onclick="simpanPengaturan()" class="w-full border border-black text-black py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Simpan Ketentuan</button>
-                    </div>
-                </div>
-
-                <div class="border border-gray-100 rounded-xl overflow-hidden">
-                    <button onclick="toggleAdminMenu('menu-bobot')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
-                        📊 Manajemen Bobot Poin <span id="icon-menu-bobot">▼</span>
-                    </button>
-                    <div id="menu-bobot" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
-                        <div id="list-kategori-admin" class="space-y-2 max-h-32 overflow-y-auto"></div>
-                        <div class="flex gap-2 border-t border-gray-100 pt-3">
-                            <input type="text" id="add-kategori-nama" placeholder="Kategori Baru" class="input-field w-2/3 px-3 py-2 rounded-lg text-[10px]">
-                            <input type="number" id="add-kategori-bobot" placeholder="Poin" class="input-field w-1/3 px-3 py-2 rounded-lg text-[10px] text-center">
-                        </div>
-                        <button onclick="tambahKategori()" class="w-full bg-black text-white py-2 rounded-lg text-[9px] font-bold uppercase hover:opacity-90">Tambah Kategori</button>
-                    </div>
-                </div>
-
-                <div class="border border-gray-100 rounded-xl overflow-hidden">
-                    <button onclick="toggleAdminMenu('menu-periode')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
-                        📅 Manajemen Periode Yudisium <span id="icon-menu-periode">▼</span>
-                    </button>
-                    <div id="menu-periode" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
-                        <div id="list-periode-admin" class="space-y-2 max-h-32 overflow-y-auto"></div>
-                        <div class="space-y-2 border-t border-gray-100 pt-3">
-                            <input type="text" id="add-periode-nama" placeholder="Nama Periode" class="input-field w-full px-3 py-2 rounded-lg text-[10px]">
-                            <div class="flex gap-2">
-                                <div class="w-1/2"><label class="text-[8px] text-gray-400 uppercase">Mulai</label><input type="date" id="add-periode-start" class="input-field w-full px-2 py-1 rounded-lg text-[10px]"></div>
-                                <div class="w-1/2"><label class="text-[8px] text-gray-400 uppercase">Selesai</label><input type="date" id="add-periode-end" class="input-field w-full px-2 py-1 rounded-lg text-[10px]"></div>
-                            </div>
-                        </div>
-                        <button onclick="tambahPeriode()" class="w-full bg-black text-white py-2 rounded-lg text-[9px] font-bold uppercase hover:opacity-90">Tambah Periode</button>
-                    </div>
-                </div>
-
-                <div class="border border-gray-100 rounded-xl overflow-hidden">
-                    <button onclick="toggleAdminMenu('menu-antrian')" class="accordion-btn w-full bg-black text-white px-4 py-3 text-[10px] font-bold uppercase tracking-widest">
-                        ✅ Antrian Verifikasi <span id="icon-menu-antrian">▼</span>
-                    </button>
-                    <div id="menu-antrian" class="hidden p-4 bg-white border-t border-gray-100">
-                        <div id="list-antrian" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
-                    </div>
-                </div>
-
-                <div class="border border-gray-100 rounded-xl overflow-hidden mt-2">
-                    <button onclick="toggleAdminMenu('menu-riwayat-admin')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
-                        📜 Riwayat Verifikasi <span id="icon-menu-riwayat-admin">▼</span>
-                    </button>
-                    <div id="menu-riwayat-admin" class="hidden p-4 bg-white border-t border-gray-100">
-                        <div class="flex justify-end mb-2">
-                            <button onclick="hapusSemuaRiwayatAdminSupabase()" class="text-[8px] bg-red-50 text-red-500 font-bold px-2 py-1 rounded hover:bg-red-100">🗑️ Kosongkan Riwayat</button>
-                        </div>
-                        <div id="list-riwayat-admin" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
-                    </div>
-                </div>
-
-                <div class="border border-gray-100 rounded-xl overflow-hidden mt-2">
-                    <button onclick="toggleAdminMenu('menu-spionase')" class="accordion-btn w-full bg-blue-50 text-blue-800 px-4 py-3 text-[10px] font-bold uppercase tracking-widest border border-blue-100">
-                        🕵️ Spionase Mahasiswa <span id="icon-menu-spionase">▼</span>
-                    </button>
-                    <div id="menu-spionase" class="hidden p-4 bg-white border-t border-blue-100">
-                        <p class="text-[9px] text-gray-500 italic mb-3">Daftar seluruh mahasiswa yang pernah mengakses & mengajukan SIPO.</p>
-                        <div id="list-spionase" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
-                    </div>
-                </div>
-
-                <div class="border border-gray-100 rounded-xl overflow-hidden mt-2">
-                    <button onclick="toggleAdminMenu('menu-rekap')" class="accordion-btn w-full bg-gray-50 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-gray-600">
-                        🎓 Rekapitulasi & Download <span id="icon-menu-rekap">▼</span>
-                    </button>
-                    <div id="menu-rekap" class="hidden p-4 bg-white space-y-3 border-t border-gray-100">
-                        <select id="select-rekap-periode" class="input-field w-full px-3 py-2 rounded-lg text-[10px] font-bold text-gray-600"></select>
-                        <div class="flex gap-2">
-                            <button id="btn-lihat-data" onclick="toggleTampilkanDataRekap()" class="w-1/2 border border-black text-black py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-black hover:text-white transition-all">Lihat Data</button>
-                            <button onclick="downloadRekapExcel()" class="w-1/2 bg-green-600 text-white py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-green-700 transition-all">Unduh Excel (.xls)</button>
-                        </div>
-                        <div id="tabel-rekap-admin" class="hidden mt-3 max-h-40 overflow-y-auto border border-gray-200 rounded-lg">
-                            <table class="w-full text-left text-[9px]">
-                                <thead class="bg-gray-100 text-gray-500 uppercase">
-                                    <tr>
-                                        <th class="px-2 py-2">NIM & Nama</th>
-                                        <th class="px-2 py-2 text-center">Poin</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="isi-tabel-rekap" class="divide-y divide-gray-100"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-6 pt-4 border-t border-red-100">
-                    <button onclick="resetFactoryData()" class="w-full bg-red-50 text-red-500 border border-red-200 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">
-                        💥 Hapus Data Server (Reset Data)
-                    </button>
-                </div>
-                <button onclick="location.reload()" class="w-full text-[10px] text-gray-400 font-bold uppercase mt-4">Keluar Panel Admin</button>
-            </div>
-        </div>
-
-        <div id="dashboard-mhs" class="hidden space-y-6">
-            <div class="flex items-start justify-between border-b border-gray-100 pb-4">
-                <div>
-                    <h2 class="serif text-2xl" id="user-nim-display">NIM</h2>
-                    <h3 class="font-bold text-sm mt-1" id="user-nama-display">Nama Mahasiswa</h3>
-                    <p class="text-[10px] tracking-[0.2em] uppercase text-gray-400 mt-1 font-bold">
-                        <span id="user-prodi-display">Prodi</span> • Angkatan <span id="user-angkatan-display">20--</span>
-                    </p>
-                </div>
-                <button onclick="location.reload()" class="text-[10px] text-red-500 font-bold bg-red-50 px-3 py-2 rounded-lg hover:bg-red-100 transition-all">Keluar</button>
-            </div>
-
-            <div class="bg-black text-white p-6 rounded-2xl shadow-xl shadow-black/20">
-                <div class="flex justify-between items-end mb-2">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Progress Poin</p>
-                    <p class="text-[10px] text-gray-400">Target: <span id="target-grade">120</span></p>
-                </div>
-                <div class="flex items-end gap-2 mb-4">
-                    <span class="text-4xl font-bold tracking-tighter" id="user-poin-display">0</span>
-                    <span class="text-xs text-gray-400 pb-1">Poin</span>
-                </div>
-                <div class="w-full bg-white/20 rounded-full h-1.5 mb-2">
-                    <div class="bg-white h-1.5 rounded-full transition-all duration-1000" style="width: 0%" id="progress-bar"></div>
-                </div>
-            </div>
-
-            <button id="btn-download-cert" onclick="downloadOfficialCert()" class="hidden w-full border-2 border-black text-black py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-md">
-                🎉 Unduh Sertifikat Kelulusan SIPO
-            </button>
-
-            <div class="space-y-3 border-t border-gray-100 pt-4">
-                <h3 class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Riwayat Dokumen</h3>
-                <div id="riwayat-sipo" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
-            </div>
-
-            <div class="pt-2 space-y-3">
-                <div class="sertifikat-item p-4 border border-gray-200 rounded-xl space-y-3 bg-gray-50">
-                    <input type="text" id="input-nama-kegiatan" placeholder="Nama Kegiatan (Cth: LKMM)" class="input-field w-full px-4 py-2 rounded-lg text-xs font-medium">
-                    <div class="flex gap-2">
-                        <select id="input-kategori-kegiatan" class="input-field w-1/2 px-2 py-2 rounded-lg font-bold uppercase text-[9px] text-gray-500"></select>
-                        <input type="url" id="input-link-kegiatan" placeholder="Link Bukti (G-Drive)" class="input-field w-1/2 px-3 py-2 rounded-lg text-xs">
-                    </div>
-                </div>
-                <button onclick="submitAjuanBaru()" class="w-full bg-black text-white py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90">Kirim Ajuan Baru</button>
-            </div>
-        </div>
-
-    </div> 
-
-    <footer class="mt-8 text-center text-[9px] text-gray-400 font-bold uppercase tracking-widest pb-4">
-        &copy; 2026 BEM KM MIPA - UNSOED<br>Kementerian Dalam Negeri
-    </footer>
-
-    <script>
-        // MENGGANTI NAMA VARIABEL AGAR TIDAK BENTROK DENGAN SUPABASE BAWAAN
-        let sipoDB; 
-        let currentUserNIM = "";
-        let currentUserName = "";
-
-        function initSystem() {
-            if(!localStorage.getItem("sipo_passing_grade")) localStorage.setItem("sipo_passing_grade", "120");
-            if(!localStorage.getItem("sipo_default_angkatan")) localStorage.setItem("sipo_default_angkatan", "2025");
-            if(!localStorage.getItem("sipo_kategori")) {
-                localStorage.setItem("sipo_kategori", JSON.stringify([
-                    { id: 1, nama: "Tingkat Nasional", bobot: 50 },
-                    { id: 2, nama: "Tingkat Universitas", bobot: 30 },
-                    { id: 3, nama: "Tingkat Fakultas", bobot: 20 }
-                ]));
-            }
-            if(!localStorage.getItem("sipo_periode")) {
-                localStorage.setItem("sipo_periode", JSON.stringify([
-                    { id: 4, nama: "Gelombang 1 - 2026", start: "2026-03-01", end: "2026-03-31" }
-                ]));
-            }
-            document.getElementById('set-passing').value = localStorage.getItem("sipo_passing_grade");
-            document.getElementById('set-angkatan').value = localStorage.getItem("sipo_default_angkatan");
-
-            if (window.supabase) {
-                const supabaseUrl = 'https://izcgyvllxehrspgbmoks.supabase.co';
-                const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml6Y2d5dmxseGVocnNwZ2Jtb2tzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MzM2MjcsImV4cCI6MjA5MDEwOTYyN30.WPNv5ijYvPntNSlaxERse9LZHS3LwvyQsx9z-_KXgPI';
-                sipoDB = window.supabase.createClient(supabaseUrl, supabaseKey);
-                // KODE CCTV REAL-TIME (Ditaruh di dalam function initSystem)
-        sipoDB
-          .channel('schema-db-changes')
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'sipo_pengajuan' }, (payload) => {
-              console.log('Ada perubahan di pengajuan!', payload);
-              // Jika sedang di dashboard mahasiswa, update riwayatnya
-              if(currentUserNIM) loadRiwayatMhsDariSupabase();
-              // Jika sedang di dashboard admin, update antrian dan riwayatnya
-              if(!document.getElementById('admin-dashboard-mini').classList.contains('hidden')) {
-                  loadAntrianAdminDariSupabase();
-                  loadRiwayatAdminDariSupabase();
-              }
-          })
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'sipo_users' }, (payload) => {
-              console.log('Ada perubahan di profil/poin!', payload);
-              // Update progress bar poin mahasiswa secara real-time
-              if(currentUserNIM) {
-                  const updatedUser = payload.new;
-                  if(updatedUser.nim === currentUserNIM) {
-                      document.getElementById('user-poin-display').innerText = updatedUser.poin;
-                      let passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
-                      let persentase = (updatedUser.poin / passingGrade) * 100;
-                      document.getElementById('progress-bar').style.width = Math.min(persentase, 100) + '%';
-                      if (updatedUser.poin >= passingGrade) document.getElementById('btn-download-cert').classList.remove('hidden');
-                  }
-              }
-              // Update list spionase admin
-              if(!document.getElementById('admin-dashboard-mini').classList.contains('hidden')) {
-                  loadSpionaseDariSupabase();
-              }
-          })
-          .subscribe();
-            }
-        }
-
-        async function resetFactoryData() {
-            if(confirm("PERINGATAN KERAS! 🚨\n\nIni akan menghapus SELURUH data dari SUPABASE dan Browser.\n\nApakah Anda YAKIN?")) {
-                if(sipoDB) {
-                    await sipoDB.from('sipo_pengajuan').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-                    await sipoDB.from('sipo_users').delete().neq('nim', '0');
-                }
-                localStorage.clear();
-                alert("Semua data berhasil dibersihkan! Sistem akan dimuat ulang.");
-                location.reload();
-            }
-        }
-
-        // ==========================================
-        // MAHASISWA
-        // ==========================================
-        async function loginMahasiswa() {
-            if(!sipoDB) return alert("Sistem Database belum termuat. Pastikan koneksi internet stabil.");
-            
-            const nim = document.getElementById('mhs-nim').value.trim().toUpperCase();
-            if(!nim) { alert("NIM harus diisi!"); return; }
-
-            currentUserNIM = nim;
-            document.getElementById('mhs-nim').value = "Loading...";
-
-            try {
-                const { data, error } = await sipoDB.from('sipo_users').select('*').eq('nim', nim).maybeSingle();
-                document.getElementById('mhs-nim').value = nim;
-
-                if (error) {
-                    alert("Error dari Server: " + error.message);
-                    return;
-                }
-
-                if (data) {
-                    bukaDashboardMahasiswa(data);
-                } else {
-                    document.getElementById('section-mhs').classList.add('hidden');
-                    document.getElementById('main-header').classList.add('hidden');
-                    document.getElementById('section-lengkapi-profil').classList.remove('hidden');
-                    document.getElementById('reg-angkatan').value = localStorage.getItem("sipo_default_angkatan");
-                }
-            } catch (err) {
-                alert("Terjadi kesalahan sistem. Coba lagi.");
-                document.getElementById('mhs-nim').value = nim;
-            }
-        }
-
-        async function simpanProfilBaru() {
-            const nama = document.getElementById('reg-nama').value.trim();
-            const prodi = document.getElementById('reg-prodi').value;
-            const angkatan = document.getElementById('reg-angkatan').value.trim();
-
-            if(!nama || !prodi || !angkatan) { alert("Semua kolom identitas wajib diisi!"); return; }
-
-            const newUser = { nim: currentUserNIM, nama: nama, prodi: prodi, angkatan: angkatan, poin: 0 };
-            
-            try {
-                const { error } = await sipoDB.from('sipo_users').insert([newUser]);
-                
-                if(error) { 
-                    alert("Gagal menyimpan data: " + error.message); 
-                    return; 
-                }
-                
-                document.getElementById('section-lengkapi-profil').classList.add('hidden');
-                bukaDashboardMahasiswa(newUser);
-            } catch(err) {
-                alert("Terjadi kesalahan saat menyimpan.");
-            }
-        }
-
-        function bukaDashboardMahasiswa(userData) {
-            currentUserName = userData.nama;
-            const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
-
-            document.getElementById('section-mhs').classList.add('hidden');
-            document.getElementById('main-header').classList.add('hidden');
-            document.getElementById('dashboard-mhs').classList.remove('hidden');
-            
-            document.getElementById('user-nim-display').innerText = userData.nim;
-            document.getElementById('user-nama-display').innerText = userData.nama;
-            document.getElementById('user-prodi-display').innerText = userData.prodi;
-            document.getElementById('user-angkatan-display').innerText = userData.angkatan;
-            
-            document.getElementById('target-grade').innerText = passingGrade;
-            document.getElementById('user-poin-display').innerText = userData.poin;
-            
-            let persentase = (userData.poin / passingGrade) * 100;
-            document.getElementById('progress-bar').style.width = Math.min(persentase, 100) + '%';
-
-            if (userData.poin >= passingGrade) {
-                document.getElementById('btn-download-cert').classList.remove('hidden');
-            }
-
-            loadDropdownKategoriMhs();
-            loadRiwayatMhsDariSupabase();
-        }
-
-        function loadDropdownKategoriMhs() {
-            const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
-            const select = document.getElementById('input-kategori-kegiatan');
-            select.innerHTML = '<option value="">Pilih Kategori Bobot...</option>';
-            kategori.forEach(k => {
-                select.innerHTML += `<option value="${k.bobot}">${k.nama} (${k.bobot})</option>`;
-            });
-        }
-
-        async function submitAjuanBaru() {
-            const namaKegiatan = document.getElementById('input-nama-kegiatan').value;
-            const bobot = document.getElementById('input-kategori-kegiatan').value;
-            const link = document.getElementById('input-link-kegiatan').value;
-            
-            if(!namaKegiatan || !bobot || !link) { alert("Isi form pengajuan dengan lengkap!"); return; }
-
-            const waktuAju = new Date().toLocaleString('id-ID'); 
-            const ajuanBaru = { 
-                nim: currentUserNIM, nama: currentUserName, kegiatan: namaKegiatan, link: link, 
-                poin: parseInt(bobot), status: "Menunggu", waktu: waktuAju, alasan: ""
-            };
-
-            try {
-                const { error } = await sipoDB.from('sipo_pengajuan').insert([ajuanBaru]);
-                
-                if(error) { 
-                    alert("Gagal mengirim ajuan. Detail: " + error.message); 
-                    return; 
-                }
-
-                alert("Dokumen berhasil diajukan ke server!");
-                document.getElementById('input-nama-kegiatan').value = '';
-                document.getElementById('input-kategori-kegiatan').value = '';
-                document.getElementById('input-link-kegiatan').value = '';
-                
-                loadRiwayatMhsDariSupabase();
-            } catch(err) {
-                alert("Kesalahan sistem saat mengirim data.");
-            }
-        }
-
-        async function loadRiwayatMhsDariSupabase() {
-            const { data, error } = await sipoDB.from('sipo_pengajuan').select('*').eq('nim', currentUserNIM).order('waktu', { ascending: false });
-            const container = document.getElementById('riwayat-sipo');
-            container.innerHTML = "";
-            
-            if(!data || data.length === 0) {
-                container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada dokumen yang diajukan.</p>";
-                return;
-            }
-
-            data.forEach(item => {
-                let statusBadge = item.status === "Disetujui" ? `<span class="text-[9px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Disetujui (+${item.poin})</span>` :
-                                  item.status === "Ditolak" ? `<span class="text-[9px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Ditolak ❌</span>` :
-                                  `<span class="text-[9px] font-bold text-yellow-600 bg-yellow-50 px-2 py-1 rounded">Menunggu ⏳</span>`;
-                let alasanHtml = (item.status === "Ditolak" && item.alasan) ? `<p class="text-[8px] text-red-500 mt-1 font-bold">Alasan Penolakan: ${item.alasan}</p>` : "";
-                
-                container.innerHTML += `
-                    <div class="flex justify-between items-center p-3 border border-gray-100 rounded-xl bg-white mb-2 shadow-sm">
-                        <div class="w-2/3">
-                            <p class="font-bold text-[11px] truncate">${item.kegiatan}</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <p class="text-[8px] text-gray-400">🕒 ${item.waktu}</p>
-                                <a href="${item.link}" target="_blank" class="text-[8px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold hover:bg-blue-100 transition-all">🔗 Bukti G-Drive</a>
-                            </div>
-                            ${alasanHtml}
-                        </div>
-                        <div class="text-right w-1/3">${statusBadge}</div>
-                    </div>`;
-            });
-        }
-
-        // ==========================================
-        // ADMIN
-        // ==========================================
-        function loginAdmin() {
-            if(!sipoDB) return alert("Database belum siap. Tunggu atau Refresh halaman!");
-            if(document.getElementById('admin-user').value === "admin_bem" && document.getElementById('admin-pass').value === "unsoed2026") {
-                document.getElementById('admin-login-form').classList.add('hidden');
-                document.getElementById('main-header').classList.add('hidden');
-                document.getElementById('admin-dashboard-mini').classList.remove('hidden');
-                
-                renderListKategoriAdmin();
-                renderListPeriodeAdmin();
-                loadAntrianAdminDariSupabase();
-                loadRiwayatAdminDariSupabase();
-                loadSpionaseDariSupabase();
-            } else { alert("Akses Ditolak!"); }
-        }
-
-        function generateToken() { document.getElementById('display-token').innerText = Math.floor(100000 + Math.random() * 900000).toString(); }
-
-        function simpanPengaturan() {
-            localStorage.setItem("sipo_passing_grade", document.getElementById('set-passing').value);
-            localStorage.setItem("sipo_default_angkatan", document.getElementById('set-angkatan').value);
-            alert("Ketentuan berhasil diperbarui!");
-        }
-
-        function renderListKategoriAdmin() {
-            const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
-            const container = document.getElementById('list-kategori-admin');
-            container.innerHTML = "";
-            kategori.forEach(k => {
-                container.innerHTML += `<div class="flex justify-between items-center p-2 bg-gray-50 border border-gray-100 rounded-lg text-[10px]"><span class="font-bold">${k.nama}</span><div class="flex items-center gap-3"><span class="text-green-600 font-bold">+${k.bobot}</span><button onclick="hapusKategori(${k.id})" class="text-red-500 font-bold hover:underline">Hapus</button></div></div>`;
-            });
-        }
-        function tambahKategori() {
-            const nama = document.getElementById('add-kategori-nama').value;
-            const bobot = document.getElementById('add-kategori-bobot').value;
-            if(!nama || !bobot) return;
-            const kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
-            kategori.push({ id: Date.now(), nama: nama, bobot: parseInt(bobot) });
-            localStorage.setItem("sipo_kategori", JSON.stringify(kategori));
-            renderListKategoriAdmin();
-        }
-        function hapusKategori(id) {
-            let kategori = JSON.parse(localStorage.getItem("sipo_kategori"));
-            kategori = kategori.filter(k => k.id !== id);
-            localStorage.setItem("sipo_kategori", JSON.stringify(kategori));
-            renderListKategoriAdmin();
-        }
-
-        function renderListPeriodeAdmin() {
-            const periode = JSON.parse(localStorage.getItem("sipo_periode"));
-            const container = document.getElementById('list-periode-admin');
-            const selectRekap = document.getElementById('select-rekap-periode');
-            container.innerHTML = ""; selectRekap.innerHTML = "<option value=''>Pilih Periode Yudisium...</option>";
-            periode.forEach(p => {
-                container.innerHTML += `<div class="p-2 bg-gray-50 border border-gray-100 rounded-lg text-[10px]"><div class="flex justify-between font-bold mb-1"><span>${p.nama}</span><button onclick="hapusPeriode(${p.id})" class="text-red-500 hover:underline">Hapus</button></div><span class="text-[8px] text-gray-500">${p.start} s/d ${p.end}</span></div>`;
-                selectRekap.innerHTML += `<option value="${p.id}">${p.nama} (${p.start} s/d ${p.end})</option>`;
-            });
-        }
-        function tambahPeriode() {
-            const nama = document.getElementById('add-periode-nama').value;
-            const start = document.getElementById('add-periode-start').value;
-            const end = document.getElementById('add-periode-end').value;
-            if(!nama || !start || !end) return;
-            const periode = JSON.parse(localStorage.getItem("sipo_periode"));
-            periode.push({ id: Date.now(), nama: nama, start: start, end: end });
-            localStorage.setItem("sipo_periode", JSON.stringify(periode));
-            renderListPeriodeAdmin();
-        }
-        function hapusPeriode(id) {
-            let periode = JSON.parse(localStorage.getItem("sipo_periode"));
-            periode = periode.filter(p => p.id !== id);
-            localStorage.setItem("sipo_periode", JSON.stringify(periode));
-            renderListPeriodeAdmin();
-        }
-
-        async function loadAntrianAdminDariSupabase() {
-            const { data, error } = await sipoDB.from('sipo_pengajuan').select('*').eq('status', 'Menunggu').order('waktu', { ascending: true });
-            const container = document.getElementById('list-antrian');
-            container.innerHTML = "";
-            if(!data || data.length === 0) { container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Antrian bersih.</p>"; return; }
-            data.forEach(item => {
-                container.innerHTML += `
-                    <div class="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2 shadow-sm text-xs transition-all">
-                        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
-                            <span class="font-bold">${item.nim} - ${item.nama}</span>
-                            <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
-                        </div>
-                        <div class="flex justify-between items-center mt-1">
-                            <span class="font-bold text-[10px] truncate max-w-[60%]">${item.kegiatan}</span>
-                            <div class="flex items-center gap-2">
-                                <a href="${item.link}" target="_blank" class="text-[8px] bg-blue-50 text-blue-600 px-2 py-1 rounded font-bold hover:bg-blue-100 transition-all">🔗 Cek Bukti</a>
-                                <span class="text-green-600 font-bold text-[10px]">+${item.poin}</span>
-                            </div>
-                        </div>
-                        <div class="flex gap-2 mt-2 pt-1">
-                            <button onclick="prosesDokumenSupabase('${item.id}', '${item.nim}', ${item.poin}, 'Disetujui')" class="flex-1 bg-black text-white py-2 rounded-lg font-bold text-[9px] hover:bg-gray-800">Setujui</button>
-                            <button onclick="prosesDokumenSupabase('${item.id}', '${item.nim}', 0, 'Ditolak')" class="flex-1 border border-red-200 text-red-500 bg-white py-2 rounded-lg font-bold text-[9px] hover:bg-red-50">Tolak</button>
-                        </div>
-                    </div>`;
-            });
-        }
-
-        async function loadRiwayatAdminDariSupabase() {
-            const { data, error } = await sipoDB.from('sipo_pengajuan').select('*').neq('status', 'Menunggu').order('waktu', { ascending: false });
-            const container = document.getElementById('list-riwayat-admin');
-            container.innerHTML = "";
-            if(!data || data.length === 0) { container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada riwayat verifikasi.</p>"; return; }
-            
-            data.forEach(item => {
-                let statusBadge = item.status === "Disetujui" ? `<span class="text-[8px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded">Disetujui (+${item.poin})</span>` : `<span class="text-[8px] font-bold text-red-600 bg-red-50 px-2 py-1 rounded">Ditolak ❌</span>`;
-                container.innerHTML += `
-                    <div class="p-3 bg-white border border-gray-100 rounded-xl space-y-2 shadow-sm text-xs mb-2">
-                        <div class="flex justify-between items-center border-b border-gray-100 pb-1">
-                            <span class="font-bold text-[10px]">${item.nim} - ${item.nama}</span>
-                            <div class="flex items-center gap-2">
-                                <span class="text-[8px] text-gray-400">🕒 ${item.waktu}</span>
-                                <button onclick="hapusSatuRiwayatAdminSupabase('${item.id}')" class="text-red-500 font-bold hover:bg-red-50 px-1 rounded">✕</button>
-                            </div>
-                        </div>
-                        <div class="flex justify-between items-start mt-1">
-                            <div class="max-w-[70%]">
-                                <span class="font-bold text-[10px]">${item.kegiatan}</span>
-                                <div class="mt-1 mb-1"><a href="${item.link}" target="_blank" class="text-[8px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold hover:bg-blue-100 transition-all">🔗 Cek Bukti</a></div>
-                                ${item.alasan ? `<p class="text-[8px] text-red-500 font-bold">Alasan: ${item.alasan}</p>` : ''}
-                            </div>
-                            ${statusBadge}
-                        </div>
-                    </div>`;
-            });
-        }
-
-        async function hapusSatuRiwayatAdminSupabase(id) {
-            if(!confirm("Hapus riwayat ini dari database?")) return;
-            await sipoDB.from('sipo_pengajuan').delete().eq('id', id);
-            loadRiwayatAdminDariSupabase();
-        }
-
-        async function hapusSemuaRiwayatAdminSupabase() {
-            if(!confirm("YAKIN ingin mengosongkan SELURUH riwayat verifikasi dari database?")) return;
-            await sipoDB.from('sipo_pengajuan').delete().neq('status', 'Menunggu');
-            loadRiwayatAdminDariSupabase();
-        }
-
-        async function prosesDokumenSupabase(idAjuan, nim, poinDitambah, statusBaru) {
-            let alasan = "";
-            if(statusBaru === "Ditolak") {
-                alasan = prompt("Masukkan alasan penolakan berkas ini:");
-                if(alasan === null) return; 
-            }
-            const waktuProses = new Date().toLocaleString('id-ID'); 
-            await sipoDB.from('sipo_pengajuan').update({ status: statusBaru, waktu: waktuProses, alasan: alasan }).eq('id', idAjuan);
-            
-            if(statusBaru === "Disetujui") {
-                const { data: user } = await sipoDB.from('sipo_users').select('poin').eq('nim', nim).single();
-                if(user) await sipoDB.from('sipo_users').update({ poin: user.poin + poinDitambah }).eq('nim', nim);
-            }
-            loadAntrianAdminDariSupabase(); loadRiwayatAdminDariSupabase(); loadSpionaseDariSupabase();
-        }
-
-        async function loadSpionaseDariSupabase() {
-            const { data, error } = await sipoDB.from('sipo_users').select('*').order('poin', { ascending: false });
-            const container = document.getElementById('list-spionase');
-            container.innerHTML = "";
-            if(!data || data.length === 0) { container.innerHTML = "<p class='text-[10px] text-gray-400 italic text-center'>Belum ada data mahasiswa terdaftar.</p>"; return; }
-            data.forEach(user => {
-                container.innerHTML += `
-                    <div class="p-3 bg-blue-50/30 border border-blue-100 rounded-xl flex justify-between items-center text-xs mb-2 shadow-sm">
-                        <div>
-                            <span class="font-bold">${user.nama}</span> <span class="text-[9px] text-gray-500">(${user.nim})</span>
-                            <p class="text-[8px] text-gray-500 mt-1">${user.prodi} • Angkatan ${user.angkatan}</p>
-                        </div>
-                        <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 rounded text-[10px]">${user.poin} Poin</span>
-                    </div>`;
-            });
-        }
-
-        async function toggleTampilkanDataRekap() {
-            const tabel = document.getElementById('tabel-rekap-admin');
-            const btn = document.getElementById('btn-lihat-data');
-            if(tabel.classList.contains('hidden')) {
-                const periodeId = document.getElementById('select-rekap-periode').value;
-                if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
-                
-                const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
-                const { data: eligible } = await sipoDB.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
-                const tbody = document.getElementById('isi-tabel-rekap');
-                tbody.innerHTML = "";
-                
-                if(!eligible || eligible.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="2" class="px-2 py-4 text-center text-gray-400 italic">Belum ada yang memenuhi Passing Grade.</td></tr>`;
-                } else {
-                    eligible.forEach(mhs => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td class="px-2 py-2"><span class="font-bold">${mhs.nama}</span><br><span class="text-[8px] text-gray-400">${mhs.nim} • ${mhs.prodi} • ${mhs.angkatan}</span></td>
-                                <td class="px-2 py-2 text-center text-green-600 font-bold">${mhs.poin}</td>
-                            </tr>`;
-                    });
-                }
-                tabel.classList.remove('hidden'); btn.innerText = "Tutup Data"; btn.classList.add('bg-gray-200');
-            } else {
-                tabel.classList.add('hidden'); btn.innerText = "Lihat Data"; btn.classList.remove('bg-gray-200');
-            }
-        }
-
-        async function downloadRekapExcel() {
-            const periodeId = document.getElementById('select-rekap-periode').value;
-            if(!periodeId) return alert("Pilih periode yudisium terlebih dahulu!");
-
-            const passingGrade = parseInt(localStorage.getItem("sipo_passing_grade"));
-            const { data: eligible } = await sipoDB.from('sipo_users').select('*').gte('poin', passingGrade).order('nama', { ascending: true });
-
-            if(!eligible || eligible.length === 0) return alert("Tidak ada data untuk diunduh.");
-
-            let tableHtml = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><style>table { border-collapse: collapse; font-family: Arial, sans-serif; } th { background-color: #1a1a1a; color: #ffffff; font-weight: bold; padding: 10px; border: 1px solid #dddddd; text-align: center; } td { padding: 8px; border: 1px solid #dddddd; text-align: left; } .poin { text-align: center; font-weight: bold; color: #16a34a; } .title { font-size: 16px; font-weight: bold; text-align: center; background-color: #f3f4f6; padding: 10px; }</style></head><body><table><tr><td colspan="5" class="title">REKAPITULASI KELULUSAN SIPO - BEM KM MIPA UNSOED</td></tr><tr><th>NO</th><th>NIM</th><th>NAMA LENGKAP</th><th>PROGRAM STUDI</th><th>TOTAL POIN</th></tr>`;
-            eligible.forEach((mhs, index) => {
-                tableHtml += `<tr><td style="text-align:center;">${index + 1}</td><td>${mhs.nim}</td><td>${mhs.nama}</td><td>${mhs.prodi} (Angkatan ${mhs.angkatan})</td><td class="poin">${mhs.poin}</td></tr>`;
-            });
-            tableHtml += `</table></body></html>`;
-
-            const blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `Rekap_SIPO_${Date.now()}.xls`;
-            document.body.appendChild(link);
-            link.click(); document.body.removeChild(link);
-        }
-
-        function downloadOfficialCert() {
-            const nama = currentUserName;
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'landscape' });
-            doc.setDrawColor(0, 0, 0); doc.setLineWidth(1); doc.rect(10, 10, 277, 190); doc.setLineWidth(0.3); doc.rect(12, 12, 273, 186);
-            doc.setFontSize(28); doc.text("SERTIFIKAT KELULUSAN SIPO", 148, 60, null, null, "center");
-            doc.setFontSize(14); doc.text("Badan Eksekutif Mahasiswa KM MIPA - Universitas Jenderal Soedirman", 148, 70, null, null, "center");
-            doc.setFontSize(18); doc.text("Diberikan kepada:", 148, 100, null, null, "center");
-            doc.setFontSize(26); doc.text(`${nama} (${currentUserNIM})`, 148, 115, null, null, "center");
-            doc.setFontSize(14); doc.text("Telah memenuhi seluruh persyaratan Sistem Poin Organisasi (SIPO)", 148, 140, null, null, "center");
-            doc.text("dan dinyatakan LULUS YUDISIUM.", 148, 148, null, null, "center");
-            doc.setFontSize(10); doc.text("Purwokerto, " + new Date().toLocaleDateString('id-ID'), 200, 175);
-            doc.text("Ketua PSDM BEM KM MIPA", 200, 195);
-            doc.save(`Sertifikat_SIPO_${currentUserNIM}.pdf`);
-        }
-    </script>
 </body>
 </html>
