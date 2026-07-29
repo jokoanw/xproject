@@ -10,11 +10,10 @@
         
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #f8fafc; /* Latar belakang slate sangat terang */
-            color: #0f172a; /* Teks gelap */
+            background-color: #f8fafc; 
+            color: #0f172a; 
         }
         
-        /* Efek Kaca Buram Cerah ala iOS */
         .ios-glass-panel {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(24px) saturate(150%);
@@ -34,13 +33,13 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-5 relative overflow-hidden bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50">
     
-    <!-- Ornamen Latar Belakang Cerah (Pastel) -->
+    <!-- Ornamen Latar Belakang Cerah -->
     <div class="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-blue-300 rounded-full mix-blend-multiply filter blur-[90px] opacity-40"></div>
     <div class="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-emerald-200 rounded-full mix-blend-multiply filter blur-[90px] opacity-40"></div>
     <div class="absolute top-[40%] left-[30%] w-[300px] h-[300px] bg-purple-200 rounded-full mix-blend-multiply filter blur-[90px] opacity-30"></div>
 
     <!-- Kotak Utama Registrasi -->
-    <div class="max-w-md w-full ios-glass-panel ios-rounded p-9 relative z-10">
+    <div class="max-w-md w-full ios-glass-panel ios-rounded p-9 relative z-10 mb-10">
         
         <!-- Header -->
         <div class="mb-10 mt-2 text-center">
@@ -57,7 +56,6 @@
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                     </svg>
                 </span>
-                <!-- Perbaikan Padding: pl-12 (48px) agar tidak overlap dengan ikon -->
                 <input type="text" id="nama" class="w-full h-14 pl-12 pr-4 bg-white/60 ios-rounded border border-slate-200 text-base text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 focus:bg-white focus:outline-none transition-all shadow-sm" placeholder="Nama Lengkap">
             </div>
 
@@ -69,7 +67,6 @@
                       <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 13.5v6a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-6" />
                     </svg>
                 </span>
-                <!-- Perbaikan Padding: pl-12 -->
                 <select id="jurusan" class="w-full h-14 pl-12 pr-10 bg-white/60 ios-rounded border border-slate-200 text-base text-slate-900 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 focus:bg-white focus:outline-none transition-all shadow-sm cursor-pointer">
                     <option value="" disabled selected class="text-slate-400">Pilih Program Studi</option>
                     <option value="Fisika" class="bg-white">Fisika</option>
@@ -91,7 +88,6 @@
                       <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                     </svg>
                 </span>
-                <!-- Perbaikan Padding: pl-12 -->
                 <input type="email" id="email" class="w-full h-14 pl-12 pr-4 bg-white/60 ios-rounded border border-slate-200 text-base text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 focus:bg-white focus:outline-none transition-all shadow-sm" placeholder="Email (@mhs.unsoed.ac.id)">
             </div>
 
@@ -101,6 +97,11 @@
             </button>
             <p class="text-xs text-center text-slate-500 pt-2 font-medium">Sudah mendaftar pra-acara? Tunjukkan kode ke petugas.</p>
         </form>
+    </div>
+
+    <!-- Footer Web -->
+    <div class="absolute bottom-6 w-full flex justify-center z-10 px-4">
+        <p class="text-[10px] text-slate-400/80 font-semibold tracking-[0.2em] uppercase text-center">© 2026 ATP Diesnatalis FMIPA. All rights reserved.</p>
     </div>
 </body>
 </html>
