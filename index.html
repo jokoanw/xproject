@@ -1,24 +1,83 @@
-<html>
-    <head> 
-        <style>
-            body {
-                background-color:#D4AF37;
-                color:#e0e0e0;
-                font-family: 'Helvetica Neue', Arial, sans-serif;
-                text-align: center;
-                margin-top: 15%;
-            }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi - Dies Natalis FMIPA 12</title>
+    <!-- Mengimpor Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Mengimpor font elegan dari Google Fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Tema gelap: Slate 900 */
+            color: #e2e8f0;
+        }
+        
+        /* Efek kaca elegan untuk kotak form */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Menghilangkan panah default pada dropdown untuk kesan minimalis */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+    
+    <!-- Elemen dekoratif latar belakang (Ornamen cahaya samar) -->
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-900 rounded-full mix-blend-multiply filter blur-[128px] opacity-50"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-slate-800 rounded-full mix-blend-multiply filter blur-[128px] opacity-50"></div>
 
-            h1 {
-                letter-spacing: 3px;
-                font-weight: 700;
-            }
-            </style>
-             </head>
+    <!-- Kotak Utama Registrasi -->
+    <div class="max-w-md w-full glass-panel rounded-2xl p-8 sm:p-10 shadow-2xl relative z-10">
+        
+        <!-- Header / Judul Acara -->
+        <div class="text-center mb-10">
+            <h1 class="text-2xl sm:text-3xl font-semibold tracking-widest text-white mb-2">DIES NATALIS</h1>
+            <p class="text-xs sm:text-sm tracking-[0.3em] text-gray-400 uppercase">FMIPA Unsoed ke-12</p>
+            <div class="h-px w-12 bg-gray-600 mx-auto mt-6"></div>
+        </div>
 
-             <body>
-            <h1> Heloo, Dunia. Ini Afdhi Sang Developer Aplikasi Pemula! </h1>
-            <p> Selamat datang di halaman pertama HTML buatanku </p>
-             </body>
+        <!-- Form Input -->
+        <form class="space-y-8">
+            <!-- Input Nama -->
+            <div class="relative">
+                <input type="text" id="nama" class="w-full bg-transparent border-b border-gray-600 focus:border-white focus:outline-none py-2 text-white transition-colors peer placeholder-transparent" placeholder="Nama Lengkap" autocomplete="off">
+                <label for="nama" class="absolute left-0 -top-3.5 text-xs text-gray-500 transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-gray-300">Nama Lengkap</label>
+            </div>
 
+            <!-- Input Jurusan -->
+            <div class="relative">
+                <select id="jurusan" class="w-full bg-transparent border-b border-gray-600 focus:border-white focus:outline-none py-2 text-white transition-colors peer cursor-pointer">
+                    <option value="" disabled selected hidden></option>
+                    <option value="Fisika" class="bg-gray-800 text-white">Fisika</option>
+                    <option value="Kimia" class="bg-gray-800 text-white">Kimia</option>
+                    <option value="Matematika" class="bg-gray-800 text-white">Matematika</option>
+                </select>
+                <label for="jurusan" class="absolute left-0 -top-3.5 text-xs text-gray-300 transition-all">Program Studi</label>
+            </div>
+
+            <!-- Input Email -->
+            <div class="relative">
+                <input type="email" id="email" class="w-full bg-transparent border-b border-gray-600 focus:border-white focus:outline-none py-2 text-white transition-colors peer placeholder-transparent" placeholder="Email Universitas" autocomplete="off">
+                <label for="email" class="absolute left-0 -top-3.5 text-xs text-gray-500 transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-gray-300">Email Utama / Universitas</label>
+            </div>
+
+            <!-- Tombol Submit -->
+            <button type="button" class="w-full bg-gray-100 text-gray-900 font-semibold py-3.5 rounded-lg hover:bg-white transition-colors duration-300 mt-4 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)]">
+                Dapatkan E-Ticket
+            </button>
+        </form>
+    </div>
+</body>
 </html>
