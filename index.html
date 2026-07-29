@@ -3,99 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Kehadiran - Dies Natalis FMIPA 12</title>
+    <title>Verified E-Ticket - Dies Natalis FMIPA 12</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono&display=swap');
         
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #020617; /* Slate 950 */
+            background-color: #020617; 
             color: #f8fafc;
         }
         
-        .ios-glass-panel {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .ios-glass-ticket {
+            background: linear-gradient(170deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.6);
         }
 
-        /* Menstandarkan rounded corners ala Apple (Squircle) */
-        .ios-rounded {
-            border-radius: 1.25rem; /* 20px */
+        .ios-ticket-rounded {
+            border-radius: 1.75rem; /* 28px */
         }
         
-        /* Menghilangkan panah default dropdown */
-        select {
-            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+        /* Garis Pemisah ala iOS (halus dan terintegrasi) */
+        .ios-divider {
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+        }
+
+        .mono-text {
+            font-family: 'Space Mono', monospace;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-5 relative overflow-hidden">
+<body class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
     
-    <!-- Elemen Latar Belakang (Blurry Light) -->
-    <div class="absolute top-[-15%] left-[-15%] w-[400px] h-[400px] bg-blue-600 rounded-full mix-blend-lighten filter blur-[128px] opacity-20"></div>
-    <div class="absolute bottom-[-15%] right-[-15%] w-[400px] h-[400px] bg-emerald-600 rounded-full mix-blend-lighten filter blur-[128px] opacity-20"></div>
+    <!-- Ornamen Latar Belakang -->
+    <div class="absolute top-[20%] left-[-10%] w-[350px] h-[350px] bg-indigo-700 rounded-full mix-blend-lighten filter blur-[120px] opacity-25"></div>
+    <div class="absolute bottom-[20%] right-[-10%] w-[350px] h-[350px] bg-slate-600 rounded-full mix-blend-lighten filter blur-[120px] opacity-25"></div>
 
-    <!-- Kotak Utama Registrasi -->
-    <div class="max-w-md w-full ios-glass-panel ios-rounded p-9 shadow-2xl relative z-10 border border-white/5">
+    <!-- Container Tiket -->
+    <div class="max-w-sm w-full ios-glass-ticket ios-ticket-rounded overflow-hidden relative z-10 border border-white/5">
         
-        <!-- Header -->
-        <div class="mb-10 mt-2">
-            <h1 class="text-3xl font-bold tracking-tight text-white mb-1.5">Daftar Kehadiran</h1>
-            <p class="text-sm font-medium text-slate-400">Dies Natalis FMIPA Unsoed ke-12</p>
+        <!-- Bagian Atas: Header & QR Code -->
+        <div class="p-8 pb-7 flex flex-col items-center">
+            <div class="w-full flex justify-between items-center mb-6">
+                <span class="text-xl font-bold tracking-tight text-white">E-Ticket</span>
+                <span class="px-3.5 py-1.5 bg-slate-800 text-slate-300 text-[11px] font-semibold tracking-wider uppercase ios-rounded border border-white/5">
+                    Dies Natalis FMIPA 12
+                </span>
+            </div>
+            
+            <!-- Kotak QR Code dengan aksen iOS Green -->
+            <div class="bg-white p-4 rounded-3xl shadow-xl mb-6 border-4 border-emerald-500/50 shadow-emerald-900/30">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=FMP12-VERIFIED-AFDHI&color=020617" alt="QR Code" class="w-44 h-44 object-contain rounded-xl">
+            </div>
+            
+            <p class="text-green-400 font-semibold tracking-wide flex items-center gap-2.5 text-lg">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                </span>
+                SIAP DI-SCAN
+            </p>
         </div>
 
-        <!-- Form Input -->
-        <form class="space-y-5">
-            <!-- Input Nama -->
-            <div class="relative flex items-center">
-                <span class="absolute left-4.5 text-slate-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                    </svg>
-                </span>
-                <input type="text" id="nama" class="w-full h-14 pl-13 bg-slate-800/60 ios-rounded border border-white/5 text-base text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all" placeholder="Nama Lengkap">
-            </div>
+        <!-- Garis Pemisah Tiket -->
+        <div class="ios-divider"></div>
 
-            <!-- Input Jurusan -->
-            <div class="relative flex items-center">
-                <span class="absolute left-4.5 text-slate-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.174L11.24 2.133a.75.75 0 0 1 1.107 0l6.98 8.041a.75.75 0 0 1-.577 1.25H4.837a.75.75 0 0 1-.577-1.25Z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 13.5v6a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-6" />
-                    </svg>
-                </span>
-                <select id="jurusan" class="w-full h-14 pl-13 pr-6 bg-slate-800/60 ios-rounded border border-white/5 text-base text-white focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all cursor-pointer">
-                    <option value="" disabled selected class="text-slate-500">Pilih Program Studi</option>
-                    <option value="Fisika" class="bg-slate-900">Fisika</option>
-                    <option value="Kimia" class="bg-slate-900">Kimia</option>
-                    <option value="Matematika" class="bg-slate-900">Matematika</option>
-                </select>
-                <span class="absolute right-4.5 text-slate-600 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                      <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                    </svg>
-                </span>
-            </div>
+        <!-- Bagian Bawah: Detail Peserta -->
+        <div class="p-9 pt-7 bg-black/10">
+            <div class="space-y-5">
+                <div>
+                    <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1.5">Nama Peserta</p>
+                    <p class="font-semibold text-xl text-white">Afdhi Abdilah</p>
+                </div>
+                
+                <div class="flex justify-between gap-4">
+                    <div>
+                        <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1.5">Program Studi</p>
+                        <p class="font-medium text-base text-white">Fisika</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1.5">Tipe Tiket</p>
+                        <p class="font-medium text-base text-white">On-The-Spot</p>
+                    </div>
+                </div>
 
-            <!-- Input Email -->
-            <div class="relative flex items-center">
-                <span class="absolute left-4.5 text-slate-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                    </svg>
-                </span>
-                <input type="email" id="email" class="w-full h-14 pl-13 bg-slate-800/60 ios-rounded border border-white/5 text-base text-white placeholder-slate-500 focus:ring-2 focus:ring-blue-500/50 focus:outline-none transition-all" placeholder="Email Universitas (@mhs.unsoed.ac.id)">
+                <div class="pt-2">
+                    <p class="text-[11px] text-slate-500 uppercase tracking-widest mb-1.5">Ticket ID</p>
+                    <p class="mono-text text-xs text-emerald-400 tracking-[0.2em]">FMP12-8A9X-21Z</p>
+                </div>
             </div>
-
-            <!-- Tombol Submit -->
-            <button type="button" class="w-full h-14 bg-blue-600 text-white text-lg font-semibold ios-rounded hover:bg-blue-500 active:bg-blue-700 active:scale-[0.98] transition-all duration-150 mt-4 shadow-lg shadow-blue-900/40">
-                Dapatkan E-Ticket
-            </button>
-            <p class="text-xs text-center text-slate-500 pt-2">Sudah mendaftar pra-acara? Tunjukkan kode Anda ke petugas.</p>
-        </form>
+        </div>
+        
     </div>
+
+    <!-- Instruksi bawah -->
+    <p class="absolute bottom-10 text-sm text-slate-600 tracking-wide text-center w-full max-w-xs">Tunjukkan layar ini pada petugas di pintu masuk FMIPA.</p>
 </body>
 </html>
