@@ -1,172 +1,87 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Command Center - Dies Natalis FMIPA 12</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f8fafc; color: #0f172a; }
-        
-        .ios-glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(24px) saturate(150%);
-            -webkit-backdrop-filter: blur(24px) saturate(150%);
-            border: 1px solid rgba(255, 255, 255, 1);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+<!-- Script Integrasi Firebase & Logika Form -->
+    <script type="module">
+        // 1. Mengimpor Modul Firebase dari Google (Versi 10 Terbaru)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  
+        // =========================================================================
+        // 2. TEMPEL KODE FIREBASE ANDA DI SINI
+        // Ganti isi variabel firebaseConfig ini dengan kode milik Anda dari Notepad!
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQvjHFiOZAOZiVDD_-X7v7D0wiYDo3vn8",
+  authDomain: "presensi12-79349.firebaseapp.com",
+  projectId: "presensi12-79349",
+  storageBucket: "presensi12-79349.firebasestorage.app",
+  messagingSenderId: "99731054651",
+  appId: "1:99731054651:web:77af6714b2b32244963c1e"
+        };
+        // =========================================================================
+  
+        // 3. Inisialisasi Firebase & Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+  
+        // 4. Fungsi Pembuat ID Tiket Acak (Contoh: FMP12-A8X9)
+        function generateTicketID() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = 'FMP12-';
+            for (let i = 0; i < 4; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
         }
-        
-        .dropzone {
-            border: 2px dashed #cbd5e1;
-            background: rgba(248, 250, 252, 0.5);
-            transition: all 0.3s ease;
-        }
-        .dropzone:hover { border-color: #3b82f6; background: rgba(239, 246, 255, 0.5); }
-        
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
-</head>
-<body class="min-h-[100dvh] p-4 sm:p-6 relative overflow-x-hidden bg-gradient-to-br from-slate-50 via-slate-100 to-blue-50">
-    
-    <div class="fixed top-[-10%] left-[-5%] w-[400px] h-[400px] bg-blue-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-40 pointer-events-none"></div>
-    <div class="fixed bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-purple-200 rounded-full mix-blend-multiply filter blur-[100px] opacity-30 pointer-events-none"></div>
-
-    <div class="max-w-5xl mx-auto relative z-10 space-y-6 pb-12">
-        
-        <!-- Top Navigation Bar -->
-        <div class="flex items-center justify-between ios-glass-card p-4 rounded-2xl">
-            <div class="flex items-center gap-4">
-                <a href="portal.html" class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-600 hover:text-blue-600 transition-colors border border-slate-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" /></svg>
-                </a>
-                <div>
-                    <h1 class="text-lg sm:text-xl font-bold tracking-tight text-slate-900">Command Center</h1>
-                    <p class="text-[10px] sm:text-xs font-medium text-emerald-600 flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Database Terhubung
-                    </p>
-                </div>
-            </div>
-            
-            <div class="hidden sm:flex items-center gap-3">
-                <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">Admin Mode</span>
-            </div>
-        </div>
-
-        <!-- Row 1: Statistik Kehadiran -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="ios-glass-card p-5 rounded-3xl flex flex-col justify-center">
-                <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-1">Total Pendaftar</span>
-                <span class="text-3xl font-bold text-slate-900">450</span>
-            </div>
-            <div class="ios-glass-card p-5 rounded-3xl flex flex-col justify-center border-b-4 border-b-blue-500">
-                <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-1">Hadir Pembukaan</span>
-                <span class="text-3xl font-bold text-slate-900">382</span>
-            </div>
-            <div class="ios-glass-card p-5 rounded-3xl flex flex-col justify-center border-b-4 border-b-purple-500">
-                <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-1">Hadir Penutupan</span>
-                <span class="text-3xl font-bold text-slate-900">120</span>
-            </div>
-            <div class="ios-glass-card p-5 rounded-3xl flex flex-col justify-center">
-                <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mb-1">Undangan VIP Eksternal</span>
-                <span class="text-3xl font-bold text-slate-900">45</span>
-            </div>
-        </div>
-
-        <!-- Row 2: Tabel Presensi Real-Time & Ekspor PDF -->
-        <div class="ios-glass-card rounded-3xl overflow-hidden flex flex-col">
-            <div class="p-5 border-b border-slate-200/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/50">
-                <div>
-                    <h2 class="text-base font-bold text-slate-900">Data Presensi Peserta</h2>
-                    <p class="text-xs text-slate-500">Log kehadiran langsung dari Gate Scanner</p>
-                </div>
-                <button class="bg-slate-900 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-300 flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
-                    Unduh Laporan PDF
-                </button>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50/50 text-slate-500 text-[10px] uppercase tracking-widest">
-                            <th class="p-4 font-semibold whitespace-nowrap">ID Tiket</th>
-                            <th class="p-4 font-semibold whitespace-nowrap">Nama Peserta</th>
-                            <th class="p-4 font-semibold whitespace-nowrap">Program Studi</th>
-                            <th class="p-4 font-semibold whitespace-nowrap">Status Pembukaan</th>
-                            <th class="p-4 font-semibold whitespace-nowrap">Status Penutupan</th> <!-- KOLOM BARU -->
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm text-slate-700 font-medium divide-y divide-slate-100">
-                        <tr class="hover:bg-white/40 transition-colors">
-                            <td class="p-4 text-xs font-mono text-slate-400">FMP12-8A9X</td>
-                            <td class="p-4 text-slate-900 font-semibold">Afdhi Abdilah</td>
-                            <td class="p-4">Fisika</td>
-                            <td class="p-4"><span class="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs rounded-lg">Hadir (08:15)</span></td>
-                            <td class="p-4"><span class="px-2.5 py-1 bg-purple-100 text-purple-700 text-xs rounded-lg">Hadir (18:45)</span></td>
-                        </tr>
-                        <tr class="hover:bg-white/40 transition-colors">
-                            <td class="p-4 text-xs font-mono text-slate-400">FMP12-K2L9</td>
-                            <td class="p-4 text-slate-900 font-semibold">Yolanda Marsya Utami</td>
-                            <td class="p-4">Matematika</td>
-                            <td class="p-4"><span class="px-2.5 py-1 bg-blue-100 text-blue-700 text-xs rounded-lg">Hadir (08:20)</span></td>
-                            <td class="p-4"><span class="px-2.5 py-1 bg-slate-100 text-slate-500 text-xs rounded-lg">Belum Scan</span></td>
-                        </tr>
-                        <tr class="hover:bg-white/40 transition-colors">
-                            <td class="p-4 text-xs font-mono text-slate-400">FMP12-M9N1</td>
-                            <td class="p-4 text-slate-900 font-semibold">Budi Santoso</td>
-                            <td class="p-4">Kimia</td>
-                            <td class="p-4"><span class="px-2.5 py-1 bg-slate-100 text-slate-500 text-xs rounded-lg">Absen</span></td>
-                            <td class="p-4"><span class="px-2.5 py-1 bg-slate-100 text-slate-500 text-xs rounded-lg">Belum Scan</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Row 3: Injeksi Word & Email Blast (VIP) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="ios-glass-card rounded-3xl p-6 flex flex-col">
-                <div class="mb-4">
-                    <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-blue-500"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
-                        Injeksi Data VIP
-                    </h2>
-                    <p class="text-xs text-slate-500 mt-1">Ekstrak email undangan khusus dari dokumen (.docx)</p>
-                </div>
-                <div class="dropzone rounded-2xl flex-1 flex flex-col items-center justify-center p-8 text-center cursor-pointer">
-                    <div class="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" /></svg>
-                    </div>
-                    <p class="text-sm font-semibold text-slate-700">Tarik & Lepas File Word ke Sini</p>
-                    <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-wider">Atau klik untuk mencari file</p>
-                    <input type="file" class="hidden" accept=".docx">
-                </div>
-            </div>
-
-            <div class="ios-glass-card rounded-3xl p-6 flex flex-col justify-between bg-gradient-to-br from-white/80 to-blue-50/50">
-                <div>
-                    <div class="mb-4">
-                        <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-indigo-500"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" /></svg>
-                            Malam Puncak Blast
-                        </h2>
-                        <p class="text-xs text-slate-500 mt-1">Sistem akan mengirimkan <strong>427 email</strong> (Peserta Pembukaan + VIP Eksternal) yang berisi E-Ticket Eksklusif.</p>
-                    </div>
-                    <div class="bg-white/60 p-4 rounded-xl border border-slate-100 text-sm font-medium text-slate-600 mb-6">
-                        <p class="flex justify-between mb-2"><span>Peserta Tervalidasi (Hadir):</span> <span class="font-bold text-slate-900">382 Email</span></p>
-                        <p class="flex justify-between"><span>VIP Hasil Injeksi Word:</span> <span class="font-bold text-slate-900">45 Email</span></p>
-                    </div>
-                </div>
-                <button class="w-full bg-blue-600 text-white text-base font-semibold py-4 rounded-2xl hover:bg-blue-700 active:scale-[0.98] transition-all duration-150 shadow-xl shadow-blue-600/30 flex justify-center items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path d="M3 4a2 2 0 0 0-2 2v1.161l8.441 4.221a1.25 1.25 0 0 0 1.118 0L19 7.162V6a2 2 0 0 0-2-2H3Z" /><path d="m19 8.839-7.77 3.885a2.75 2.75 0 0 1-2.46 0L1 8.839V14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.839Z" /></svg>
-                    Kirim Semua Undangan Sekarang
-                </button>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+  
+        // 5. Eksekusi Saat Tombol Ditekan
+        const submitBtn = document.querySelector('button');
+        submitBtn.addEventListener('click', async () => {
+            // Ambil nilai dari kotak input
+            const nama = document.getElementById('nama').value;
+            const jurusan = document.getElementById('jurusan').value;
+            const email = document.getElementById('email').value;
+  
+            // Pengecekan jika ada kolom yang kosong
+            if(!nama || !jurusan || !email) {
+                alert("Mohon lengkapi semua data pendaftaran!");
+                return;
+            }
+  
+            // Ubah tampilan tombol saat memproses data
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Memproses...";
+            submitBtn.disabled = true;
+            submitBtn.classList.add("opacity-70", "cursor-not-allowed");
+  
+            const ticketID = generateTicketID();
+  
+            try {
+                // Proses mengirim data ke Database (Koleksi: peserta_diesnatalis)
+                await addDoc(collection(db, "peserta_diesnatalis"), {
+                    nama_lengkap: nama,
+                    jurusan: jurusan,
+                    email: email,
+                    kode_qr_unik: ticketID,
+                    sumber_data: "pra_acara", 
+                    waktu_hadir_pembukaan: null,
+                    waktu_hadir_penutupan: null,
+                    waktu_daftar: serverTimestamp()
+                });
+  
+                // Simpan data sementara di Browser (Local Storage) 
+                // Agar nanti bisa dibaca oleh halaman ticket.html
+                localStorage.setItem("ticket_nama", nama);
+                localStorage.setItem("ticket_jurusan", jurusan);
+                localStorage.setItem("ticket_id", ticketID);
+                localStorage.setItem("ticket_tipe", "Pra-Acara");
+                
+                // Lompat ke halaman tiket!
+                window.location.href = "ticket.html";
+                
+            } catch (error) {
+                console.error("Gagal menyimpan data: ", error);
+                alert("Terjadi kesalahan sistem, silakan coba lagi.");
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
+            }
+        });
+    </script>
