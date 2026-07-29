@@ -3,105 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Kehadiran - Dies Natalis FMIPA 12</title>
+    <title>Scanner Panitia - Dies Natalis FMIPA 12</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Mengimpor library HTML5 QR Code Scanner -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono&display=swap');
         
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: #f8fafc; 
-            color: #0f172a; 
+            color: #0f172a;
         }
         
         .ios-glass-panel {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(24px) saturate(150%);
             -webkit-backdrop-filter: blur(24px) saturate(150%);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
         }
 
         .ios-rounded {
-            border-radius: 1.25rem;
+            border-radius: 1.5rem;
         }
         
-        select {
-            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+        /* Modifikasi tampilan default dari library scanner agar lebih rapi */
+        #reader {
+            width: 100%;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: none !important;
+        }
+        #reader video {
+            object-fit: cover;
+            border-radius: 1rem;
+        }
+        #reader__dashboard_section_csr span {
+            color: #64748b !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+        #reader__dashboard_section_swaplink {
+            text-decoration: none !important;
+            color: #3b82f6 !important;
+            font-weight: 600;
+        }
+        button {
+            border-radius: 0.75rem !important;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-5 relative overflow-hidden bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50">
+<body class="min-h-screen flex flex-col items-center p-5 relative overflow-hidden bg-gradient-to-br from-slate-100 via-white to-blue-50">
     
-    <!-- Ornamen Latar Belakang Cerah -->
-    <div class="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-blue-300 rounded-full mix-blend-multiply filter blur-[90px] opacity-40"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-emerald-200 rounded-full mix-blend-multiply filter blur-[90px] opacity-40"></div>
-    <div class="absolute top-[40%] left-[30%] w-[300px] h-[300px] bg-purple-200 rounded-full mix-blend-multiply filter blur-[90px] opacity-30"></div>
+    <!-- Ornamen Latar Belakang -->
+    <div class="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] bg-blue-200 rounded-full mix-blend-multiply filter blur-[80px] opacity-40"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[300px] h-[300px] bg-emerald-200 rounded-full mix-blend-multiply filter blur-[80px] opacity-30"></div>
 
-    <!-- Kotak Utama Registrasi -->
-    <div class="max-w-md w-full ios-glass-panel ios-rounded p-9 relative z-10 mb-10">
+    <!-- Header Panitia -->
+    <div class="w-full max-w-md flex justify-between items-center mb-6 mt-4 relative z-10">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900">Gate Access</h1>
+            <p class="text-xs font-medium text-slate-500 uppercase tracking-widest mt-1">Panitia Mode</p>
+        </div>
+        <div class="h-10 w-10 bg-slate-900 rounded-full flex items-center justify-center shadow-lg shadow-slate-400/30">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Kotak Scanner -->
+    <div class="max-w-md w-full ios-glass-panel ios-rounded p-6 relative z-10 flex flex-col items-center">
         
-        <!-- Header -->
-        <div class="mb-10 mt-2 text-center">
-            <h1 class="text-3xl font-bold tracking-tight text-slate-900 mb-1.5">Daftar Kehadiran</h1>
-            <p class="text-sm font-medium text-slate-500">Dies Natalis FMIPA Unsoed ke-12</p>
+        <!-- Area Kamera -->
+        <div class="w-full bg-slate-100 rounded-[1rem] p-2 mb-4 border border-slate-200 shadow-inner">
+            <div id="reader"></div>
         </div>
 
-        <!-- Form Input -->
-        <form class="space-y-5">
-            <!-- Input Nama -->
-            <div class="relative flex items-center">
-                <span class="absolute left-4 text-slate-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                    </svg>
+        <!-- Status & Hasil -->
+        <div class="w-full text-center">
+            <div id="scan-status" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold border border-blue-100 mb-2">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
                 </span>
-                <input type="text" id="nama" class="w-full h-14 pl-12 pr-4 bg-white/60 ios-rounded border border-slate-200 text-base text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 focus:bg-white focus:outline-none transition-all shadow-sm" placeholder="Nama Lengkap">
+                Kamera Aktif...
             </div>
-
-            <!-- Input Jurusan -->
-            <div class="relative flex items-center">
-                <span class="absolute left-4 text-slate-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.174L11.24 2.133a.75.75 0 0 1 1.107 0l6.98 8.041a.75.75 0 0 1-.577 1.25H4.837a.75.75 0 0 1-.577-1.25Z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 13.5v6a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-6" />
-                    </svg>
-                </span>
-                <select id="jurusan" class="w-full h-14 pl-12 pr-10 bg-white/60 ios-rounded border border-slate-200 text-base text-slate-900 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 focus:bg-white focus:outline-none transition-all shadow-sm cursor-pointer">
-                    <option value="" disabled selected class="text-slate-400">Pilih Program Studi</option>
-                    <option value="Fisika" class="bg-white">Fisika</option>
-                    <option value="Kimia" class="bg-white">Kimia</option>
-                    <option value="Matematika" class="bg-white">Matematika</option>
-                    <option value="Statistika" class="bg-white">Statistika</option>
-                </select>
-                <span class="absolute right-4 text-slate-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                      <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                    </svg>
-                </span>
+            <div id="scan-result" class="text-sm font-medium text-slate-500 font-mono mt-2 break-all">
+                Arahkan tiket ke kamera
             </div>
-
-            <!-- Input Email -->
-            <div class="relative flex items-center">
-                <span class="absolute left-4 text-slate-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                    </svg>
-                </span>
-                <input type="email" id="email" class="w-full h-14 pl-12 pr-4 bg-white/60 ios-rounded border border-slate-200 text-base text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 focus:bg-white focus:outline-none transition-all shadow-sm" placeholder="Email (@mhs.unsoed.ac.id)">
-            </div>
-
-            <!-- Tombol Submit -->
-            <button type="button" class="w-full h-14 bg-blue-600 text-white text-lg font-semibold ios-rounded hover:bg-blue-700 active:scale-[0.98] transition-all duration-150 mt-4 shadow-lg shadow-blue-600/30">
-                Dapatkan E-Ticket
-            </button>
-            <p class="text-xs text-center text-slate-500 pt-2 font-medium">Sudah mendaftar pra-acara? Tunjukkan kode ke petugas.</p>
-        </form>
+        </div>
     </div>
 
-    <!-- Footer Web -->
-    <div class="absolute bottom-6 w-full flex justify-center z-10 px-4">
-        <p class="text-[10px] text-slate-400/80 font-semibold tracking-[0.2em] uppercase text-center">© 2026 ATP Diesnatalis FMIPA. All rights reserved.</p>
+    <!-- Statistik Singkat -->
+    <div class="max-w-md w-full mt-6 grid grid-cols-2 gap-4 relative z-10">
+        <div class="ios-glass-panel rounded-2xl p-4 flex flex-col items-center justify-center">
+            <span class="text-xs text-slate-500 font-medium uppercase tracking-wider mb-1">Total Hadir</span>
+            <span class="text-2xl font-bold text-slate-900">0</span>
+        </div>
+        <div class="ios-glass-panel rounded-2xl p-4 flex flex-col items-center justify-center">
+            <span class="text-xs text-slate-500 font-medium uppercase tracking-wider mb-1">Scan Terakhir</span>
+            <span class="text-sm font-semibold text-emerald-600 truncate w-full text-center">-</span>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <div class="absolute bottom-6 w-full flex justify-center z-10">
+        <p class="text-[10px] text-slate-400/80 font-semibold tracking-[0.2em] uppercase text-center">© 2026 ATP Diesnatalis FMIPA</p>
+    </div>
+
+    <!-- Script Logika Scanner -->
+    <script>
+        // Inisialisasi Scanner saat halaman dimuat
+        document.addEventListener("DOMContentLoaded", function() {
+            function onScanSuccess(decodedText, decodedResult) {
+                // Berhenti scan sejenak agar tidak double-scan
+                html5QrcodeScanner.pause();
+                
+                // Ubah UI menjadi sukses
+                const statusBadge = document.getElementById('scan-status');
+                statusBadge.className = "inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full text-sm font-semibold border border-emerald-100 mb-2";
+                statusBadge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd" /></svg> Scan Berhasil!`;
+                
+                document.getElementById('scan-result').innerText = "ID: " + decodedText;
+
+                // NANTINYA DI SINI: Kode untuk mengirim ID tiket (decodedText) ke Firebase
+                console.log(`Scan result: ${decodedText}`);
+
+                // Melanjutkan scan setelah 2 detik
+                setTimeout(() => {
+                    html5QrcodeScanner.resume();
+                    statusBadge.className = "inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-semibold border border-blue-100 mb-2";
+                    statusBadge.innerHTML = `<span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span></span> Kamera Aktif...`;
+                    document.getElementById('scan-result').innerText = "Arahkan tiket ke kamera";
+                }, 2000);
+            }
+
+            function onScanFailure(error) {
+                // Abaikan error saat sedang mencari QR (berjalan terus menerus)
+            }
+
+            let html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader",
+                { fps: 10, qrbox: {width: 250, height: 250} },
+                /* verbose= */ false);
+            
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        });
+    </script>
 </body>
 </html>
