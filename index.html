@@ -1,82 +1,693 @@
-<!-- Script Integrasi Firebase & Logika Form -->
-    <script type="module">
-        // 1. Mengimpor Modul Firebase dari Google (Versi 10 Terbaru)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  
-        // =========================================================================
-        // 2. TEMPEL KODE FIREBASE ANDA DI SINI
-        // Ganti isi variabel firebaseConfig ini dengan kode milik Anda dari Notepad!
-        const firebaseConfig = {
-           
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scrapbook Minggu Seru 🌸</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --cream:#FFF6EC;
+    --cream-deep:#FBEAD9;
+    --pink:#F4B9CF;
+    --pink-deep:#E895B4;
+    --peach:#FFD2A6;
+    --sage:#B7C9AE;
+    --lavender:#D9CBEE;
+    --plum:#4A3B47;
+    --plum-soft:#7A6470;
+    --paper:#FFFDF9;
+    --shadow: 0 8px 20px rgba(74,59,71,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Quicksand',sans-serif;
+    color:var(--plum);
+    background:
+      radial-gradient(circle at 15% 20%, rgba(244,185,207,0.35), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(217,203,238,0.35), transparent 40%),
+      var(--cream);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
 
-        // =========================================================================
-  
-        // 3. Inisialisasi Firebase & Firestore
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-  
-        // 4. Fungsi Pembuat ID Tiket Acak (Contoh: FMP12-A8X9)
-        function generateTicketID() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = 'FMP12-';
-            for (let i = 0; i < 4; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-  
-        // 5. Eksekusi Saat Tombol Ditekan
-        const submitBtn = document.querySelector('button');
-        submitBtn.addEventListener('click', async () => {
-            // Ambil nilai dari kotak input
-            const nama = document.getElementById('nama').value;
-            const jurusan = document.getElementById('jurusan').value;
-            const email = document.getElementById('email').value;
-  
-            // Pengecekan jika ada kolom yang kosong
-            if(!nama || !jurusan || !email) {
-                alert("Mohon lengkapi semua data pendaftaran!");
-                return;
-            }
-  
-            // Ubah tampilan tombol saat memproses data
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = "Memproses...";
-            submitBtn.disabled = true;
-            submitBtn.classList.add("opacity-70", "cursor-not-allowed");
-  
-            const ticketID = generateTicketID();
-  
-            try {
-                // Proses mengirim data ke Database (Koleksi: peserta_diesnatalis)
-                await addDoc(collection(db, "peserta_diesnatalis"), {
-                    nama_lengkap: nama,
-                    jurusan: jurusan,
-                    email: email,
-                    kode_qr_unik: ticketID,
-                    sumber_data: "pra_acara", 
-                    waktu_hadir_pembukaan: null,
-                    waktu_hadir_penutupan: null,
-                    waktu_daftar: serverTimestamp()
-                });
-  
-                // Simpan data sementara di Browser (Local Storage) 
-                // Agar nanti bisa dibaca oleh halaman ticket.html
-                localStorage.setItem("ticket_nama", nama);
-                localStorage.setItem("ticket_jurusan", jurusan);
-                localStorage.setItem("ticket_id", ticketID);
-                localStorage.setItem("ticket_tipe", "Pra-Acara");
-                
-                // Lompat ke halaman tiket!
-                window.location.href = "ticket.html";
-                
-            } catch (error) {
-                console.error("Gagal menyimpan data: ", error);
-                alert("Terjadi kesalahan sistem, silakan coba lagi.");
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
-                submitBtn.classList.remove("opacity-70", "cursor-not-allowed");
-            }
-        });
-    </script>
+  /* ---------- Header ---------- */
+  header{
+    text-align:center;
+    padding:28px 16px 10px;
+  }
+  header h1{
+    font-family:'Caveat',cursive;
+    font-size:clamp(2.2rem, 5vw, 3.2rem);
+    margin:0;
+    color:var(--pink-deep);
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.6);
+    transform: rotate(-1.5deg);
+  }
+  header p{
+    margin:6px 0 0;
+    font-size:0.95rem;
+    color:var(--plum-soft);
+    font-weight:600;
+  }
+
+  /* ---------- Layout ---------- */
+  .app{
+    display:flex;
+    gap:18px;
+    max-width:1400px;
+    margin:0 auto;
+    padding:10px 18px 60px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width:240px;
+    flex-shrink:0;
+    background:var(--paper);
+    border-radius:20px;
+    padding:18px;
+    box-shadow:var(--shadow);
+    position:sticky;
+    top:14px;
+  }
+  .sidebar h2{
+    font-family:'Caveat',cursive;
+    font-size:1.5rem;
+    margin:0 0 10px;
+    color:var(--pink-deep);
+    border-bottom:2px dashed var(--pink);
+    padding-bottom:6px;
+  }
+  .sidebar h2:not(:first-child){margin-top:20px;}
+
+  .upload-btn{
+    display:block;
+    text-align:center;
+    background:var(--pink);
+    color:#fff;
+    font-weight:700;
+    padding:11px;
+    border-radius:14px;
+    cursor:pointer;
+    border:none;
+    width:100%;
+    font-family:'Quicksand',sans-serif;
+    font-size:0.95rem;
+    transition:transform .15s ease, background .15s ease;
+    box-shadow:0 4px 0 var(--pink-deep);
+  }
+  .upload-btn:hover{background:var(--pink-deep); transform:translateY(-1px);}
+  .upload-btn:active{transform:translateY(2px); box-shadow:0 1px 0 var(--pink-deep);}
+  input[type=file]{display:none;}
+
+  .sticker-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+  }
+  .sticker-grid button{
+    font-size:1.4rem;
+    background:var(--cream-deep);
+    border:none;
+    border-radius:12px;
+    padding:6px 0;
+    cursor:grab;
+    transition:transform .12s ease, background .12s;
+  }
+  .sticker-grid button:hover{background:var(--peach); transform:scale(1.15) rotate(-6deg);}
+
+  .tool-row{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .tool-row button{
+    flex:1 1 auto;
+    background:var(--sage);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    padding:8px 6px;
+    font-size:0.8rem;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Quicksand',sans-serif;
+  }
+  .tool-row button:hover{filter:brightness(1.08);}
+
+  .bg-swatches{display:flex; gap:8px; flex-wrap:wrap;}
+  .swatch{
+    width:34px;height:34px;border-radius:10px;cursor:pointer;
+    border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,0.15);
+  }
+  .swatch.active{outline:3px solid var(--pink-deep);}
+
+  .download-btn{
+    margin-top:18px;
+    width:100%;
+    background:var(--plum);
+    color:#fff;
+    border:none;
+    border-radius:14px;
+    padding:13px;
+    font-weight:700;
+    font-size:1rem;
+    cursor:pointer;
+    font-family:'Quicksand',sans-serif;
+    box-shadow:0 4px 0 #2f2530;
+  }
+  .download-btn:hover{background:#3a2e37;}
+  .download-btn:active{transform:translateY(2px); box-shadow:0 1px 0 #2f2530;}
+
+  .hint{
+    font-size:0.75rem;
+    color:var(--plum-soft);
+    line-height:1.4;
+    margin-top:8px;
+  }
+
+  /* ---------- Board ---------- */
+  .board-wrap{
+    flex:1 1 600px;
+    min-width:320px;
+  }
+  #board{
+    position:relative;
+    width:100%;
+    aspect-ratio:4/3;
+    min-height:520px;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    background-color:var(--cream-deep);
+    background-image:
+      radial-gradient(rgba(74,59,71,0.06) 1.2px, transparent 1.2px);
+    background-size:16px 16px;
+    border:10px solid var(--paper);
+  }
+  #board.bg-cork{
+    background-color:#C9A97C;
+    background-image:
+      radial-gradient(rgba(0,0,0,0.12) 1.5px, transparent 1.5px),
+      radial-gradient(rgba(255,255,255,0.06) 1.5px, transparent 1.5px);
+    background-size:14px 14px, 18px 18px;
+    background-position:0 0, 5px 7px;
+  }
+  #board.bg-gingham{
+    background-color:#FFF6EC;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(232,149,180,0.28) 0 10px, transparent 10px 20px),
+      repeating-linear-gradient(90deg, rgba(232,149,180,0.28) 0 10px, transparent 10px 20px);
+  }
+  .empty-hint{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:30px;
+    font-family:'Caveat',cursive;
+    font-size:1.6rem;
+    color:var(--plum-soft);
+    pointer-events:none;
+  }
+
+  /* ---------- Draggable items ---------- */
+  .item{
+    position:absolute;
+    cursor:grab;
+    touch-action:none;
+    user-select:none;
+  }
+  .item.dragging{cursor:grabbing; z-index:999 !important;}
+  .item.selected .frame{outline:2px dashed var(--pink-deep); outline-offset:4px;}
+
+  .polaroid{
+    background:#fff;
+    padding:10px 10px 34px;
+    border-radius:4px;
+    box-shadow:0 10px 18px rgba(0,0,0,0.25);
+    width:180px;
+  }
+  .polaroid img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    display:block;
+    background:#eee;
+  }
+  .polaroid .cap{
+    font-family:'Caveat',cursive;
+    font-size:1.25rem;
+    text-align:center;
+    margin-top:8px;
+    color:var(--plum);
+    outline:none;
+    min-height:22px;
+  }
+
+  .sticker-el{
+    font-size:2.6rem;
+    filter:drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+  }
+
+  .tape{
+    width:90px;
+    height:28px;
+    background:rgba(217,203,238,0.75);
+    border:1px solid rgba(255,255,255,0.5);
+    box-shadow:0 3px 6px rgba(0,0,0,0.15);
+  }
+  .tape.pink{background:rgba(244,185,207,0.75);}
+  .tape.peach{background:rgba(255,210,166,0.75);}
+
+  .text-el{
+    font-family:'Caveat',cursive;
+    font-size:1.8rem;
+    color:var(--plum);
+    padding:2px 6px;
+    outline:none;
+    min-width:40px;
+    background:transparent;
+  }
+
+  .item-controls{
+    position:absolute;
+    top:-16px;
+    right:-16px;
+    display:none;
+    gap:4px;
+  }
+  .item.selected .item-controls{display:flex;}
+  .item-controls button{
+    width:26px;height:26px;
+    border-radius:50%;
+    border:none;
+    background:var(--plum);
+    color:#fff;
+    font-size:0.8rem;
+    cursor:pointer;
+    line-height:1;
+  }
+  .item-controls button:hover{background:var(--pink-deep);}
+
+  .filter-none{filter:none;}
+  .filter-warm{filter:sepia(0.25) saturate(1.3) contrast(1.05) brightness(1.05);}
+  .filter-faded{filter:contrast(0.85) brightness(1.1) saturate(0.7);}
+  .filter-bw{filter:grayscale(1) contrast(1.1);}
+  .filter-vintage{filter:sepia(0.4) contrast(1.1) brightness(0.95) saturate(1.2);}
+
+  @media (max-width:820px){
+    .sidebar{position:static; width:100%;}
+    .app{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Scrapbook Minggu Seru 🌸</h1>
+  <p>tempel foto, tambah stiker, terus download buat kenang-kenangan~</p>
+</header>
+
+<div class="app">
+
+  <div class="sidebar">
+    <h2>📷 Foto</h2>
+    <label class="upload-btn" for="fileInput">+ Tambah Foto</label>
+    <input id="fileInput" type="file" accept="image/*" multiple>
+    <div class="hint">Klik foto di board buat pilih, lalu atur filter/putar/hapus.</div>
+
+    <h2>🎀 Stiker Lucu</h2>
+    <div class="sticker-grid">
+      <button data-sticker="⭐">⭐</button>
+      <button data-sticker="💖">💖</button>
+      <button data-sticker="🌸">🌸</button>
+      <button data-sticker="✨">✨</button>
+      <button data-sticker="🎀">🎀</button>
+      <button data-sticker="🍒">🍒</button>
+      <button data-sticker="☁️">☁️</button>
+      <button data-sticker="🐰">🐰</button>
+      <button data-sticker="🧸">🧸</button>
+      <button data-sticker="🍰">🍰</button>
+      <button data-sticker="🦋">🦋</button>
+      <button data-sticker="🌈">🌈</button>
+    </div>
+
+    <h2>🩹 Washi Tape</h2>
+    <div class="tool-row">
+      <button id="addTapeLav">Lavender</button>
+      <button id="addTapePink">Pink</button>
+      <button id="addTapePeach">Peach</button>
+    </div>
+
+    <h2>✏️ Tulisan</h2>
+    <div class="tool-row">
+      <button id="addText">+ Teks</button>
+    </div>
+
+    <h2>🎨 Filter Foto Terpilih</h2>
+    <div class="tool-row">
+      <button data-filter="filter-none">Asli</button>
+      <button data-filter="filter-warm">Hangat</button>
+      <button data-filter="filter-faded">Pudar</button>
+    </div>
+    <div class="tool-row" style="margin-top:6px;">
+      <button data-filter="filter-bw">B&amp;W</button>
+      <button data-filter="filter-vintage">Vintage</button>
+    </div>
+
+    <h2>🖼️ Background</h2>
+    <div class="bg-swatches">
+      <div class="swatch active" data-bg="" style="background:#FBEAD9;" title="Polkadot Cream"></div>
+      <div class="swatch" data-bg="bg-cork" style="background:#C9A97C;" title="Cork Board"></div>
+      <div class="swatch" data-bg="bg-gingham" style="background:#FFF6EC;" title="Gingham"></div>
+    </div>
+
+    <button class="download-btn" id="downloadBtn">⬇️ Download Scrapbook</button>
+    <div class="hint">Tips: drag buat mindahin, tombol 🔄 buat muter, ❌ buat hapus.</div>
+  </div>
+
+  <div class="board-wrap">
+    <div id="board">
+      <div class="empty-hint" id="emptyHint">tempel foto kalian di sini dulu yuk ✨<br>lalu hias sesuka hati~</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const board = document.getElementById('board');
+  const emptyHint = document.getElementById('emptyHint');
+  const fileInput = document.getElementById('fileInput');
+  let zCounter = 10;
+  let selectedItem = null;
+
+  function updateEmptyHint(){
+    const hasItems = board.querySelectorAll('.item').length > 0;
+    emptyHint.style.display = hasItems ? 'none' : 'flex';
+  }
+
+  function clearSelection(){
+    if(selectedItem){ selectedItem.classList.remove('selected'); }
+    selectedItem = null;
+  }
+
+  function selectItem(item){
+    clearSelection();
+    selectedItem = item;
+    item.classList.add('selected');
+    item.style.zIndex = ++zCounter;
+  }
+
+  function randomPos(){
+    const w = board.clientWidth, h = board.clientHeight;
+    return {
+      x: Math.max(20, Math.random()*(w-200)),
+      y: Math.max(20, Math.random()*(h-220))
+    };
+  }
+
+  function makeDraggable(item){
+    let dragging=false, startX=0, startY=0, origX=0, origY=0;
+
+    function getPoint(e){
+      if(e.touches && e.touches[0]) return {x:e.touches[0].clientX, y:e.touches[0].clientY};
+      return {x:e.clientX, y:e.clientY};
+    }
+
+    function down(e){
+      if(e.target.closest('.item-controls') || e.target.classList.contains('cap') || e.target.classList.contains('text-el')) return;
+      selectItem(item);
+      dragging = true;
+      item.classList.add('dragging');
+      const p = getPoint(e);
+      startX = p.x; startY = p.y;
+      origX = parseFloat(item.style.left)||0;
+      origY = parseFloat(item.style.top)||0;
+      e.preventDefault();
+    }
+    function move(e){
+      if(!dragging) return;
+      const p = getPoint(e);
+      const dx = p.x-startX, dy = p.y-startY;
+      const boardRect = board.getBoundingClientRect();
+      let nx = origX+dx, ny = origY+dy;
+      nx = Math.max(-60, Math.min(boardRect.width-40, nx));
+      ny = Math.max(-40, Math.min(boardRect.height-40, ny));
+      item.style.left = nx+'px';
+      item.style.top = ny+'px';
+    }
+    function up(){
+      dragging=false;
+      item.classList.remove('dragging');
+    }
+    item.addEventListener('mousedown', down);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    item.addEventListener('touchstart', down, {passive:false});
+    window.addEventListener('touchmove', move, {passive:false});
+    window.addEventListener('touchend', up);
+
+    item.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      selectItem(item);
+    });
+  }
+
+  function addControls(item, opts){
+    const ctrl = document.createElement('div');
+    ctrl.className = 'item-controls';
+
+    const rotBtn = document.createElement('button');
+    rotBtn.textContent = '🔄';
+    rotBtn.title = 'Putar';
+    rotBtn.onclick = (e)=>{
+      e.stopPropagation();
+      let rot = parseFloat(item.dataset.rot||0);
+      rot += 15;
+      item.dataset.rot = rot;
+      item.style.transform = `rotate(${rot}deg)`;
+    };
+    ctrl.appendChild(rotBtn);
+
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '❌';
+    delBtn.title = 'Hapus';
+    delBtn.onclick = (e)=>{
+      e.stopPropagation();
+      item.remove();
+      updateEmptyHint();
+    };
+    ctrl.appendChild(delBtn);
+
+    if(opts && opts.scalable){
+      const bigBtn = document.createElement('button');
+      bigBtn.textContent = '➕';
+      bigBtn.title = 'Perbesar';
+      bigBtn.onclick = (e)=>{
+        e.stopPropagation();
+        let s = parseFloat(item.dataset.scale||1);
+        s = Math.min(s+0.15, 3);
+        item.dataset.scale = s;
+        applyTransform(item);
+      };
+      const smallBtn = document.createElement('button');
+      smallBtn.textContent = '➖';
+      smallBtn.title = 'Perkecil';
+      smallBtn.onclick = (e)=>{
+        e.stopPropagation();
+        let s = parseFloat(item.dataset.scale||1);
+        s = Math.max(s-0.15, 0.4);
+        item.dataset.scale = s;
+        applyTransform(item);
+      };
+      ctrl.appendChild(smallBtn);
+      ctrl.appendChild(bigBtn);
+    }
+
+    item.appendChild(ctrl);
+  }
+
+  function applyTransform(item){
+    const rot = item.dataset.rot||0;
+    const scale = item.dataset.scale||1;
+    item.style.transform = `rotate(${rot}deg) scale(${scale})`;
+  }
+
+  // override rotate to respect scale too
+  function makeRotateAware(item){
+    const rotBtn = item.querySelector('.item-controls button');
+  }
+
+  function createBaseItem(className){
+    const item = document.createElement('div');
+    item.className = 'item ' + className;
+    const pos = randomPos();
+    item.style.left = pos.x+'px';
+    item.style.top = pos.y+'px';
+    const rot = (Math.random()*16-8).toFixed(1);
+    item.dataset.rot = rot;
+    item.dataset.scale = 1;
+    item.style.transform = `rotate(${rot}deg)`;
+    item.style.zIndex = ++zCounter;
+    return item;
+  }
+
+  function addPhoto(src){
+    const item = createBaseItem('photo-item');
+    const frame = document.createElement('div');
+    frame.className = 'frame polaroid';
+    const img = document.createElement('img');
+    img.src = src;
+    img.className = 'filter-none';
+    const cap = document.createElement('div');
+    cap.className = 'cap';
+    cap.contentEditable = true;
+    cap.setAttribute('data-placeholder','tulis caption~');
+    cap.textContent = '';
+    frame.appendChild(img);
+    frame.appendChild(cap);
+    item.appendChild(frame);
+    addControls(item, {scalable:true});
+    board.appendChild(item);
+    makeDraggable(item);
+    // fix rotate button to use applyTransform (with scale)
+    const rotBtn = item.querySelector('.item-controls button');
+    rotBtn.onclick = (e)=>{
+      e.stopPropagation();
+      let rot = parseFloat(item.dataset.rot||0);
+      rot += 15;
+      item.dataset.rot = rot;
+      applyTransform(item);
+    };
+    selectItem(item);
+    updateEmptyHint();
+  }
+
+  function addSticker(char){
+    const item = createBaseItem('sticker-item');
+    const el = document.createElement('div');
+    el.className = 'sticker-el';
+    el.textContent = char;
+    item.appendChild(el);
+    addControls(item, {scalable:true});
+    const rotBtn = item.querySelector('.item-controls button');
+    rotBtn.onclick = (e)=>{
+      e.stopPropagation();
+      let rot = parseFloat(item.dataset.rot||0);
+      rot += 15;
+      item.dataset.rot = rot;
+      applyTransform(item);
+    };
+    board.appendChild(item);
+    makeDraggable(item);
+    selectItem(item);
+    updateEmptyHint();
+  }
+
+  function addTape(colorClass){
+    const item = createBaseItem('tape-item');
+    const el = document.createElement('div');
+    el.className = 'tape ' + colorClass;
+    item.appendChild(el);
+    addControls(item, {});
+    board.appendChild(item);
+    makeDraggable(item);
+    selectItem(item);
+    updateEmptyHint();
+  }
+
+  function addText(){
+    const item = createBaseItem('text-item');
+    const el = document.createElement('div');
+    el.className = 'text-el';
+    el.contentEditable = true;
+    el.textContent = 'tulis di sini...';
+    item.appendChild(el);
+    addControls(item, {scalable:true});
+    const rotBtn = item.querySelector('.item-controls button');
+    rotBtn.onclick = (e)=>{
+      e.stopPropagation();
+      let rot = parseFloat(item.dataset.rot||0);
+      rot += 15;
+      item.dataset.rot = rot;
+      applyTransform(item);
+    };
+    board.appendChild(item);
+    makeDraggable(item);
+    selectItem(item);
+    updateEmptyHint();
+    setTimeout(()=>{ el.focus(); document.execCommand('selectAll',false,null); },50);
+  }
+
+  // ---- Events ----
+  fileInput.addEventListener('change', (e)=>{
+    const files = Array.from(e.target.files);
+    files.forEach(f=>{
+      const reader = new FileReader();
+      reader.onload = ev => addPhoto(ev.target.result);
+      reader.readAsDataURL(f);
+    });
+    fileInput.value='';
+  });
+
+  document.querySelectorAll('.sticker-grid button').forEach(btn=>{
+    btn.addEventListener('click', ()=> addSticker(btn.dataset.sticker));
+  });
+
+  document.getElementById('addTapeLav').onclick = ()=> addTape('lavender' in {} ? '' : '');
+  document.getElementById('addTapeLav').onclick = ()=> addTape('');
+  document.getElementById('addTapePink').onclick = ()=> addTape('pink');
+  document.getElementById('addTapePeach').onclick = ()=> addTape('peach');
+  document.getElementById('addText').onclick = addText;
+
+  document.querySelectorAll('[data-filter]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(!selectedItem) return;
+      const img = selectedItem.querySelector('img');
+      if(!img) return;
+      img.className = btn.dataset.filter;
+    });
+  });
+
+  document.querySelectorAll('.swatch').forEach(sw=>{
+    sw.addEventListener('click', ()=>{
+      document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+      sw.classList.add('active');
+      board.className = '';
+      if(sw.dataset.bg) board.classList.add(sw.dataset.bg);
+    });
+  });
+
+  board.addEventListener('click', (e)=>{
+    if(e.target === board){ clearSelection(); }
+  });
+
+  document.getElementById('downloadBtn').addEventListener('click', ()=>{
+    document.querySelectorAll('.item-controls').forEach(c=>c.style.display='none');
+    clearSelection();
+    emptyHint.style.display='none';
+    html2canvas(board, {backgroundColor:null, scale:2}).then(canvas=>{
+      const link = document.createElement('a');
+      link.download = 'scrapbook-minggu-seru.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      updateEmptyHint();
+    });
+  });
+
+  updateEmptyHint();
+})();
+</script>
+
+</body>
+</html>
