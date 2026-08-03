@@ -219,6 +219,102 @@
     pointer-events:none;
   }
 
+  /* ---------- Mode switch (template grid) ---------- */
+  .mode-switch{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .mode-switch button{
+    padding:10px 16px;
+    border-radius:14px;
+    border:none;
+    background:var(--paper);
+    color:var(--plum);
+    font-weight:700;
+    font-size:0.85rem;
+    cursor:pointer;
+    font-family:'Quicksand',sans-serif;
+    box-shadow:0 3px 0 rgba(74,59,71,0.15);
+    transition:background .15s, color .15s;
+  }
+  .mode-switch button.active{
+    background:var(--pink-deep);
+    color:#fff;
+  }
+  .mode-hint{
+    text-align:center;
+    font-size:0.8rem;
+    color:var(--plum-soft);
+    margin-bottom:10px;
+    font-weight:600;
+  }
+
+  #board.template-mode{
+    background-image:none;
+    background-color:var(--cream-deep);
+  }
+  #board.t1{
+    aspect-ratio:3/4;
+    background:linear-gradient(160deg,#EAE6D6,#DCE6D0);
+  }
+  #board.t2{
+    aspect-ratio:0.66;
+    background:linear-gradient(160deg,#FBEAD9,#F7DCE8);
+  }
+
+  .slot{
+    position:absolute;
+    overflow:hidden;
+    cursor:pointer;
+    background:#fff;
+    border:4px solid #fff;
+    box-shadow:0 6px 14px rgba(0,0,0,0.28);
+  }
+  .slot img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .slot-plus{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2.2rem;
+    color:#c9bfc3;
+    background:rgba(255,255,255,0.55);
+  }
+  .slot-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(30,20,25,0.4);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.75rem;
+    font-weight:700;
+    text-align:center;
+    opacity:0;
+    transition:opacity .15s;
+    font-family:'Quicksand',sans-serif;
+    pointer-events:none;
+  }
+  .slot:hover .slot-overlay{opacity:1;}
+
+  .deco{
+    position:absolute;
+    pointer-events:none;
+    line-height:1;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    z-index:6;
+  }
+
   /* ---------- Draggable items ---------- */
   .item{
     position:absolute;
@@ -376,6 +472,12 @@
   </div>
 
   <div class="board-wrap">
+    <div class="mode-switch">
+      <button data-mode="free" class="active">✂️ Bebas</button>
+      <button data-mode="t1">🌿 Template 1 (Alam)</button>
+      <button data-mode="t2">🍅 Template 2 (Couple)</button>
+    </div>
+    <div class="mode-hint" id="modeHint">Susun sendiri fotonya, tempel stiker &amp; teks sesukamu.</div>
     <div id="board">
       <div class="empty-hint" id="emptyHint">tempel foto kalian di sini dulu yuk ✨<br>lalu hias sesuka hati~</div>
     </div>
@@ -386,12 +488,14 @@
 <script>
 (function(){
   const board = document.getElementById('board');
-  const emptyHint = document.getElementById('emptyHint');
+  let emptyHint = document.getElementById('emptyHint');
   const fileInput = document.getElementById('fileInput');
   let zCounter = 10;
   let selectedItem = null;
+  let currentMode = 'free';
 
   function updateEmptyHint(){
+    if(!emptyHint) return;
     const hasItems = board.querySelectorAll('.item').length > 0;
     emptyHint.style.display = hasItems ? 'none' : 'flex';
   }
@@ -672,10 +776,156 @@
     if(e.target === board){ clearSelection(); }
   });
 
+  // ---- Template grid (foto tinggal masuk ke slot) ----
+  const templates = {
+    t1: {
+      cls:'t1',
+      hint:'Klik tiap kotak putih buat masukin fotonya — layout hijau ala jalan-jalan.',
+      slots:[
+        {left:5,  top:2,  width:30, height:20, rot:-3},
+        {left:34, top:0,  width:61, height:26, rot:2},
+        {left:2,  top:25, width:60, height:73, rot:-1},
+        {left:63, top:32, width:35, height:27, rot:2},
+        {left:65, top:60, width:32, height:20, rot:-2}
+      ],
+      decos:[
+        {emoji:'🍀', left:47, top:22, size:2.4, rot:-12},
+        {emoji:'☆', left:57, top:25, size:1.3},
+        {emoji:'✦', left:60, top:28, size:0.9},
+        {emoji:'∘', left:62, top:26, size:0.9},
+        {emoji:'✧', left:53, top:24, size:1.1},
+        {emoji:'☆', left:48, top:39, size:1.2},
+        {emoji:'✦', left:50, top:41, size:0.9},
+        {emoji:'∘', left:52, top:43, size:0.8}
+      ]
+    },
+    t2: {
+      cls:'t2',
+      hint:'Klik kotak atas buat foto dia, kotak bawah buat fotomu (atau kebalik, bebas!).',
+      slots:[
+        {left:0, top:0,  width:100, height:47, rot:0},
+        {left:0, top:51, width:100, height:47, rot:0}
+      ],
+      decos:[
+        {emoji:'🍅', left:3,  top:1,  size:2.1},
+        {emoji:'🍅', left:9,  top:0.5,size:1.6},
+        {emoji:'🌸', left:80, top:1,  size:1.8},
+        {emoji:'🌿', left:1,  top:9,  size:1.9},
+        {emoji:'⭐', left:37, top:13, size:1.7},
+        {emoji:'⭐', left:34, top:53, size:1.7},
+        {emoji:'🍅', left:2,  top:52, size:2.1},
+        {emoji:'🌷', left:81, top:53, size:1.8},
+        {emoji:'✦',  left:70, top:63, size:1.1},
+        {emoji:'💌', left:83, top:74, size:1.6}
+      ]
+    }
+  };
+
+  function renderTemplate(key){
+    const t = templates[key];
+    currentMode = key;
+    board.innerHTML = '';
+    board.className = 'template-mode ' + t.cls;
+    emptyHint = null;
+
+    t.decos.forEach(d=>{
+      const el = document.createElement('div');
+      el.className = 'deco';
+      el.style.left = d.left+'%';
+      el.style.top = d.top+'%';
+      el.style.fontSize = (d.size||1.5)+'rem';
+      el.style.transform = `rotate(${d.rot||0}deg)`;
+      el.textContent = d.emoji;
+      board.appendChild(el);
+    });
+
+    t.slots.forEach((s, i)=>{
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+      slot.style.left = s.left+'%';
+      slot.style.top = s.top+'%';
+      slot.style.width = s.width+'%';
+      slot.style.height = s.height+'%';
+      slot.style.transform = `rotate(${s.rot||0}deg)`;
+      slot.style.zIndex = 4;
+
+      const plus = document.createElement('div');
+      plus.className = 'slot-plus';
+      plus.textContent = '+';
+      slot.appendChild(plus);
+
+      const overlay = document.createElement('div');
+      overlay.className = 'slot-overlay';
+      overlay.textContent = 'Ganti foto';
+      slot.appendChild(overlay);
+
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.hidden = true;
+      slot.appendChild(input);
+
+      slot.addEventListener('click', ()=> input.click());
+      input.addEventListener('change', (e)=>{
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev)=>{
+          plus.style.display = 'none';
+          let img = slot.querySelector('img');
+          if(!img){
+            img = document.createElement('img');
+            img.className = 'filter-none';
+            slot.insertBefore(img, overlay);
+          }
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      board.appendChild(slot);
+    });
+
+    document.getElementById('modeHint').textContent = t.hint;
+  }
+
+  function renderFreeform(){
+    currentMode = 'free';
+    board.className = '';
+    board.innerHTML = '<div class="empty-hint" id="emptyHint">tempel foto kalian di sini dulu yuk ✨<br>lalu hias sesuka hati~</div>';
+    emptyHint = document.getElementById('emptyHint');
+    document.getElementById('modeHint').textContent = 'Susun sendiri fotonya, tempel stiker & teks sesukamu.';
+  }
+
+  document.querySelectorAll('.mode-switch button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.mode-switch button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.dataset.mode;
+      selectedItem = null;
+      if(mode === 'free'){
+        renderFreeform();
+      } else {
+        renderTemplate(mode);
+      }
+    });
+  });
+
+  // filter tetap bisa dipakai untuk foto di dalam slot template (klik foto dulu baru pilih filter)
+  board.addEventListener('click', (e)=>{
+    const slot = e.target.closest ? e.target.closest('.slot') : null;
+    if(slot){
+      document.querySelectorAll('.slot').forEach(s=>s.style.outline='none');
+      slot.style.outline = '3px dashed var(--pink-deep)';
+      selectedItem = slot;
+    }
+  });
+
   document.getElementById('downloadBtn').addEventListener('click', ()=>{
     document.querySelectorAll('.item-controls').forEach(c=>c.style.display='none');
+    document.querySelectorAll('.slot').forEach(s=>s.style.outline='none');
     clearSelection();
-    emptyHint.style.display='none';
+    if(emptyHint) emptyHint.style.display='none';
     html2canvas(board, {backgroundColor:null, scale:2}).then(canvas=>{
       const link = document.createElement('a');
       link.download = 'scrapbook-minggu-seru.png';
