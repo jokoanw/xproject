@@ -3,941 +3,436 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scrapbook Minggu Seru 🌸</title>
+<title>Mapping Lapangan — Dies Natalis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cream:#FFF6EC;
-    --cream-deep:#FBEAD9;
-    --pink:#F4B9CF;
-    --pink-deep:#E895B4;
-    --peach:#FFD2A6;
-    --sage:#B7C9AE;
-    --lavender:#D9CBEE;
-    --plum:#4A3B47;
-    --plum-soft:#7A6470;
-    --paper:#FFFDF9;
-    --shadow: 0 8px 20px rgba(74,59,71,0.18);
+    --bg:#0B1220;
+    --panel:#101B30;
+    --panel-2:#0D1626;
+    --line:#25344F;
+    --line-soft:#1A2740;
+    --cyan:#4FC3F7;
+    --amber:#F5A623;
+    --amber-dim:#7A5B23;
+    --text:#E7EEF7;
+    --text-dim:#8CA0BE;
+    --danger:#FF6B6B;
+    --tile-a:#132241;
+    --tile-b:#0F1C36;
+    --road:#2C3B52;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    font-family:'Quicksand',sans-serif;
-    color:var(--plum);
-    background:
-      radial-gradient(circle at 15% 20%, rgba(244,185,207,0.35), transparent 40%),
-      radial-gradient(circle at 85% 80%, rgba(217,203,238,0.35), transparent 40%),
-      var(--cream);
-    min-height:100vh;
-    overflow-x:hidden;
-  }
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow:hidden;}
+  .app{display:flex;height:100vh;}
 
-  /* ---------- Header ---------- */
-  header{
-    text-align:center;
-    padding:28px 16px 10px;
-  }
-  header h1{
-    font-family:'Caveat',cursive;
-    font-size:clamp(2.2rem, 5vw, 3.2rem);
-    margin:0;
-    color:var(--pink-deep);
-    text-shadow: 2px 2px 0 rgba(255,255,255,0.6);
-    transform: rotate(-1.5deg);
-  }
-  header p{
-    margin:6px 0 0;
-    font-size:0.95rem;
-    color:var(--plum-soft);
-    font-weight:600;
-  }
-
-  /* ---------- Layout ---------- */
-  .app{
-    display:flex;
-    gap:18px;
-    max-width:1400px;
-    margin:0 auto;
-    padding:10px 18px 60px;
-    align-items:flex-start;
-    flex-wrap:wrap;
-  }
-
-  /* ---------- Sidebar ---------- */
+  /* ---- Sidebar ---- */
   .sidebar{
-    width:240px;
-    flex-shrink:0;
-    background:var(--paper);
-    border-radius:20px;
-    padding:18px;
-    box-shadow:var(--shadow);
-    position:sticky;
-    top:14px;
+    width:308px;flex:0 0 308px;background:var(--panel);
+    border-right:1px solid var(--line);display:flex;flex-direction:column;
+    overflow-y:auto;
   }
-  .sidebar h2{
-    font-family:'Caveat',cursive;
-    font-size:1.5rem;
-    margin:0 0 10px;
-    color:var(--pink-deep);
-    border-bottom:2px dashed var(--pink);
-    padding-bottom:6px;
-  }
-  .sidebar h2:not(:first-child){margin-top:20px;}
+  .brand{padding:20px 18px 14px;border-bottom:1px solid var(--line);}
+  .brand .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;}
+  .brand h1{font-size:17px;margin:6px 0 2px;font-weight:700;line-height:1.25;}
+  .brand p{margin:0;font-size:12px;color:var(--text-dim);}
 
-  .upload-btn{
-    display:block;
-    text-align:center;
-    background:var(--pink);
-    color:#fff;
-    font-weight:700;
-    padding:11px;
-    border-radius:14px;
-    cursor:pointer;
-    border:none;
-    width:100%;
-    font-family:'Quicksand',sans-serif;
-    font-size:0.95rem;
-    transition:transform .15s ease, background .15s ease;
-    box-shadow:0 4px 0 var(--pink-deep);
-  }
-  .upload-btn:hover{background:var(--pink-deep); transform:translateY(-1px);}
-  .upload-btn:active{transform:translateY(2px); box-shadow:0 1px 0 var(--pink-deep);}
-  input[type=file]{display:none;}
+  .section{padding:16px 18px;border-bottom:1px solid var(--line-soft);}
+  .section h2{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin:0 0 10px;}
 
-  .sticker-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:6px;
+  .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .tool-btn{
+    display:flex;align-items:center;gap:8px;padding:9px 10px;background:var(--panel-2);
+    border:1px solid var(--line);border-radius:6px;color:var(--text);font-size:12.5px;
+    cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:.12s border-color,.12s background;
   }
-  .sticker-grid button{
-    font-size:1.4rem;
-    background:var(--cream-deep);
-    border:none;
-    border-radius:12px;
-    padding:6px 0;
-    cursor:grab;
-    transition:transform .12s ease, background .12s;
-  }
-  .sticker-grid button:hover{background:var(--peach); transform:scale(1.15) rotate(-6deg);}
+  .tool-btn .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(255,255,255,.25);}
+  .tool-btn:hover{border-color:var(--cyan);}
+  .tool-btn.active{border-color:var(--amber);background:rgba(245,166,35,.12);}
+  .tool-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:1px;}
 
-  .tool-row{
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-  }
-  .tool-row button{
-    flex:1 1 auto;
-    background:var(--sage);
-    color:#fff;
-    border:none;
-    border-radius:10px;
-    padding:8px 6px;
-    font-size:0.8rem;
-    font-weight:700;
-    cursor:pointer;
-    font-family:'Quicksand',sans-serif;
-  }
-  .tool-row button:hover{filter:brightness(1.08);}
+  .hint{font-size:11.5px;color:var(--text-dim);margin-top:10px;line-height:1.5;}
 
-  .bg-swatches{display:flex; gap:8px; flex-wrap:wrap;}
-  .swatch{
-    width:34px;height:34px;border-radius:10px;cursor:pointer;
-    border:3px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,0.15);
+  .edit-panel{display:none;}
+  .edit-panel.show{display:block;}
+  .edit-panel input[type=text]{
+    width:100%;padding:8px 9px;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:6px;color:var(--text);font-size:13px;font-family:'Inter',sans-serif;margin-bottom:8px;
   }
-  .swatch.active{outline:3px solid var(--pink-deep);}
+  .edit-panel input[type=text]:focus{outline:none;border-color:var(--cyan);}
+  .row-actions{display:flex;gap:8px;}
+  .btn{
+    padding:8px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel-2);
+    color:var(--text);font-size:12.5px;cursor:pointer;font-family:'Inter',sans-serif;
+  }
+  .btn:hover{border-color:var(--cyan);}
+  .btn.danger{color:var(--danger);border-color:#4a2222;}
+  .btn.danger:hover{border-color:var(--danger);}
+  .btn.primary{background:var(--amber);color:#1a1200;border-color:var(--amber);font-weight:600;}
+  .btn.wide{width:100%;}
+  .btn.small{padding:6px 9px;font-size:11.5px;}
 
-  .download-btn{
-    margin-top:18px;
-    width:100%;
-    background:var(--plum);
-    color:#fff;
-    border:none;
-    border-radius:14px;
-    padding:13px;
-    font-weight:700;
-    font-size:1rem;
-    cursor:pointer;
-    font-family:'Quicksand',sans-serif;
-    box-shadow:0 4px 0 #2f2530;
-  }
-  .download-btn:hover{background:#3a2e37;}
-  .download-btn:active{transform:translateY(2px); box-shadow:0 1px 0 #2f2530;}
+  .legend{display:flex;flex-direction:column;gap:7px;}
+  .legend .item{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--text-dim);}
+  .legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(255,255,255,.25);}
 
-  .hint{
-    font-size:0.75rem;
-    color:var(--plum-soft);
-    line-height:1.4;
-    margin-top:8px;
-  }
+  .status{margin-top:auto;padding:14px 18px;border-top:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);}
+  .status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);margin-right:6px;}
+  .status .dot.err{background:var(--danger);}
 
-  /* ---------- Board ---------- */
-  .board-wrap{
-    flex:1 1 600px;
-    min-width:320px;
+  /* ---- Canvas area ---- */
+  .stage{flex:1;position:relative;background:
+      radial-gradient(circle at 50% 40%, #0E1A30 0%, var(--bg) 70%);
   }
-  #board{
-    position:relative;
-    width:100%;
-    aspect-ratio:4/3;
-    min-height:520px;
-    border-radius:22px;
-    overflow:hidden;
-    box-shadow:var(--shadow);
-    background-color:var(--cream-deep);
-    background-image:
-      radial-gradient(rgba(74,59,71,0.06) 1.2px, transparent 1.2px);
-    background-size:16px 16px;
-    border:10px solid var(--paper);
+  .stage-header{
+    position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;
+    align-items:center;padding:14px 20px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    color:var(--text-dim);pointer-events:none;letter-spacing:.04em;
   }
-  #board.bg-cork{
-    background-color:#C9A97C;
-    background-image:
-      radial-gradient(rgba(0,0,0,0.12) 1.5px, transparent 1.5px),
-      radial-gradient(rgba(255,255,255,0.06) 1.5px, transparent 1.5px);
-    background-size:14px 14px, 18px 18px;
-    background-position:0 0, 5px 7px;
-  }
-  #board.bg-gingham{
-    background-color:#FFF6EC;
-    background-image:
-      repeating-linear-gradient(0deg, rgba(232,149,180,0.28) 0 10px, transparent 10px 20px),
-      repeating-linear-gradient(90deg, rgba(232,149,180,0.28) 0 10px, transparent 10px 20px);
-  }
-  .empty-hint{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:30px;
-    font-family:'Caveat',cursive;
-    font-size:1.6rem;
-    color:var(--plum-soft);
-    pointer-events:none;
-  }
+  .corner{position:absolute;width:22px;height:22px;border-color:var(--cyan);opacity:.55;pointer-events:none;}
+  .corner.tl{top:14px;left:14px;border-top:2px solid;border-left:2px solid;}
+  .corner.tr{top:14px;right:14px;border-top:2px solid;border-right:2px solid;}
+  .corner.bl{bottom:14px;left:14px;border-bottom:2px solid;border-left:2px solid;}
+  .corner.br{bottom:14px;right:14px;border-bottom:2px solid;border-right:2px solid;}
 
-  /* ---------- Mode switch (template grid) ---------- */
-  .mode-switch{
-    display:flex;
-    gap:8px;
-    justify-content:center;
-    flex-wrap:wrap;
-    margin-bottom:10px;
-  }
-  .mode-switch button{
-    padding:10px 16px;
-    border-radius:14px;
-    border:none;
-    background:var(--paper);
-    color:var(--plum);
-    font-weight:700;
-    font-size:0.85rem;
-    cursor:pointer;
-    font-family:'Quicksand',sans-serif;
-    box-shadow:0 3px 0 rgba(74,59,71,0.15);
-    transition:background .15s, color .15s;
-  }
-  .mode-switch button.active{
-    background:var(--pink-deep);
-    color:#fff;
-  }
-  .mode-hint{
-    text-align:center;
-    font-size:0.8rem;
-    color:var(--plum-soft);
-    margin-bottom:10px;
-    font-weight:600;
-  }
+  svg{width:100%;height:100%;display:block;}
+  .tile{cursor:pointer;transition:filter .08s;}
+  .tile:hover{filter:brightness(1.35);}
+  .obj-hit{cursor:pointer;}
+  .obj-label{font-family:'IBM Plex Mono',monospace;font-size:6.5px;fill:var(--text);pointer-events:none;text-anchor:middle;}
 
-  #board.template-mode{
-    background-image:none;
-    background-color:var(--cream-deep);
-  }
-  #board.t1{
-    aspect-ratio:3/4;
-    background:linear-gradient(160deg,#EAE6D6,#DCE6D0);
-  }
-  #board.t2{
-    aspect-ratio:0.66;
-    background:linear-gradient(160deg,#FBEAD9,#F7DCE8);
-  }
-
-  .slot{
-    position:absolute;
-    overflow:hidden;
-    cursor:pointer;
-    background:#fff;
-    border:4px solid #fff;
-    box-shadow:0 6px 14px rgba(0,0,0,0.28);
-  }
-  .slot img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-  }
-  .slot-plus{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:2.2rem;
-    color:#c9bfc3;
-    background:rgba(255,255,255,0.55);
-  }
-  .slot-overlay{
-    position:absolute;
-    inset:0;
-    background:rgba(30,20,25,0.4);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:0.75rem;
-    font-weight:700;
-    text-align:center;
-    opacity:0;
-    transition:opacity .15s;
-    font-family:'Quicksand',sans-serif;
-    pointer-events:none;
-  }
-  .slot:hover .slot-overlay{opacity:1;}
-
-  .deco{
-    position:absolute;
-    pointer-events:none;
-    line-height:1;
-    filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-    z-index:6;
-  }
-
-  /* ---------- Draggable items ---------- */
-  .item{
-    position:absolute;
-    cursor:grab;
-    touch-action:none;
-    user-select:none;
-  }
-  .item.dragging{cursor:grabbing; z-index:999 !important;}
-  .item.selected .frame{outline:2px dashed var(--pink-deep); outline-offset:4px;}
-
-  .polaroid{
-    background:#fff;
-    padding:10px 10px 34px;
-    border-radius:4px;
-    box-shadow:0 10px 18px rgba(0,0,0,0.25);
-    width:180px;
-  }
-  .polaroid img{
-    width:100%;
-    height:180px;
-    object-fit:cover;
-    display:block;
-    background:#eee;
-  }
-  .polaroid .cap{
-    font-family:'Caveat',cursive;
-    font-size:1.25rem;
-    text-align:center;
-    margin-top:8px;
-    color:var(--plum);
-    outline:none;
-    min-height:22px;
-  }
-
-  .sticker-el{
-    font-size:2.6rem;
-    filter:drop-shadow(0 4px 6px rgba(0,0,0,0.25));
-  }
-
-  .tape{
-    width:90px;
-    height:28px;
-    background:rgba(217,203,238,0.75);
-    border:1px solid rgba(255,255,255,0.5);
-    box-shadow:0 3px 6px rgba(0,0,0,0.15);
-  }
-  .tape.pink{background:rgba(244,185,207,0.75);}
-  .tape.peach{background:rgba(255,210,166,0.75);}
-
-  .text-el{
-    font-family:'Caveat',cursive;
-    font-size:1.8rem;
-    color:var(--plum);
-    padding:2px 6px;
-    outline:none;
-    min-width:40px;
-    background:transparent;
-  }
-
-  .item-controls{
-    position:absolute;
-    top:-16px;
-    right:-16px;
-    display:none;
-    gap:4px;
-  }
-  .item.selected .item-controls{display:flex;}
-  .item-controls button{
-    width:26px;height:26px;
-    border-radius:50%;
-    border:none;
-    background:var(--plum);
-    color:#fff;
-    font-size:0.8rem;
-    cursor:pointer;
-    line-height:1;
-  }
-  .item-controls button:hover{background:var(--pink-deep);}
-
-  .filter-none{filter:none;}
-  .filter-warm{filter:sepia(0.25) saturate(1.3) contrast(1.05) brightness(1.05);}
-  .filter-faded{filter:contrast(0.85) brightness(1.1) saturate(0.7);}
-  .filter-bw{filter:grayscale(1) contrast(1.1);}
-  .filter-vintage{filter:sepia(0.4) contrast(1.1) brightness(0.95) saturate(1.2);}
-
-  @media (max-width:820px){
-    .sidebar{position:static; width:100%;}
-    .app{flex-direction:column;}
-  }
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
 </style>
 </head>
 <body>
-
-<header>
-  <h1>Scrapbook Minggu Seru 🌸</h1>
-  <p>tempel foto, tambah stiker, terus download buat kenang-kenangan~</p>
-</header>
-
 <div class="app">
 
-  <div class="sidebar">
-    <h2>📷 Foto</h2>
-    <label class="upload-btn" for="fileInput">+ Tambah Foto</label>
-    <input id="fileInput" type="file" accept="image/*" multiple>
-    <div class="hint">Klik foto di board buat pilih, lalu atur filter/putar/hapus.</div>
-
-    <h2>🎀 Stiker Lucu</h2>
-    <div class="sticker-grid">
-      <button data-sticker="⭐">⭐</button>
-      <button data-sticker="💖">💖</button>
-      <button data-sticker="🌸">🌸</button>
-      <button data-sticker="✨">✨</button>
-      <button data-sticker="🎀">🎀</button>
-      <button data-sticker="🍒">🍒</button>
-      <button data-sticker="☁️">☁️</button>
-      <button data-sticker="🐰">🐰</button>
-      <button data-sticker="🧸">🧸</button>
-      <button data-sticker="🍰">🍰</button>
-      <button data-sticker="🦋">🦋</button>
-      <button data-sticker="🌈">🌈</button>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="eyebrow">Divisi Lapangan · Survey Grid</div>
+      <h1>Mapping Lapangan Dies Natalis</h1>
+      <p>Susun denah 3D lokasi acara langsung dari browser — tanpa install apa pun.</p>
     </div>
 
-    <h2>🩹 Washi Tape</h2>
-    <div class="tool-row">
-      <button id="addTapeLav">Lavender</button>
-      <button id="addTapePink">Pink</button>
-      <button id="addTapePeach">Peach</button>
+    <div class="section">
+      <h2>Alat</h2>
+      <div class="tool-grid" id="toolGrid"></div>
+      <div class="hint">Pilih alat, lalu klik petak grid di kanan untuk menempatkan objek. Klik lagi untuk mengganti isi petak.</div>
     </div>
 
-    <h2>✏️ Tulisan</h2>
-    <div class="tool-row">
-      <button id="addText">+ Teks</button>
+    <div class="section edit-panel" id="editPanel">
+      <h2>Objek Terpilih</h2>
+      <input type="text" id="editLabel" maxlength="28" placeholder="Nama objek">
+      <div class="row-actions">
+        <button class="btn danger" id="btnDeleteObj">Hapus objek</button>
+        <button class="btn" id="btnCloseEdit">Tutup</button>
+      </div>
     </div>
 
-    <h2>🎨 Filter Foto Terpilih</h2>
-    <div class="tool-row">
-      <button data-filter="filter-none">Asli</button>
-      <button data-filter="filter-warm">Hangat</button>
-      <button data-filter="filter-faded">Pudar</button>
-    </div>
-    <div class="tool-row" style="margin-top:6px;">
-      <button data-filter="filter-bw">B&amp;W</button>
-      <button data-filter="filter-vintage">Vintage</button>
+    <div class="section">
+      <h2>Legenda</h2>
+      <div class="legend" id="legend"></div>
     </div>
 
-    <h2>🖼️ Background</h2>
-    <div class="bg-swatches">
-      <div class="swatch active" data-bg="" style="background:#FBEAD9;" title="Polkadot Cream"></div>
-      <div class="swatch" data-bg="bg-cork" style="background:#C9A97C;" title="Cork Board"></div>
-      <div class="swatch" data-bg="bg-gingham" style="background:#FFF6EC;" title="Gingham"></div>
+    <div class="section">
+      <h2>Data</h2>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn wide" id="btnSaveNow">Simpan sekarang</button>
+        <button class="btn wide" id="btnReset">Kosongkan seluruh peta</button>
+      </div>
+      <div class="hint">Data tersimpan otomatis dan <strong>bisa dilihat &amp; diedit siapa saja</strong> yang membuka file ini — cocok untuk kerja tim lapangan bersama.</div>
     </div>
 
-    <button class="download-btn" id="downloadBtn">⬇️ Download Scrapbook</button>
-    <div class="hint">Tips: drag buat mindahin, tombol 🔄 buat muter, ❌ buat hapus.</div>
-  </div>
+    <div class="status" id="statusBar"><span class="dot" id="statusDot"></span><span id="statusText">Memuat data…</span></div>
+  </aside>
 
-  <div class="board-wrap">
-    <div class="mode-switch">
-      <button data-mode="free" class="active">✂️ Bebas</button>
-      <button data-mode="t1">🌿 Template 1 (Alam)</button>
-      <button data-mode="t2">🍅 Template 2 (Couple)</button>
+  <main class="stage">
+    <div class="stage-header">
+      <span id="coordReadout">KOL — · BARIS —</span>
+      <span>GRID 10×10 · PROYEKSI ISOMETRIK</span>
     </div>
-    <div class="mode-hint" id="modeHint">Susun sendiri fotonya, tempel stiker &amp; teks sesukamu.</div>
-    <div id="board">
-      <div class="empty-hint" id="emptyHint">tempel foto kalian di sini dulu yuk ✨<br>lalu hias sesuka hati~</div>
-    </div>
-  </div>
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+    <svg id="board" viewBox="-360 -110 720 480" preserveAspectRatio="xMidYMid meet">
+      <g id="scene"></g>
+    </svg>
+  </main>
 
 </div>
 
 <script>
 (function(){
-  const board = document.getElementById('board');
-  let emptyHint = document.getElementById('emptyHint');
-  const fileInput = document.getElementById('fileInput');
-  let zCounter = 10;
-  let selectedItem = null;
-  let currentMode = 'free';
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const TILE_W = 64, TILE_H = 32, GRID = 10;
+  const STORE_KEY = 'diesnatalis-layout-v1';
 
-  function updateEmptyHint(){
-    if(!emptyHint) return;
-    const hasItems = board.querySelectorAll('.item').length > 0;
-    emptyHint.style.display = hasItems ? 'none' : 'flex';
-  }
-
-  function clearSelection(){
-    if(selectedItem){ selectedItem.classList.remove('selected'); }
-    selectedItem = null;
-  }
-
-  function selectItem(item){
-    clearSelection();
-    selectedItem = item;
-    item.classList.add('selected');
-    item.style.zIndex = ++zCounter;
-  }
-
-  function randomPos(){
-    const w = board.clientWidth, h = board.clientHeight;
-    return {
-      x: Math.max(20, Math.random()*(w-200)),
-      y: Math.max(20, Math.random()*(h-220))
-    };
-  }
-
-  function makeDraggable(item){
-    let dragging=false, startX=0, startY=0, origX=0, origY=0;
-
-    function getPoint(e){
-      if(e.touches && e.touches[0]) return {x:e.touches[0].clientX, y:e.touches[0].clientY};
-      return {x:e.clientX, y:e.clientY};
-    }
-
-    function down(e){
-      if(e.target.closest('.item-controls') || e.target.classList.contains('cap') || e.target.classList.contains('text-el')) return;
-      selectItem(item);
-      dragging = true;
-      item.classList.add('dragging');
-      const p = getPoint(e);
-      startX = p.x; startY = p.y;
-      origX = parseFloat(item.style.left)||0;
-      origY = parseFloat(item.style.top)||0;
-      e.preventDefault();
-    }
-    function move(e){
-      if(!dragging) return;
-      const p = getPoint(e);
-      const dx = p.x-startX, dy = p.y-startY;
-      const boardRect = board.getBoundingClientRect();
-      let nx = origX+dx, ny = origY+dy;
-      nx = Math.max(-60, Math.min(boardRect.width-40, nx));
-      ny = Math.max(-40, Math.min(boardRect.height-40, ny));
-      item.style.left = nx+'px';
-      item.style.top = ny+'px';
-    }
-    function up(){
-      dragging=false;
-      item.classList.remove('dragging');
-    }
-    item.addEventListener('mousedown', down);
-    window.addEventListener('mousemove', move);
-    window.addEventListener('mouseup', up);
-    item.addEventListener('touchstart', down, {passive:false});
-    window.addEventListener('touchmove', move, {passive:false});
-    window.addEventListener('touchend', up);
-
-    item.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      selectItem(item);
-    });
-  }
-
-  function addControls(item, opts){
-    const ctrl = document.createElement('div');
-    ctrl.className = 'item-controls';
-
-    const rotBtn = document.createElement('button');
-    rotBtn.textContent = '🔄';
-    rotBtn.title = 'Putar';
-    rotBtn.onclick = (e)=>{
-      e.stopPropagation();
-      let rot = parseFloat(item.dataset.rot||0);
-      rot += 15;
-      item.dataset.rot = rot;
-      item.style.transform = `rotate(${rot}deg)`;
-    };
-    ctrl.appendChild(rotBtn);
-
-    const delBtn = document.createElement('button');
-    delBtn.textContent = '❌';
-    delBtn.title = 'Hapus';
-    delBtn.onclick = (e)=>{
-      e.stopPropagation();
-      item.remove();
-      updateEmptyHint();
-    };
-    ctrl.appendChild(delBtn);
-
-    if(opts && opts.scalable){
-      const bigBtn = document.createElement('button');
-      bigBtn.textContent = '➕';
-      bigBtn.title = 'Perbesar';
-      bigBtn.onclick = (e)=>{
-        e.stopPropagation();
-        let s = parseFloat(item.dataset.scale||1);
-        s = Math.min(s+0.15, 3);
-        item.dataset.scale = s;
-        applyTransform(item);
-      };
-      const smallBtn = document.createElement('button');
-      smallBtn.textContent = '➖';
-      smallBtn.title = 'Perkecil';
-      smallBtn.onclick = (e)=>{
-        e.stopPropagation();
-        let s = parseFloat(item.dataset.scale||1);
-        s = Math.max(s-0.15, 0.4);
-        item.dataset.scale = s;
-        applyTransform(item);
-      };
-      ctrl.appendChild(smallBtn);
-      ctrl.appendChild(bigBtn);
-    }
-
-    item.appendChild(ctrl);
-  }
-
-  function applyTransform(item){
-    const rot = item.dataset.rot||0;
-    const scale = item.dataset.scale||1;
-    item.style.transform = `rotate(${rot}deg) scale(${scale})`;
-  }
-
-  // override rotate to respect scale too
-  function makeRotateAware(item){
-    const rotBtn = item.querySelector('.item-controls button');
-  }
-
-  function createBaseItem(className){
-    const item = document.createElement('div');
-    item.className = 'item ' + className;
-    const pos = randomPos();
-    item.style.left = pos.x+'px';
-    item.style.top = pos.y+'px';
-    const rot = (Math.random()*16-8).toFixed(1);
-    item.dataset.rot = rot;
-    item.dataset.scale = 1;
-    item.style.transform = `rotate(${rot}deg)`;
-    item.style.zIndex = ++zCounter;
-    return item;
-  }
-
-  function addPhoto(src){
-    const item = createBaseItem('photo-item');
-    const frame = document.createElement('div');
-    frame.className = 'frame polaroid';
-    const img = document.createElement('img');
-    img.src = src;
-    img.className = 'filter-none';
-    const cap = document.createElement('div');
-    cap.className = 'cap';
-    cap.contentEditable = true;
-    cap.setAttribute('data-placeholder','tulis caption~');
-    cap.textContent = '';
-    frame.appendChild(img);
-    frame.appendChild(cap);
-    item.appendChild(frame);
-    addControls(item, {scalable:true});
-    board.appendChild(item);
-    makeDraggable(item);
-    // fix rotate button to use applyTransform (with scale)
-    const rotBtn = item.querySelector('.item-controls button');
-    rotBtn.onclick = (e)=>{
-      e.stopPropagation();
-      let rot = parseFloat(item.dataset.rot||0);
-      rot += 15;
-      item.dataset.rot = rot;
-      applyTransform(item);
-    };
-    selectItem(item);
-    updateEmptyHint();
-  }
-
-  function addSticker(char){
-    const item = createBaseItem('sticker-item');
-    const el = document.createElement('div');
-    el.className = 'sticker-el';
-    el.textContent = char;
-    item.appendChild(el);
-    addControls(item, {scalable:true});
-    const rotBtn = item.querySelector('.item-controls button');
-    rotBtn.onclick = (e)=>{
-      e.stopPropagation();
-      let rot = parseFloat(item.dataset.rot||0);
-      rot += 15;
-      item.dataset.rot = rot;
-      applyTransform(item);
-    };
-    board.appendChild(item);
-    makeDraggable(item);
-    selectItem(item);
-    updateEmptyHint();
-  }
-
-  function addTape(colorClass){
-    const item = createBaseItem('tape-item');
-    const el = document.createElement('div');
-    el.className = 'tape ' + colorClass;
-    item.appendChild(el);
-    addControls(item, {});
-    board.appendChild(item);
-    makeDraggable(item);
-    selectItem(item);
-    updateEmptyHint();
-  }
-
-  function addText(){
-    const item = createBaseItem('text-item');
-    const el = document.createElement('div');
-    el.className = 'text-el';
-    el.contentEditable = true;
-    el.textContent = 'tulis di sini...';
-    item.appendChild(el);
-    addControls(item, {scalable:true});
-    const rotBtn = item.querySelector('.item-controls button');
-    rotBtn.onclick = (e)=>{
-      e.stopPropagation();
-      let rot = parseFloat(item.dataset.rot||0);
-      rot += 15;
-      item.dataset.rot = rot;
-      applyTransform(item);
-    };
-    board.appendChild(item);
-    makeDraggable(item);
-    selectItem(item);
-    updateEmptyHint();
-    setTimeout(()=>{ el.focus(); document.execCommand('selectAll',false,null); },50);
-  }
-
-  // ---- Events ----
-  fileInput.addEventListener('change', (e)=>{
-    const files = Array.from(e.target.files);
-    files.forEach(f=>{
-      const reader = new FileReader();
-      reader.onload = ev => addPhoto(ev.target.result);
-      reader.readAsDataURL(f);
-    });
-    fileInput.value='';
-  });
-
-  document.querySelectorAll('.sticker-grid button').forEach(btn=>{
-    btn.addEventListener('click', ()=> addSticker(btn.dataset.sticker));
-  });
-
-  document.getElementById('addTapeLav').onclick = ()=> addTape('lavender' in {} ? '' : '');
-  document.getElementById('addTapeLav').onclick = ()=> addTape('');
-  document.getElementById('addTapePink').onclick = ()=> addTape('pink');
-  document.getElementById('addTapePeach').onclick = ()=> addTape('peach');
-  document.getElementById('addText').onclick = addText;
-
-  document.querySelectorAll('[data-filter]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      if(!selectedItem) return;
-      const img = selectedItem.querySelector('img');
-      if(!img) return;
-      img.className = btn.dataset.filter;
-    });
-  });
-
-  document.querySelectorAll('.swatch').forEach(sw=>{
-    sw.addEventListener('click', ()=>{
-      document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
-      sw.classList.add('active');
-      board.className = '';
-      if(sw.dataset.bg) board.classList.add(sw.dataset.bg);
-    });
-  });
-
-  board.addEventListener('click', (e)=>{
-    if(e.target === board){ clearSelection(); }
-  });
-
-  // ---- Template grid (foto tinggal masuk ke slot) ----
-  const templates = {
-    t1: {
-      cls:'t1',
-      hint:'Klik tiap kotak putih buat masukin fotonya — layout hijau ala jalan-jalan.',
-      slots:[
-        {left:5,  top:2,  width:30, height:20, rot:-3},
-        {left:34, top:0,  width:61, height:26, rot:2},
-        {left:2,  top:25, width:60, height:73, rot:-1},
-        {left:63, top:32, width:35, height:27, rot:2},
-        {left:65, top:60, width:32, height:20, rot:-2}
-      ],
-      decos:[
-        {emoji:'🍀', left:47, top:22, size:2.4, rot:-12},
-        {emoji:'☆', left:57, top:25, size:1.3},
-        {emoji:'✦', left:60, top:28, size:0.9},
-        {emoji:'∘', left:62, top:26, size:0.9},
-        {emoji:'✧', left:53, top:24, size:1.1},
-        {emoji:'☆', left:48, top:39, size:1.2},
-        {emoji:'✦', left:50, top:41, size:0.9},
-        {emoji:'∘', left:52, top:43, size:0.8}
-      ]
-    },
-    t2: {
-      cls:'t2',
-      hint:'Klik kotak atas buat foto dia, kotak bawah buat fotomu (atau kebalik, bebas!).',
-      slots:[
-        {left:0, top:0,  width:100, height:47, rot:0},
-        {left:0, top:51, width:100, height:47, rot:0}
-      ],
-      decos:[
-        {emoji:'🍅', left:3,  top:1,  size:2.1},
-        {emoji:'🍅', left:9,  top:0.5,size:1.6},
-        {emoji:'🌸', left:80, top:1,  size:1.8},
-        {emoji:'🌿', left:1,  top:9,  size:1.9},
-        {emoji:'⭐', left:37, top:13, size:1.7},
-        {emoji:'⭐', left:34, top:53, size:1.7},
-        {emoji:'🍅', left:2,  top:52, size:2.1},
-        {emoji:'🌷', left:81, top:53, size:1.8},
-        {emoji:'✦',  left:70, top:63, size:1.1},
-        {emoji:'💌', left:83, top:74, size:1.6}
-      ]
-    }
+  const OBJECT_TYPES = {
+    gedung:    { label:'Gedung',     icon:'▣', height:66, top:'#B9C6DC', left:'#8B99B2', right:'#69768F' },
+    panggung:  { label:'Panggung',   icon:'◆', height:24, top:'#F7B94A', left:'#D6890F', right:'#B06E0A' },
+    tenda:     { label:'Tenda',      icon:'▲', height:32, top:'#EAF2FA', left:'#C3D6E8', right:'#9FB9D1' },
+    kendaraan: { label:'Kendaraan',  icon:'●', height:16, top:'#7ED0FF', left:'#4FC3F7', right:'#2E9CD1' },
+    pohon:     { label:'Pohon',      icon:'✦', height:28, top:'#7ED9A6', left:'#4CAF7D', right:'#337F58' },
+    rambu:     { label:'Rambu/Simbol', icon:'!', height:14, top:'#FF9C9C', left:'#FF6B6B', right:'#D14D4D' },
   };
+  const TOOLS = [
+    { id:'select', label:'Pilih / Edit', icon:'✏', color:null },
+    { id:'road',   label:'Jalan',        icon:'▬', color:'#3A4C68' },
+    ...Object.keys(OBJECT_TYPES).map(k => ({ id:k, label:OBJECT_TYPES[k].label, icon:OBJECT_TYPES[k].icon, color:OBJECT_TYPES[k].top })),
+    { id:'erase',  label:'Hapus petak',  icon:'✕', color:'#FF6B6B' },
+  ];
 
-  function renderTemplate(key){
-    const t = templates[key];
-    currentMode = key;
-    board.innerHTML = '';
-    board.className = 'template-mode ' + t.cls;
-    emptyHint = null;
+  let tool = 'select';
+  let roadTiles = new Set();
+  let objects = [];
+  let counters = {};
+  let selectedId = null;
+  let saveTimer = null;
 
-    t.decos.forEach(d=>{
-      const el = document.createElement('div');
-      el.className = 'deco';
-      el.style.left = d.left+'%';
-      el.style.top = d.top+'%';
-      el.style.fontSize = (d.size||1.5)+'rem';
-      el.style.transform = `rotate(${d.rot||0}deg)`;
-      el.textContent = d.emoji;
-      board.appendChild(el);
-    });
+  const scene = document.getElementById('scene');
 
-    t.slots.forEach((s, i)=>{
-      const slot = document.createElement('div');
-      slot.className = 'slot';
-      slot.style.left = s.left+'%';
-      slot.style.top = s.top+'%';
-      slot.style.width = s.width+'%';
-      slot.style.height = s.height+'%';
-      slot.style.transform = `rotate(${s.rot||0}deg)`;
-      slot.style.zIndex = 4;
+  function tileToScreen(col,row){
+    return { x:(col-row)*(TILE_W/2), y:(col+row)*(TILE_H/2) };
+  }
+  function svgEl(tag, attrs){
+    const el = document.createElementNS(SVGNS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function uid(){ return 'o'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
-      const plus = document.createElement('div');
-      plus.className = 'slot-plus';
-      plus.textContent = '+';
-      slot.appendChild(plus);
-
-      const overlay = document.createElement('div');
-      overlay.className = 'slot-overlay';
-      overlay.textContent = 'Ganti foto';
-      slot.appendChild(overlay);
-
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.hidden = true;
-      slot.appendChild(input);
-
-      slot.addEventListener('click', ()=> input.click());
-      input.addEventListener('change', (e)=>{
-        const file = e.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = (ev)=>{
-          plus.style.display = 'none';
-          let img = slot.querySelector('img');
-          if(!img){
-            img = document.createElement('img');
-            img.className = 'filter-none';
-            slot.insertBefore(img, overlay);
-          }
-          img.src = ev.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
-
-      board.appendChild(slot);
-    });
-
-    document.getElementById('modeHint').textContent = t.hint;
+  function findObjectAt(col,row){
+    return objects.find(o => o.col===col && o.row===row);
   }
 
-  function renderFreeform(){
-    currentMode = 'free';
-    board.className = '';
-    board.innerHTML = '<div class="empty-hint" id="emptyHint">tempel foto kalian di sini dulu yuk ✨<br>lalu hias sesuka hati~</div>';
-    emptyHint = document.getElementById('emptyHint');
-    document.getElementById('modeHint').textContent = 'Susun sendiri fotonya, tempel stiker & teks sesukamu.';
-  }
-
-  document.querySelectorAll('.mode-switch button').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      document.querySelectorAll('.mode-switch button').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      const mode = btn.dataset.mode;
-      selectedItem = null;
-      if(mode === 'free'){
-        renderFreeform();
-      } else {
-        renderTemplate(mode);
-      }
-    });
-  });
-
-  // filter tetap bisa dipakai untuk foto di dalam slot template (klik foto dulu baru pilih filter)
-  board.addEventListener('click', (e)=>{
-    const slot = e.target.closest ? e.target.closest('.slot') : null;
-    if(slot){
-      document.querySelectorAll('.slot').forEach(s=>s.style.outline='none');
-      slot.style.outline = '3px dashed var(--pink-deep)';
-      selectedItem = slot;
+  function handleTileClick(col,row){
+    const existing = findObjectAt(col,row);
+    if (tool === 'select'){
+      if (existing){ selectedId = existing.id; openEdit(existing); }
+      else { selectedId = null; closeEdit(); }
+      render();
+      return;
     }
-  });
+    if (tool === 'road'){
+      const key = col+','+row;
+      if (roadTiles.has(key)) roadTiles.delete(key); else roadTiles.add(key);
+      render(); scheduleSave();
+      return;
+    }
+    if (tool === 'erase'){
+      if (existing) objects = objects.filter(o => o.id !== existing.id);
+      roadTiles.delete(col+','+row);
+      if (selectedId && existing && selectedId === existing.id){ selectedId=null; closeEdit(); }
+      render(); scheduleSave();
+      return;
+    }
+    // placing an object type
+    const type = tool;
+    counters[type] = (counters[type]||0) + 1;
+    const newObj = { id: uid(), col, row, type, label: OBJECT_TYPES[type].label + ' ' + counters[type] };
+    if (existing) objects = objects.map(o => o.id===existing.id ? newObj : o);
+    else objects.push(newObj);
+    render(); scheduleSave();
+  }
 
-  document.getElementById('downloadBtn').addEventListener('click', ()=>{
-    document.querySelectorAll('.item-controls').forEach(c=>c.style.display='none');
-    document.querySelectorAll('.slot').forEach(s=>s.style.outline='none');
-    clearSelection();
-    if(emptyHint) emptyHint.style.display='none';
-    html2canvas(board, {backgroundColor:null, scale:2}).then(canvas=>{
-      const link = document.createElement('a');
-      link.download = 'scrapbook-minggu-seru.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      updateEmptyHint();
+  function drawFloorTile(col,row){
+    const {x,y} = tileToScreen(col,row);
+    const key = col+','+row;
+    const isRoad = roadTiles.has(key);
+    const checker = (col+row) % 2 === 0;
+    const fill = isRoad ? 'var(--road)' : (checker ? 'var(--tile-a)' : 'var(--tile-b)');
+    const pts = `${x},${y} ${x+TILE_W/2},${y+TILE_H/2} ${x},${y+TILE_H} ${x-TILE_W/2},${y+TILE_H/2}`;
+    const poly = svgEl('polygon', { points:pts, class:'tile', fill, stroke:'#25344F', 'stroke-width':'1' });
+    poly.addEventListener('click', () => handleTileClick(col,row));
+    poly.addEventListener('mouseenter', () => {
+      document.getElementById('coordReadout').textContent = `KOL ${col} · BARIS ${row}`;
     });
+    scene.appendChild(poly);
+    if (isRoad){
+      const line = svgEl('line', {
+        x1:x, y1:y+TILE_H/2-6, x2:x, y2:y+TILE_H/2+6,
+        stroke:'#5B7290', 'stroke-width':'1', 'stroke-dasharray':'2,2'
+      });
+      scene.appendChild(line);
+    }
+  }
+
+  function drawObject(obj){
+    const def = OBJECT_TYPES[obj.type];
+    const {x,y} = tileToScreen(obj.col, obj.row);
+    const h = def.height;
+    const T  = {x:x,           y:y};
+    const R  = {x:x+TILE_W/2,  y:y+TILE_H/2};
+    const B  = {x:x,           y:y+TILE_H};
+    const L  = {x:x-TILE_W/2,  y:y+TILE_H/2};
+    const Tt = {x:T.x, y:T.y-h};
+    const Rt = {x:R.x, y:R.y-h};
+    const Bt = {x:B.x, y:B.y-h};
+    const Lt = {x:L.x, y:L.y-h};
+
+    const g = svgEl('g', { class:'obj-hit' });
+    const top = svgEl('polygon', { points:pp([Tt,Rt,Bt,Lt]), fill:def.top, stroke:'#0009', 'stroke-width':'0.6' });
+    const left = svgEl('polygon', { points:pp([T,L,Lt,Tt]), fill:def.left, stroke:'#0009', 'stroke-width':'0.6' });
+    const right = svgEl('polygon', { points:pp([T,R,Rt,Tt]), fill:def.right, stroke:'#0009', 'stroke-width':'0.6' });
+    g.appendChild(right); g.appendChild(left); g.appendChild(top);
+
+    const label = svgEl('text', { class:'obj-label', x:Tt.x, y:Tt.y-4 });
+    label.textContent = obj.label;
+    g.appendChild(label);
+
+    if (selectedId === obj.id){
+      const hl = svgEl('polygon', { points:pp([Tt,Rt,Bt,Lt]), fill:'none', stroke:'#F5A623', 'stroke-width':'2', 'stroke-dasharray':'3,2' });
+      g.appendChild(hl);
+    }
+
+    g.addEventListener('click', (e) => { e.stopPropagation(); handleTileClick(obj.col, obj.row); });
+    g.addEventListener('mouseenter', () => {
+      document.getElementById('coordReadout').textContent = `KOL ${obj.col} · BARIS ${obj.row}`;
+    });
+    scene.appendChild(g);
+  }
+
+  function pp(points){ return points.map(p => p.x+','+p.y).join(' '); }
+
+  function render(){
+    scene.innerHTML = '';
+    for (let col=0; col<GRID; col++)
+      for (let row=0; row<GRID; row++)
+        drawFloorTile(col,row);
+
+    const sorted = [...objects].sort((a,b) => (a.col+a.row) - (b.col+b.row));
+    sorted.forEach(drawObject);
+  }
+
+  function openEdit(obj){
+    const panel = document.getElementById('editPanel');
+    panel.classList.add('show');
+    document.getElementById('editLabel').value = obj.label;
+  }
+  function closeEdit(){
+    document.getElementById('editPanel').classList.remove('show');
+  }
+
+  document.getElementById('editLabel').addEventListener('input', (e) => {
+    const obj = objects.find(o => o.id === selectedId);
+    if (!obj) return;
+    obj.label = e.target.value;
+    render();
+    scheduleSave();
+  });
+  document.getElementById('btnDeleteObj').addEventListener('click', () => {
+    objects = objects.filter(o => o.id !== selectedId);
+    selectedId = null;
+    closeEdit();
+    render();
+    scheduleSave();
+  });
+  document.getElementById('btnCloseEdit').addEventListener('click', () => {
+    selectedId = null; closeEdit(); render();
   });
 
-  updateEmptyHint();
+  // ---- Toolbar ----
+  const toolGrid = document.getElementById('toolGrid');
+  TOOLS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'tool-btn' + (t.id===tool ? ' active' : '');
+    btn.dataset.tool = t.id;
+    btn.innerHTML = (t.color ? `<span class="sw" style="background:${t.color}"></span>` : `<span class="sw" style="background:transparent;border-color:#4a5b7a"></span>`) +
+                    `<span>${t.icon}&nbsp; ${t.label}</span>`;
+    btn.addEventListener('click', () => {
+      tool = t.id;
+      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (tool !== 'select'){ selectedId = null; closeEdit(); render(); }
+    });
+    toolGrid.appendChild(btn);
+  });
+
+  // ---- Legend ----
+  const legend = document.getElementById('legend');
+  const legendItems = [
+    { label:'Jalan', color:'#3A4C68' },
+    ...Object.values(OBJECT_TYPES).map(d => ({ label:d.label, color:d.top })),
+  ];
+  legendItems.forEach(it => {
+    const row = document.createElement('div');
+    row.className = 'item';
+    row.innerHTML = `<span class="sw" style="background:${it.color}"></span><span>${it.label}</span>`;
+    legend.appendChild(row);
+  });
+
+  // ---- Reset ----
+  let resetArmed = false, resetTimer = null;
+  const btnReset = document.getElementById('btnReset');
+  btnReset.addEventListener('click', () => {
+    if (!resetArmed){
+      resetArmed = true;
+      btnReset.textContent = 'Yakin? Klik lagi untuk hapus semua';
+      btnReset.classList.add('danger');
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => {
+        resetArmed = false;
+        btnReset.textContent = 'Kosongkan seluruh peta';
+        btnReset.classList.remove('danger');
+      }, 4000);
+      return;
+    }
+    roadTiles = new Set(); objects = []; counters = {}; selectedId = null;
+    resetArmed = false;
+    btnReset.textContent = 'Kosongkan seluruh peta';
+    btnReset.classList.remove('danger');
+    closeEdit(); render(); scheduleSave();
+  });
+
+  // ---- Storage ----
+  const statusText = document.getElementById('statusText');
+  const statusDot = document.getElementById('statusDot');
+
+  function setStatus(msg, isErr){
+    statusText.textContent = msg;
+    statusDot.classList.toggle('err', !!isErr);
+  }
+
+  function scheduleSave(){
+    setStatus('Menyimpan…');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveState, 500);
+  }
+
+  async function saveState(){
+    const payload = JSON.stringify({ roadTiles:[...roadTiles], objects, counters });
+    try{
+      if (!window.storage) throw new Error('no-storage');
+      await window.storage.set(STORE_KEY, payload, true);
+      const now = new Date();
+      setStatus('Tersimpan · ' + now.toLocaleTimeString('id-ID'));
+    }catch(err){
+      setStatus('Gagal menyimpan (cek koneksi)', true);
+    }
+  }
+
+  async function loadState(){
+    try{
+      if (!window.storage) throw new Error('no-storage');
+      const res = await window.storage.get(STORE_KEY, true);
+      if (res && res.value){
+        const data = JSON.parse(res.value);
+        roadTiles = new Set(data.roadTiles || []);
+        objects = data.objects || [];
+        counters = data.counters || {};
+      }
+      setStatus('Peta dimuat');
+    }catch(err){
+      setStatus('Peta baru — belum ada data tersimpan');
+    }
+    render();
+  }
+
+  document.getElementById('btnSaveNow').addEventListener('click', saveState);
+
+  loadState();
 })();
 </script>
-
 </body>
 </html>
