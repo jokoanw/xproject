@@ -1,476 +1,262 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mapping Lapangan 3D — Dies Natalis</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0B1220; --panel:#101B30; --panel-2:#0D1626;
-    --line:#25344F; --line-soft:#1A2740;
-    --cyan:#4FC3F7; --amber:#F5A623; --text:#E7EEF7; --text-dim:#8CA0BE; --danger:#FF6B6B;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow:hidden;}
-  .app{display:flex;height:100vh;}
-  .sidebar{width:308px;flex:0 0 308px;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;}
-  .brand{padding:20px 18px 14px;border-bottom:1px solid var(--line);}
-  .brand .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;}
-  .brand h1{font-size:16.5px;margin:6px 0 2px;font-weight:700;line-height:1.25;}
-  .brand p{margin:0;font-size:12px;color:var(--text-dim);}
-  .section{padding:15px 18px;border-bottom:1px solid var(--line-soft);}
-  .section h2{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin:0 0 10px;}
-  .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-  .tool-btn{display:flex;align-items:center;gap:7px;padding:8px 9px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--text);font-size:12px;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:.12s;}
-  .tool-btn .sw{width:11px;height:11px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(255,255,255,.25);}
-  .tool-btn:hover{border-color:var(--cyan);}
-  .tool-btn.active{border-color:var(--amber);background:rgba(245,166,35,.12);}
-  .hint{font-size:11.5px;color:var(--text-dim);margin-top:10px;line-height:1.5;}
-  .edit-panel{display:none;}
-  .edit-panel.show{display:block;}
-  .edit-panel input[type=text]{width:100%;padding:8px 9px;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;color:var(--text);font-size:13px;margin-bottom:8px;font-family:'Inter',sans-serif;}
-  .edit-panel input[type=text]:focus{outline:none;border-color:var(--cyan);}
-  .row-actions{display:flex;gap:8px;}
-  .btn{padding:8px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel-2);color:var(--text);font-size:12.5px;cursor:pointer;font-family:'Inter',sans-serif;}
-  .btn:hover{border-color:var(--cyan);}
-  .btn.danger{color:var(--danger);border-color:#4a2222;}
-  .btn.danger:hover{border-color:var(--danger);}
-  .btn.wide{width:100%;}
-  .legend{display:flex;flex-direction:column;gap:6px;}
-  .legend .item{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--text-dim);}
-  .legend .sw{width:11px;height:11px;border-radius:3px;flex:0 0 auto;border:1px solid rgba(255,255,255,.25);}
-  .status{margin-top:auto;padding:14px 18px;border-top:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);}
-  .status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);margin-right:6px;}
-  .status .dot.err{background:var(--danger);}
-  .stage{flex:1;position:relative;background:radial-gradient(circle at 50% 40%,#0E1A30 0%,var(--bg) 70%);}
-  .stage-header{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--text-dim);pointer-events:none;letter-spacing:.03em;}
-  .corner{position:absolute;width:22px;height:22px;border-color:var(--cyan);opacity:.5;pointer-events:none;z-index:2;}
-  .corner.tl{top:14px;left:14px;border-top:2px solid;border-left:2px solid;}
-  .corner.tr{top:14px;right:14px;border-top:2px solid;border-right:2px solid;}
-  .corner.bl{bottom:14px;left:14px;border-bottom:2px solid;border-left:2px solid;}
-  .corner.br{bottom:14px;right:14px;border-bottom:2px solid;border-right:2px solid;}
-  #threeContainer{width:100%;height:100%;}
-  #threeContainer canvas{display:block;}
-  ::-webkit-scrollbar{width:8px;}
-  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Dinamika Gerak Translasi</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 { margin-bottom: 10px; color: #bb86fc; }
+        canvas {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+        .panel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            width: 800px;
+        }
+        .input-group { display: flex; flex-direction: column; }
+        label { font-size: 0.9em; margin-bottom: 5px; color: #aaa; }
+        input[type="range"] { accent-color: #bb86fc; cursor: pointer; }
+        .val-display { color: #03dac6; font-weight: bold; }
+        .monitor {
+            grid-column: span 2;
+            background: #2c2c2c;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            font-family: monospace;
+            font-size: 1.1em;
+            border-left: 4px solid #03dac6;
+        }
+        button {
+            grid-column: span 2;
+            padding: 12px;
+            background: #bb86fc;
+            color: #121212;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background: #9965f4; }
+    </style>
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="eyebrow">Divisi Lapangan · 3D Diorama</div>
-      <h1>Mapping Lapangan 3D</h1>
-      <p>Diisi otomatis dari denah donor darah kamu — geser & putar untuk lihat dari sudut manapun.</p>
+
+    <h2>Simulasi Vektor Gaya & Hukum Newton</h2>
+    <canvas id="simCanvas" width="800" height="350"></canvas>
+
+    <div class="panel">
+        <div class="input-group">
+            <label>Massa Balok (m): <span id="valMass" class="val-display">10</span> kg</label>
+            <input type="range" id="mass" min="1" max="50" value="10">
+        </div>
+        <div class="input-group">
+            <label>Gaya Tarik (F): <span id="valForce" class="val-display">50</span> N</label>
+            <input type="range" id="force" min="0" max="200" value="50">
+        </div>
+        <div class="input-group">
+            <label>Sudut Tarikan (θ): <span id="valAngle" class="val-display">37</span>°</label>
+            <input type="range" id="angle" min="0" max="90" value="37">
+        </div>
+        <div class="input-group">
+            <label>Koefisien Gesek (μ): <span id="valMu" class="val-display">0.2</span></label>
+            <input type="range" id="mu" min="0" max="1" step="0.1" value="0.2">
+        </div>
+        
+        <div class="monitor">
+            <span>N = <span id="outN">0</span> N</span>
+            <span>Fx = <span id="outFx">0</span> N</span>
+            <span>f = <span id="outFk">0</span> N</span>
+            <span style="color: #bb86fc;">a = <span id="outA">0</span> m/s²</span>
+        </div>
+
+        <button id="btnPlay">Mulai Simulasi</button>
     </div>
 
-    <div class="section">
-      <h2>Alat</h2>
-      <div class="tool-grid" id="toolGrid"></div>
-      <div class="hint">Pilih alat lalu klik lantai untuk menempatkan. Tahan klik &amp; geser di area 3D untuk memutar kamera, scroll untuk zoom.</div>
-    </div>
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
 
-    <div class="section edit-panel" id="editPanel">
-      <h2>Objek Terpilih</h2>
-      <input type="text" id="editLabel" maxlength="32" placeholder="Nama objek">
-      <div class="row-actions">
-        <button class="btn danger" id="btnDeleteObj">Hapus objek</button>
-        <button class="btn" id="btnCloseEdit">Tutup</button>
-      </div>
-    </div>
+        // Referensi UI
+        const inputs = ['mass', 'force', 'angle', 'mu'];
+        const vals = {};
+        inputs.forEach(id => {
+            vals[id] = document.getElementById(id);
+            vals[id].addEventListener('input', (e) => {
+                document.getElementById('val' + id.charAt(0).toUpperCase() + id.slice(1)).innerText = e.target.value;
+                resetSim();
+            });
+        });
 
-    <div class="section">
-      <h2>Legenda</h2>
-      <div class="legend" id="legend"></div>
-    </div>
+        const btnPlay = document.getElementById('btnPlay');
+        let isPlaying = false;
+        let animationId;
 
-    <div class="section">
-      <h2>Data</h2>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <button class="btn wide" id="btnSaveNow">Simpan sekarang</button>
-        <button class="btn wide" id="btnReset">Kosongkan &amp; mulai dari kosong</button>
-      </div>
-      <div class="hint">Tersimpan otomatis, dan <strong>bisa dilihat &amp; diedit siapa saja</strong> yang buka file ini — pas buat kerja tim bareng.</div>
-    </div>
+        // Variabel Fisika
+        const g = 10;
+        let xPos = 100;
+        let velocity = 0;
+        let lastTime = 0;
 
-    <div class="status" id="statusBar"><span class="dot" id="statusDot"></span><span id="statusText">Memuat…</span></div>
-  </aside>
+        function drawArrow(fromx, fromy, tox, toy, color, label) {
+            const headlen = 10; 
+            const dx = tox - fromx;
+            const dy = toy - fromy;
+            const angle = Math.atan2(dy, dx);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.moveTo(fromx, fromy);
+            ctx.lineTo(tox, toy);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            ctx.moveTo(tox, toy);
+            ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+            ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+            ctx.fill();
 
-  <main class="stage">
-    <div class="stage-header">
-      <span id="coordReadout">arahkan kursor ke lantai…</span>
-      <span>SERET = PUTAR · SCROLL = ZOOM</span>
-    </div>
-    <div class="corner tl"></div><div class="corner tr"></div>
-    <div class="corner bl"></div><div class="corner br"></div>
-    <div id="threeContainer"></div>
-  </main>
-</div>
+            ctx.fillStyle = color;
+            ctx.font = "14px Arial";
+            ctx.fillText(label, tox + 5, toy - 5);
+        }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script>
-(function(){
-  const GRID_X = 12, GRID_Z = 17;
-  const STORE_KEY = 'diesnatalis-layout-3d-v1';
+        function render(dt) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  const OBJECT_TYPES = {
-    gedung:    { label:'Gedung',      icon:'▣', height:1.4,  color:0xB9C6DC },
-    panggung:  { label:'Panggung',    icon:'◆', height:0.35, color:0xF7B94A },
-    tenda:     { label:'Tenda',       icon:'▲', height:0.7,  color:0xEAF2FA },
-    kendaraan: { label:'Kendaraan',   icon:'●', height:0.35, color:0x7ED0FF },
-    pohon:     { label:'Pohon',       icon:'✦', height:0.6,  color:0x7ED9A6 },
-    meja:      { label:'Meja',        icon:'▭', height:0.28, color:0xD9B48F },
-    kursi:     { label:'Kursi',       icon:'▫', height:0.2,  color:0x8B6F52 },
-    zona:      { label:'Zona/Area',   icon:'◍', height:0.08, color:0xF5A623 },
-    rambu:     { label:'Rambu/Penanda', icon:'!', height:0.5, color:0xFF6B6B },
-  };
-  const TOOLS = [
-    { id:'select', label:'Pilih / Edit', icon:'✏', color:null },
-    { id:'road',   label:'Jalan',        icon:'▬', color:'#3A4C68' },
-    ...Object.keys(OBJECT_TYPES).map(k => ({ id:k, label:OBJECT_TYPES[k].label, icon:OBJECT_TYPES[k].icon, color:'#'+OBJECT_TYPES[k].color.toString(16).padStart(6,'0') })),
-    { id:'erase',  label:'Hapus petak',  icon:'✕', color:'#FF6B6B' },
-  ];
+            // Gambar Lantai
+            ctx.fillStyle = "#333";
+            ctx.fillRect(0, 250, canvas.width, 100);
 
-  let tool = 'select';
-  let roadTiles = new Set();
-  let objects = [];
-  let counters = {};
-  let selectedId = null;
-  let saveTimer = null;
+            const m = parseFloat(vals.mass.value);
+            const F = parseFloat(vals.force.value);
+            const theta = parseFloat(vals.angle.value) * Math.PI / 180;
+            const mu = parseFloat(vals.mu.value);
 
-  // ---------- default layout, transcribed from the user's 2D denah ----------
-  function defaultLayout(){
-    const objs = []; let n = 0;
-    const push = (col,row,type,label) => objs.push({ id:'seed'+(n++), col, row, type, label });
+            // Kalkulasi Vektor
+            const w = m * g;
+            const Fx = F * Math.cos(theta);
+            const Fy = F * Math.sin(theta);
+            
+            let N = w - Fy;
+            let status = "";
+            let a = 0;
+            let fk = 0;
 
-    push(5,0,'panggung','Panggung Utama');
-    push(1,0,'rambu','Keluar');
-    push(6,1,'meja','Meja Snack');
-    push(2,1,'meja','Meja Pendaftaran');
+            if (N <= 0) {
+                N = 0;
+                status = "Benda Terangkat!";
+                // Logika dasar jika terangkat
+            } else {
+                fk = mu * N;
+                const F_net = Fx - fk;
+                if (F_net > 0) {
+                    a = F_net / m;
+                } else {
+                    fk = Fx; // Gaya gesek statis menahan
+                    a = 0;
+                }
+            }
 
-    let k=1;
-    for (let r=3;r<=6;r++) for (let c=1;c<=6;c++){ push(c,r,'kursi','Kursi Donor '+k); k++; }
-    for (let r=3;r<=6;r++) push(8,r,'zona','Zona Istirahat '+(r-2));
+            // Update Monitor
+            document.getElementById('outN').innerText = N.toFixed(1);
+            document.getElementById('outFx').innerText = Fx.toFixed(1);
+            document.getElementById('outFk').innerText = fk.toFixed(1);
+            document.getElementById('outA').innerText = a.toFixed(2);
 
-    k=1;
-    for (let r=8;r<=11;r++) for (let c=1;c<=6;c++){ push(c,r,'kursi','Kursi Tunggu '+k); k++; }
-    for (let r=8;r<=11;r++) push(8,r,'zona','Zona Tunggu '+(r-7));
+            // Update Posisi
+            if (isPlaying && N > 0) {
+                velocity += a * (dt / 1000) * 10; // Skala waktu agar terlihat
+                xPos += velocity * (dt / 1000) * 10;
+                if (xPos > canvas.width + 50) {
+                    isPlaying = false;
+                    btnPlay.innerText = "Mulai Simulasi";
+                }
+            }
 
-    push(0,13,'rambu','Masuk');
-    push(4,13,'meja','Meja Cek Tekanan Darah');
-    push(4,14,'kursi','Kursi Cek 1');
-    push(5,14,'kursi','Kursi Cek 2');
-    push(7,13,'meja','Meja Cek Hemoglobin');
-    push(7,14,'kursi','Kursi Cek 3');
-    push(8,14,'kursi','Kursi Cek 4');
+            // Gambar Balok
+            const rectW = 80, rectH = 60;
+            const cy = 250 - rectH/2;
+            const cx = xPos;
+            
+            ctx.fillStyle = "#03dac6";
+            ctx.fillRect(cx - rectW/2, cy - rectH/2, rectW, rectH);
 
-    for (let c=0;c<12;c++) push(c,16,'kursi','Kursi Depan '+(c+1));
-    return objs;
-  }
+            // Gambar Vektor Gaya
+            const scale = 1.5; // Skala panjang panah
+            
+            // W (ke bawah)
+            drawArrow(cx, cy, cx, cy + w * scale, "#cf6679", "w");
+            
+            // N (ke atas)
+            if (N > 0) drawArrow(cx, cy, cx, cy - N * scale, "#4caf50", "N");
+            
+            // F (miring)
+            drawArrow(cx, cy, cx + Fx * scale, cy - Fy * scale, "#bb86fc", "F");
+            
+            // Fx (putus-putus komponen horizontal)
+            ctx.setLineDash([5, 5]);
+            drawArrow(cx, cy, cx + Fx * scale, cy, "#bb86fc", "Fx");
+            ctx.setLineDash([]);
+            
+            // f (gesek)
+            if (fk > 0) drawArrow(cx, 250, cx - fk * scale, 250, "#ffb74d", "f");
+        }
 
-  // ---------- three.js setup ----------
-  const container = document.getElementById('threeContainer');
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0B1220);
-  scene.fog = new THREE.Fog(0x0B1220, 22, 55);
+        function gameLoop(timestamp) {
+            const dt = timestamp - lastTime;
+            lastTime = timestamp;
+            render(dt);
+            animationId = requestAnimationFrame(gameLoop);
+        }
 
-  const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 200);
-  camera.position.set(GRID_X*0.95, GRID_X*1.15, GRID_Z*0.95);
+        function resetSim() {
+            xPos = 100;
+            velocity = 0;
+            isPlaying = false;
+            btnPlay.innerText = "Mulai Simulasi";
+        }
 
-  const renderer = new THREE.WebGLRenderer({ antialias:true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  container.appendChild(renderer.domElement);
+        btnPlay.addEventListener('click', () => {
+            if (!isPlaying) {
+                isPlaying = true;
+                btnPlay.innerText = "Jeda";
+            } else {
+                isPlaying = false;
+                btnPlay.innerText = "Lanjut";
+            }
+        });
 
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.target.set(GRID_X/2, 0, GRID_Z/2);
-  controls.enableDamping = true; controls.dampingFactor = 0.08;
-  controls.maxPolarAngle = Math.PI/2 - 0.03;
-  controls.minDistance = 5; controls.maxDistance = 42;
-  controls.update();
-
-  const hemi = new THREE.HemisphereLight(0xBFE3FF, 0x1a2740, 0.95);
-  scene.add(hemi);
-  const dir = new THREE.DirectionalLight(0xffffff, 1.15);
-  dir.position.set(GRID_X*0.7, 15, GRID_Z*0.25);
-  dir.castShadow = true;
-  dir.shadow.mapSize.set(2048,2048);
-  dir.shadow.camera.left=-22; dir.shadow.camera.right=22; dir.shadow.camera.top=22; dir.shadow.camera.bottom=-22;
-  dir.shadow.camera.near=1; dir.shadow.camera.far=60;
-  scene.add(dir);
-
-  const groundGeo = new THREE.PlaneGeometry(GRID_X, GRID_Z);
-  const groundMat = new THREE.MeshStandardMaterial({ color:0x101C33, roughness:0.95 });
-  const ground = new THREE.Mesh(groundGeo, groundMat);
-  ground.rotation.x = -Math.PI/2;
-  ground.position.set(GRID_X/2, 0, GRID_Z/2);
-  ground.receiveShadow = true;
-  scene.add(ground);
-
-  const gridHelper = new THREE.GridHelper(Math.max(GRID_X,GRID_Z), Math.max(GRID_X,GRID_Z), 0x3A4C68, 0x1E2C45);
-  gridHelper.position.set(GRID_X/2, 0.01, GRID_Z/2);
-  gridHelper.material.transparent = true; gridHelper.material.opacity = 0.55;
-  scene.add(gridHelper);
-
-  const roadGroup = new THREE.Group(); scene.add(roadGroup);
-  const objectsGroup = new THREE.Group(); scene.add(objectsGroup);
-  const roadGeo = new THREE.PlaneGeometry(0.98,0.98);
-  const roadMat = new THREE.MeshStandardMaterial({ color:0x3A4C68, roughness:0.9 });
-
-  let selectionHelper = null;
-
-  function buildMesh(type){
-    const def = OBJECT_TYPES[type];
-    const group = new THREE.Group();
-    if (type === 'pohon'){
-      const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.06,0.08,0.25,8),
-        new THREE.MeshStandardMaterial({ color:0x6B4A2F, roughness:0.9 })
-      );
-      trunk.position.y = 0.125; trunk.castShadow = true;
-      const top = new THREE.Mesh(
-        new THREE.ConeGeometry(0.32,0.55,8),
-        new THREE.MeshStandardMaterial({ color:def.color, roughness:0.75 })
-      );
-      top.position.y = 0.25 + 0.275; top.castShadow = true;
-      group.add(trunk, top);
-    } else {
-      const scaleXZ = (type==='meja'||type==='kursi') ? 0.5 : (type==='rambu' ? 0.22 : 0.85);
-      const mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(scaleXZ, def.height, scaleXZ),
-        new THREE.MeshStandardMaterial({ color:def.color, roughness:0.55, metalness:0.04 })
-      );
-      mesh.position.y = def.height/2;
-      mesh.castShadow = true; mesh.receiveShadow = true;
-      group.add(mesh);
-    }
-    return group;
-  }
-
-  function renderScene(){
-    while(roadGroup.children.length) roadGroup.remove(roadGroup.children[0]);
-    while(objectsGroup.children.length) objectsGroup.remove(objectsGroup.children[0]);
-
-    roadTiles.forEach(key => {
-      const [c,r] = key.split(',').map(Number);
-      const m = new THREE.Mesh(roadGeo, roadMat);
-      m.rotation.x = -Math.PI/2;
-      m.position.set(c+0.5, 0.015, r+0.5);
-      m.receiveShadow = true;
-      roadGroup.add(m);
-    });
-
-    objects.forEach(obj => {
-      const g = buildMesh(obj.type);
-      g.position.set(obj.col+0.5, 0, obj.row+0.5);
-      g.userData = { id:obj.id, col:obj.col, row:obj.row };
-      objectsGroup.add(g);
-    });
-
-    if (selectionHelper){ scene.remove(selectionHelper); selectionHelper = null; }
-    if (selectedId){
-      const found = objectsGroup.children.find(g => g.userData.id === selectedId);
-      if (found){
-        selectionHelper = new THREE.BoxHelper(found, 0xF5A623);
-        scene.add(selectionHelper);
-      }
-    }
-  }
-
-  // ---------- interaction ----------
-  function findObjectAt(col,row){ return objects.find(o => o.col===col && o.row===row); }
-
-  function handleTileClick(col,row){
-    const existing = findObjectAt(col,row);
-    if (tool === 'select'){
-      if (existing){ selectedId = existing.id; openEdit(existing); }
-      else { selectedId = null; closeEdit(); }
-      renderScene(); return;
-    }
-    if (tool === 'road'){
-      const key = col+','+row;
-      if (roadTiles.has(key)) roadTiles.delete(key); else roadTiles.add(key);
-      renderScene(); scheduleSave(); return;
-    }
-    if (tool === 'erase'){
-      if (existing) objects = objects.filter(o => o.id !== existing.id);
-      roadTiles.delete(col+','+row);
-      if (selectedId && existing && selectedId===existing.id){ selectedId=null; closeEdit(); }
-      renderScene(); scheduleSave(); return;
-    }
-    const type = tool;
-    counters[type] = (counters[type]||0)+1;
-    const newObj = { id:'o'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), col, row, type, label: OBJECT_TYPES[type].label+' '+counters[type] };
-    if (existing) objects = objects.map(o => o.id===existing.id ? newObj : o);
-    else objects.push(newObj);
-    renderScene(); scheduleSave();
-  }
-
-  const raycaster = new THREE.Raycaster();
-  let downX=0, downY=0;
-
-  function ndcFromEvent(evt){
-    const rect = renderer.domElement.getBoundingClientRect();
-    return new THREE.Vector2(
-      ((evt.clientX-rect.left)/rect.width)*2-1,
-      -((evt.clientY-rect.top)/rect.height)*2+1
-    );
-  }
-
-  function pickCell(evt){
-    raycaster.setFromCamera(ndcFromEvent(evt), camera);
-    const objHits = raycaster.intersectObjects(objectsGroup.children, true);
-    if (objHits.length){
-      let o = objHits[0].object;
-      while (o && o.userData.col === undefined) o = o.parent;
-      if (o) return { col:o.userData.col, row:o.userData.row, obj: objects.find(x=>x.id===o.userData.id) };
-    }
-    const groundHits = raycaster.intersectObject(ground);
-    if (groundHits.length){
-      const p = groundHits[0].point;
-      const col = Math.max(0, Math.min(GRID_X-1, Math.floor(p.x)));
-      const row = Math.max(0, Math.min(GRID_Z-1, Math.floor(p.z)));
-      return { col, row, obj: findObjectAt(col,row) };
-    }
-    return null;
-  }
-
-  renderer.domElement.addEventListener('pointerdown', e => { downX=e.clientX; downY=e.clientY; });
-  renderer.domElement.addEventListener('pointerup', e => {
-    const moved = Math.hypot(e.clientX-downX, e.clientY-downY);
-    if (moved > 6) return; // treat as camera drag, not a click
-    const cell = pickCell(e);
-    if (cell) handleTileClick(cell.col, cell.row);
-  });
-  renderer.domElement.addEventListener('pointermove', e => {
-    const cell = pickCell(e);
-    const readout = document.getElementById('coordReadout');
-    if (!cell){ readout.textContent = 'arahkan kursor ke lantai…'; return; }
-    readout.textContent = `KOL ${cell.col} · BARIS ${cell.row}` + (cell.obj ? ' — ' + cell.obj.label : '');
-  });
-
-  function onResize(){
-    const w = container.clientWidth, h = container.clientHeight;
-    camera.aspect = w/h; camera.updateProjectionMatrix();
-    renderer.setSize(w,h);
-  }
-  window.addEventListener('resize', onResize);
-
-  (function animate(){
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-  })();
-
-  // ---------- sidebar UI ----------
-  const toolGrid = document.getElementById('toolGrid');
-  TOOLS.forEach(t => {
-    const btn = document.createElement('button');
-    btn.className = 'tool-btn' + (t.id===tool ? ' active' : '');
-    btn.innerHTML = (t.color ? `<span class="sw" style="background:${t.color}"></span>` : `<span class="sw" style="background:transparent;border-color:#4a5b7a"></span>`) +
-                    `<span>${t.icon}&nbsp; ${t.label}</span>`;
-    btn.addEventListener('click', () => {
-      tool = t.id;
-      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      if (tool !== 'select'){ selectedId = null; closeEdit(); renderScene(); }
-    });
-    toolGrid.appendChild(btn);
-  });
-
-  const legend = document.getElementById('legend');
-  [{label:'Jalan', color:'#3A4C68'}, ...Object.values(OBJECT_TYPES).map(d => ({ label:d.label, color:'#'+d.color.toString(16).padStart(6,'0') }))]
-    .forEach(it => {
-      const row = document.createElement('div');
-      row.className = 'item';
-      row.innerHTML = `<span class="sw" style="background:${it.color}"></span><span>${it.label}</span>`;
-      legend.appendChild(row);
-    });
-
-  function openEdit(obj){
-    document.getElementById('editPanel').classList.add('show');
-    document.getElementById('editLabel').value = obj.label;
-  }
-  function closeEdit(){ document.getElementById('editPanel').classList.remove('show'); }
-
-  document.getElementById('editLabel').addEventListener('input', e => {
-    const obj = objects.find(o => o.id === selectedId);
-    if (!obj) return;
-    obj.label = e.target.value;
-    renderScene(); scheduleSave();
-  });
-  document.getElementById('btnDeleteObj').addEventListener('click', () => {
-    objects = objects.filter(o => o.id !== selectedId);
-    selectedId = null; closeEdit(); renderScene(); scheduleSave();
-  });
-  document.getElementById('btnCloseEdit').addEventListener('click', () => {
-    selectedId = null; closeEdit(); renderScene();
-  });
-
-  let resetArmed = false, resetTimer = null;
-  const btnReset = document.getElementById('btnReset');
-  btnReset.addEventListener('click', () => {
-    if (!resetArmed){
-      resetArmed = true;
-      btnReset.textContent = 'Yakin? Klik lagi untuk hapus semua';
-      btnReset.classList.add('danger');
-      clearTimeout(resetTimer);
-      resetTimer = setTimeout(() => {
-        resetArmed = false; btnReset.textContent = 'Kosongkan & mulai dari kosong'; btnReset.classList.remove('danger');
-      }, 4000);
-      return;
-    }
-    roadTiles = new Set(); objects = []; counters = {}; selectedId = null;
-    resetArmed = false; btnReset.textContent = 'Kosongkan & mulai dari kosong'; btnReset.classList.remove('danger');
-    closeEdit(); renderScene(); scheduleSave();
-  });
-
-  // ---------- storage ----------
-  const statusText = document.getElementById('statusText');
-  const statusDot = document.getElementById('statusDot');
-  function setStatus(msg, isErr){ statusText.textContent = msg; statusDot.classList.toggle('err', !!isErr); }
-
-  function scheduleSave(){
-    setStatus('Menyimpan…');
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(saveState, 500);
-  }
-  async function saveState(){
-    const payload = JSON.stringify({ roadTiles:[...roadTiles], objects, counters });
-    try{
-      if (!window.storage) throw new Error('no-storage');
-      await window.storage.set(STORE_KEY, payload, true);
-      setStatus('Tersimpan · ' + new Date().toLocaleTimeString('id-ID'));
-    }catch(err){ setStatus('Gagal menyimpan (cek koneksi)', true); }
-  }
-  async function loadState(){
-    try{
-      if (!window.storage) throw new Error('no-storage');
-      const res = await window.storage.get(STORE_KEY, true);
-      if (res && res.value){
-        const data = JSON.parse(res.value);
-        roadTiles = new Set(data.roadTiles || []);
-        objects = data.objects || [];
-        counters = data.counters || {};
-      } else {
-        objects = defaultLayout();
-      }
-      setStatus('Peta dimuat');
-    }catch(err){
-      objects = defaultLayout();
-      setStatus('Contoh awal dimuat (dari denah donor darah)');
-    }
-    renderScene();
-  }
-  document.getElementById('btnSaveNow').addEventListener('click', saveState);
-
-  loadState();
-})();
-</script>
+        // Init
+        requestAnimationFrame((timestamp) => {
+            lastTime = timestamp;
+            gameLoop(timestamp);
+        });
+    </script>
 </body>
 </html>
