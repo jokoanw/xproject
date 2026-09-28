@@ -3,70 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulasi Dinamika Gerak Translasi</title>
+    <title>Simulasi Bidang Miring & Hukum Newton</title>
     <style>
         body {
-            background-color: #121212;
-            color: #e0e0e0;
+            background-color: #121212; color: #e0e0e0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            margin: 0; padding: 20px;
         }
         h2 { margin-bottom: 10px; color: #bb86fc; }
         canvas {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            background-color: #1e1e1e; border: 1px solid #333;
+            border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             margin-bottom: 20px;
         }
         .panel {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            width: 800px;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
+            background: #1e1e1e; padding: 20px; border-radius: 8px;
+            border: 1px solid #333; width: 800px;
         }
         .input-group { display: flex; flex-direction: column; }
         label { font-size: 0.9em; margin-bottom: 5px; color: #aaa; }
         input[type="range"] { accent-color: #bb86fc; cursor: pointer; }
         .val-display { color: #03dac6; font-weight: bold; }
         .monitor {
-            grid-column: span 2;
-            background: #2c2c2c;
-            padding: 15px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            font-family: monospace;
-            font-size: 1.1em;
-            border-left: 4px solid #03dac6;
+            grid-column: span 2; background: #2c2c2c; padding: 15px;
+            border-radius: 5px; display: flex; justify-content: space-between;
+            font-family: monospace; font-size: 1.1em; border-left: 4px solid #03dac6;
         }
         button {
-            grid-column: span 2;
-            padding: 12px;
-            background: #bb86fc;
-            color: #121212;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s;
+            grid-column: span 2; padding: 12px; background: #bb86fc;
+            color: #121212; border: none; border-radius: 5px; font-weight: bold;
+            font-size: 1em; cursor: pointer; transition: background 0.3s;
         }
         button:hover { background: #9965f4; }
     </style>
 </head>
 <body>
 
-    <h2>Simulasi Vektor Gaya & Hukum Newton</h2>
-    <canvas id="simCanvas" width="800" height="350"></canvas>
+    <h2>Simulasi Dinamika: Bidang Mendatar & Miring</h2>
+    <canvas id="simCanvas" width="800" height="400"></canvas>
 
     <div class="panel">
         <div class="input-group">
@@ -74,20 +50,25 @@
             <input type="range" id="mass" min="1" max="50" value="10">
         </div>
         <div class="input-group">
+            <label>Kemiringan Bidang (α): <span id="valAlpha" class="val-display">30</span>°</label>
+            <input type="range" id="alpha" min="0" max="60" value="30">
+        </div>
+        <div class="input-group">
             <label>Gaya Tarik (F): <span id="valForce" class="val-display">50</span> N</label>
             <input type="range" id="force" min="0" max="200" value="50">
         </div>
         <div class="input-group">
-            <label>Sudut Tarikan (θ): <span id="valAngle" class="val-display">37</span>°</label>
-            <input type="range" id="angle" min="0" max="90" value="37">
+            <label>Sudut Tarikan ke Bidang (θ): <span id="valAngle" class="val-display">0</span>°</label>
+            <input type="range" id="angle" min="0" max="90" value="0">
         </div>
-        <div class="input-group">
+        <div class="input-group" style="grid-column: span 2;">
             <label>Koefisien Gesek (μ): <span id="valMu" class="val-display">0.2</span></label>
             <input type="range" id="mu" min="0" max="1" step="0.1" value="0.2">
         </div>
         
         <div class="monitor">
             <span>N = <span id="outN">0</span> N</span>
+            <span>Wx = <span id="outWx">0</span> N</span>
             <span>Fx = <span id="outFx">0</span> N</span>
             <span>f = <span id="outFk">0</span> N</span>
             <span style="color: #bb86fc;">a = <span id="outA">0</span> m/s²</span>
@@ -100,8 +81,7 @@
         const canvas = document.getElementById('simCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Referensi UI
-        const inputs = ['mass', 'force', 'angle', 'mu'];
+        const inputs = ['mass', 'alpha', 'force', 'angle', 'mu'];
         const vals = {};
         inputs.forEach(id => {
             vals[id] = document.getElementById(id);
@@ -114,10 +94,8 @@
         const btnPlay = document.getElementById('btnPlay');
         let isPlaying = false;
         let animationId;
-
-        // Variabel Fisika
         const g = 10;
-        let xPos = 100;
+        let xPos = 50; 
         let velocity = 0;
         let lastTime = 0;
 
@@ -142,93 +120,121 @@
             ctx.fill();
 
             ctx.fillStyle = color;
-            ctx.font = "14px Arial";
+            ctx.font = "bold 14px Arial";
             ctx.fillText(label, tox + 5, toy - 5);
         }
 
         function render(dt) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Gambar Lantai
-            ctx.fillStyle = "#333";
-            ctx.fillRect(0, 250, canvas.width, 100);
-
             const m = parseFloat(vals.mass.value);
+            const alphaDeg = parseFloat(vals.alpha.value);
+            const alpha = alphaDeg * Math.PI / 180;
             const F = parseFloat(vals.force.value);
             const theta = parseFloat(vals.angle.value) * Math.PI / 180;
             const mu = parseFloat(vals.mu.value);
 
-            // Kalkulasi Vektor
+            // Engine Fisika
             const w = m * g;
+            const wx = w * Math.sin(alpha);
+            const wy = w * Math.cos(alpha);
+            
             const Fx = F * Math.cos(theta);
             const Fy = F * Math.sin(theta);
             
-            let N = w - Fy;
-            let status = "";
+            let N = wy - Fy;
             let a = 0;
             let fk = 0;
+            let F_net = 0;
+            let moveDir = 1; // 1 naik, -1 turun
 
             if (N <= 0) {
                 N = 0;
-                status = "Benda Terangkat!";
-                // Logika dasar jika terangkat
             } else {
-                fk = mu * N;
-                const F_net = Fx - fk;
-                if (F_net > 0) {
-                    a = F_net / m;
-                } else {
-                    fk = Fx; // Gaya gesek statis menahan
-                    a = 0;
+                const forceAlongPlane = Fx - wx; // Positif = ditarik kuat ke atas bidang
+                if (Math.abs(forceAlongPlane) > 0.01) {
+                    moveDir = forceAlongPlane > 0 ? 1 : -1;
+                    const maxFs = mu * N;
+                    
+                    if (Math.abs(forceAlongPlane) <= maxFs && velocity === 0) {
+                        fk = Math.abs(forceAlongPlane); // Gesek statis menahan
+                        a = 0;
+                    } else {
+                        fk = mu * N; // Gesek kinetis
+                        F_net = forceAlongPlane - (moveDir * fk);
+                        a = F_net / m;
+                    }
                 }
             }
 
-            // Update Monitor
             document.getElementById('outN').innerText = N.toFixed(1);
+            document.getElementById('outWx').innerText = wx.toFixed(1);
             document.getElementById('outFx').innerText = Fx.toFixed(1);
             document.getElementById('outFk').innerText = fk.toFixed(1);
             document.getElementById('outA').innerText = a.toFixed(2);
 
             // Update Posisi
             if (isPlaying && N > 0) {
-                velocity += a * (dt / 1000) * 10; // Skala waktu agar terlihat
+                velocity += a * (dt / 1000) * 5; 
                 xPos += velocity * (dt / 1000) * 10;
-                if (xPos > canvas.width + 50) {
+                
+                if (xPos < 0 || xPos > 600) {
                     isPlaying = false;
-                    btnPlay.innerText = "Mulai Simulasi";
+                    btnPlay.innerText = "Reset";
                 }
             }
 
-            // Gambar Balok
-            const rectW = 80, rectH = 60;
-            const cy = 250 - rectH/2;
-            const cx = xPos;
-            
-            ctx.fillStyle = "#03dac6";
-            ctx.fillRect(cx - rectW/2, cy - rectH/2, rectW, rectH);
+            // Rendering Visual
+            ctx.save();
+            // Pindahkan origin ke sudut kiri bawah bidang miring
+            ctx.translate(100, 350); 
 
-            // Gambar Vektor Gaya
-            const scale = 1.5; // Skala panjang panah
+            // Gambar Bidang Miring (Segitiga)
+            ctx.fillStyle = "#333";
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(700 * Math.cos(alpha), -700 * Math.sin(alpha));
+            ctx.lineTo(700 * Math.cos(alpha), 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // Rotasi sumbu koordinat mengikuti kemiringan
+            ctx.rotate(-alpha);
+
+            const rectW = 80, rectH = 60;
             
-            // W (ke bawah)
-            drawArrow(cx, cy, cx, cy + w * scale, "#cf6679", "w");
+            // Pindahkan origin ke titik pusat balok
+            ctx.translate(xPos + rectW/2, -rectH/2);
+
+            // Gambar Balok
+            ctx.fillStyle = "#03dac6";
+            ctx.fillRect(-rectW/2, -rectH/2, rectW, rectH);
+
+            const scale = 1.2; 
             
-            // N (ke atas)
-            if (N > 0) drawArrow(cx, cy, cx, cy - N * scale, "#4caf50", "N");
+            // 1. Gaya Normal (Tegak lurus permukaan)
+            if (N > 0) drawArrow(0, 0, 0, -N * scale, "#4caf50", "N");
             
-            // F (miring)
-            drawArrow(cx, cy, cx + Fx * scale, cy - Fy * scale, "#bb86fc", "F");
+            // 2. Gaya Tarik (F) dengan sudut theta
+            if (F > 0) drawArrow(0, 0, Fx * scale, -Fy * scale, "#bb86fc", "F");
             
-            // Fx (putus-putus komponen horizontal)
-            ctx.setLineDash([5, 5]);
-            drawArrow(cx, cy, cx + Fx * scale, cy, "#bb86fc", "Fx");
-            ctx.setLineDash([]);
-            
-            // f (gesek)
-            if (fk > 0) drawArrow(cx, 250, cx - fk * scale, 250, "#ffb74d", "f");
+            // 3. Gaya Berat (W) - Putar balik rotasinya agar selalu mengarah lurus ke pusat bumi
+            ctx.save();
+            ctx.rotate(alpha); 
+            drawArrow(0, 0, 0, w * scale, "#cf6679", "w");
+            ctx.restore();
+
+            // 4. Gaya Gesek (melawan arah gerak/kecenderungan gerak)
+            if (fk > 0) {
+                const fDir = (a !== 0) ? -Math.sign(a) : (Fx > wx ? -1 : 1);
+                drawArrow(0, rectH/2, fDir * fk * scale, rectH/2, "#ffb74d", "f");
+            }
+
+            ctx.restore();
         }
 
         function gameLoop(timestamp) {
+            if (!lastTime) lastTime = timestamp;
             const dt = timestamp - lastTime;
             lastTime = timestamp;
             render(dt);
@@ -236,14 +242,16 @@
         }
 
         function resetSim() {
-            xPos = 100;
+            xPos = 50;
             velocity = 0;
             isPlaying = false;
             btnPlay.innerText = "Mulai Simulasi";
         }
 
         btnPlay.addEventListener('click', () => {
-            if (!isPlaying) {
+            if (btnPlay.innerText === "Reset") {
+                resetSim();
+            } else if (!isPlaying) {
                 isPlaying = true;
                 btnPlay.innerText = "Jeda";
             } else {
@@ -252,11 +260,7 @@
             }
         });
 
-        // Init
-        requestAnimationFrame((timestamp) => {
-            lastTime = timestamp;
-            gameLoop(timestamp);
-        });
+        requestAnimationFrame(gameLoop);
     </script>
 </body>
 </html>
